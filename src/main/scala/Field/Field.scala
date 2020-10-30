@@ -1,31 +1,57 @@
 package Field
 
+//noinspection DuplicatedCode
 case class Field(fieldSize: Int) {
 
   def totalFieldSize: Int = fieldSize * fieldSize
 
-  val matrix: FieldMatrix[Cell] = FieldMatrix(Vector(
-    Vector(Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1)),
-    Vector(Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1)),
-    Vector(Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0)),
-    Vector(Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0)),
-    Vector(Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0)),
-    Vector(Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0)),
-    Vector(Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0)),
-    Vector(Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0)),
-    Vector(Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1)),
-    Vector(Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1)),
-  ))
+
+  val matrix: FieldMatrix[Cell] = {
+    val builder = Vector.newBuilder[Vector[Cell]]
+
+    for {index <- 1 to fieldSize} {
+      if (index < 4 || fieldSize - 3 < index) {
+        val builder0 = Vector.newBuilder[Cell]
+        if (index % 2 == 0) {
+          // Jede 2 Reihe ab 2er Reihe
+          for {index0 <- 1 to fieldSize} {
+            if (index0 % 2 == 0) {
+              builder0.addOne(Cell(0))
+            } else {
+              builder0.addOne(Cell(1))
+            }
+          }
+        } else {
+          // Jede 1 Reihe ab 1er Reihe
+          for {index0 <- 1 to fieldSize} {
+            if (index0 % 2 == 0) {
+              builder0.addOne(Cell(1))
+            } else {
+              builder0.addOne(Cell(0))
+            }
+          }
+        }
+        builder.addOne(builder0.result())
+      } else {
+        val builder0 = Vector.newBuilder[Cell]
+        for {index0 <- 1 to fieldSize} {
+          builder0.addOne(Cell(0))
+        }
+        builder.addOne(builder0.result())
+      }
+    }
+    FieldMatrix(builder.result())
+  }
 
   override def toString: String = {
     var output = ""
-    for (name <- matrix.rows) {
-      for (cell <- name) {
+    for (row <- matrix.rows) {
+      for (cell <- row) {
         output += cell
       }
       output += "\n"
     }
-
+    output = output.replace("▐▐","▐")
     output
   }
 }
