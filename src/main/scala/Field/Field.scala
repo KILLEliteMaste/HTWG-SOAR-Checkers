@@ -5,7 +5,7 @@ case class Field(fieldSize: Int) {
   def totalFieldSize: Int = fieldSize * fieldSize
 
 
-  val matrix: FieldMatrix[Cell] = {
+  var matrix: FieldMatrix[Cell] = {
     val builder = Vector.newBuilder[Vector[Cell]]
     for {index <- 1 to fieldSize} {
       if (index < 4) {
