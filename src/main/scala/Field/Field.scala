@@ -4,28 +4,41 @@ case class Field(fieldSize: Int) {
 
   def totalFieldSize: Int = fieldSize * fieldSize
 
-  val matrix: FieldMatrix[Cell] = FieldMatrix(Vector(
-    Vector(Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1)),
-    Vector(Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1)),
-    Vector(Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0)),
-    Vector(Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0)),
-    Vector(Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0)),
-    Vector(Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0)),
-    Vector(Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0)),
-    Vector(Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0), Cell(0)),
-    Vector(Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1)),
-    Vector(Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1), Cell(1)),
-  ))
+
+  var matrix: FieldMatrix[Cell] = {
+    val builder = Vector.newBuilder[Vector[Cell]]
+    for {index <- 1 to fieldSize} {
+      if (index < 4) {
+        //Fill the rows for white
+        if (index % 2 == 0) {
+          builder.+=(Vector.tabulate(fieldSize)(n => if (n % 2 == 0) Cell(0) else Cell(1)))
+        } else {
+          builder.+=(Vector.tabulate(fieldSize)(n => if (n % 2 == 0) Cell(1) else Cell(0)))
+        }
+      } else if (fieldSize - 3 < index) {
+        //Fill the rows for black
+        if (index % 2 == 0) {
+          builder.+=(Vector.tabulate(fieldSize)(n => if (n % 2 == 0) Cell(0) else Cell(3)))
+        } else {
+          builder.+=(Vector.tabulate(fieldSize)(n => if (n % 2 == 0) Cell(3) else Cell(0)))
+        }
+      } else {
+        //Empty row
+        builder.+=(Vector.fill(fieldSize)(Cell(0)))
+      }
+    }
+    FieldMatrix(builder.result())
+  }
 
   override def toString: String = {
     var output = ""
-    for (name <- matrix.rows) {
-      for (cell <- name) {
+    for (row <- matrix.rows) {
+      for (cell <- row) {
         output += cell
       }
       output += "\n"
     }
-
+    output = output.replace("▐▐", "▐")
     output
   }
 }
