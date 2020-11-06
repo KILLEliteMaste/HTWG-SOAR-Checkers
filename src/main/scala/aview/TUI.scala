@@ -5,7 +5,7 @@ class TUI {
 
   def processInputLine(input: String, field:Field): Field = {
     input match {
-      case "" =>
+      case n => Field(10)
     }
   }
 }
