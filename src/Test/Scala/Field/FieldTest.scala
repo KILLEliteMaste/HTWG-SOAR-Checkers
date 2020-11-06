@@ -12,18 +12,17 @@ class FieldTest extends AnyWordSpec with Matchers {
       }
     }
     "filled" in {
-      val smallfield = Field(2)
+      val field = Field(10)
 
-      smallfield.matrix.cell(0, 1).toString should be("▐ 1 ▐")
-      smallfield.matrix.cell(0, 0).toString should be("▐   ▐")
-      smallfield.matrix.cell(1, 0).toString should be("▐ 1 ▐")
-      smallfield.matrix.cell(1, 1).toString should be("▐   ▐")
+      field.matrix.cell(0, 1).value should be(0)
+      field.matrix.cell(0, 0).value should be(1)
+      field.matrix.cell(1, 0).value should be(0)
+      field.matrix.cell(1, 1).value should be(1)
     }
   }
   "made a string" in {
-    val smallfield = Field(2)
-
-    smallfield.toString should be("▐   ▐ 1 ▐\n▐ 1 ▐   ▐\n")
+    val smallfield = Field(10)
+    smallfield.toString shouldBe "▐ 1 ▐   ▐ 1 ▐   ▐ 1 ▐   ▐ 1 ▐   ▐ 1 ▐   ▐\n▐   ▐ 1 ▐   ▐ 1 ▐   ▐ 1 ▐   ▐ 1 ▐   ▐ 1 ▐\n▐ 1 ▐   ▐ 1 ▐   ▐ 1 ▐   ▐ 1 ▐   ▐ 1 ▐   ▐\n▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐\n▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐\n▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐\n▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐\n▐   ▐ 3 ▐   ▐ 3 ▐   ▐ 3 ▐   ▐ 3 ▐   ▐ 3 ▐\n▐ 3 ▐   ▐ 3 ▐   ▐ 3 ▐   ▐ 3 ▐   ▐ 3 ▐   ▐\n▐   ▐ 3 ▐   ▐ 3 ▐   ▐ 3 ▐   ▐ 3 ▐   ▐ 3 ▐\n"
   }
   "A FieldMatrix" when {
     "created" should {
@@ -39,11 +38,15 @@ class FieldTest extends AnyWordSpec with Matchers {
       "be fillable" in {
         matrix.cell(0, 0).toString should be("▐   ▐")
       }
+      "look like" in {
+        println(matrix.toString)
+        matrix.toString shouldBe "Vector(Vector(▐   ▐))"
+      }
     }
   }
   "A big field " when {
     "built" should {
-      val bigField= Field(7)
+      val bigField = Field(7)
       val fieldMatrix = new FieldMatrix[Cell](7, Cell(0))
       "have Cell(0)" in {
         fieldMatrix.cell(4, 0).toString should be("▐   ▐")
