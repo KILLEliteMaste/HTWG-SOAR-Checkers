@@ -16,28 +16,28 @@ case class Field(fieldSize: Int) {
           // Jede 2 Reihe ab 2er Reihe
           for {index0 <- 1 to fieldSize} {
             if (index0 % 2 == 0) {
-              builder0.addOne(Cell(0))
+              builder0.+=(Cell(0))
             } else {
-              builder0.addOne(Cell(1))
+              builder0.+=(Cell(1))
             }
           }
         } else {
           // Jede 1 Reihe ab 1er Reihe
           for {index0 <- 1 to fieldSize} {
             if (index0 % 2 == 0) {
-              builder0.addOne(Cell(1))
+              builder0.+=(Cell(1))
             } else {
-              builder0.addOne(Cell(0))
+              builder0.+=(Cell(0))
             }
           }
         }
-        builder.addOne(builder0.result())
+        builder.+=(builder0.result())
       } else {
         val builder0 = Vector.newBuilder[Cell]
         for {index0 <- 1 to fieldSize} {
-          builder0.addOne(Cell(0))
+          builder0.+=(Cell(0))
         }
-        builder.addOne(builder0.result())
+        builder.+=(builder0.result())
       }
     }
     FieldMatrix(builder.result())
