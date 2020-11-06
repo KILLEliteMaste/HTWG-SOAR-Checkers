@@ -1,10 +1,11 @@
 package Field
-case class Row[T](spots: List[T]) {
-  def this(size: Int, filling: T) = this(List.tabulate(size) { row => filling })
+
+case class Row[T](spots: Vector[T]) {
+  def this(size: Int, filling: T) = this(Vector.tabulate(size) { row => filling })
 
   val size: Int = spots.size
 
-  def fill(filling: T): Row[T] = copy(List.tabulate(size) { row => filling })
+  def fill(filling: T): Row[T] = copy(Vector.tabulate(size) { row => filling })
 
   def cell(spot: Int): T = spots(spot)
 
@@ -17,6 +18,4 @@ case class Row[T](spots: List[T]) {
     }
     s
   }
-
 }
-

@@ -7,7 +7,7 @@ class CellTest extends AnyWordSpec with Matchers {
   "A Cell" when {
     "not set to any value " should {
       val emptyCell = Cell(0)
-      println("HIER")
+
       "have value 0" in {
         emptyCell.value should be(0)
       }
