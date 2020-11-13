@@ -1,59 +1,90 @@
 package aview
 
-import Field._
+import controller.Controller
+import model.Position
+import util.Observer
 
 import scala.io.StdIn._
-import scala.util.matching.Regex
 
+class TUI(controller: Controller) extends Observer {
 
-class TUI {
+  controller.add(this)
+
   val numberRegex = "(\\d+)"
+  val splitAtRegex = "\\s+"
 
-  def processInputLine(input: String, field: Field): Field = {
-    val inputsplit = input.split("\\s+").toList
-    inputsplit match {
-      case "new" :: "field" :: Nil => new Field(10)
-      case "quit" :: "game" :: Nil => field
+  def processInputLine(input: String): Unit = {
+    val player = controller.player
+    val inputSplit = input.split(splitAtRegex).toList
+
+    inputSplit match {
+      case "new" :: Nil => controller.createNewField()
+      case "q" :: Nil =>
       case _ => {
-        if (inputsplit.size == 2) {
-          if (inputsplit(0).matches(numberRegex) && inputsplit(1).matches(numberRegex)) {
-            println("MOVE FROM: " + inputsplit(0) + "   " + inputsplit(1))
-            val dest = scala.io.StdIn.readLine("Choose destination\n").split("\\s+").toList
+        //ORIGIN POSITION
+        if (!isOriginInputValid(inputSplit)) return
+        val origin = Vector(Position(inputSplit.head.toInt, inputSplit(1).toInt))
+        if (!controller.checkIfAllPositionsAreInBounds(origin, controller.field) || !controller.checkIfAllCellsBelongToPlayer(player, controller.field, origin)) return
+        println("MOVE FROM: " + inputSplit.head + " " + inputSplit(1) + " to:")
 
-            if (dest.size == 2) {
-              if (dest(0).matches(numberRegex) && inputsplit(1).matches(numberRegex)) {
-                val yDest = dest(0).toInt
-                val xDest = dest(1).toInt
-                val yOrigin = inputsplit(0).toInt
-                val xOrigin = inputsplit(1).toInt
+        //DESTINATION POSITIONS
+        val destinationInput = readLine("Choose destinations:\n").split(splitAtRegex).toList
+        if (!isDestinationInputValid(destinationInput)) return
 
-                val range = Vector.range(0, 10)
-                if (range.contains(yDest) && range.contains(xDest) && range.contains(yOrigin) && range.contains(xOrigin)) {
+        val vectorBuilder = Vector.newBuilder[Position]
+        for (elem <- destinationInput.sliding(2, 2)) {
+          vectorBuilder.+=(Position(elem.head.toInt, elem(1).toInt))
+        }
+        val destinations = vectorBuilder.result()
 
-                  field.matrix = field.matrix.replaceCell(xDest, yDest, field.matrix.cell(xOrigin, yOrigin))
+        if (!controller.checkIfAllPositionsAreInBounds(destinations, controller.field)) return
+        //Has to be empty otherwise you cannot move to this position
+        if (!controller.checkIfAllCellsAreEmpty(controller.field, destinations)) return
 
-                  field.matrix = field.matrix.replaceCell(xOrigin, yOrigin, Cell(0))
-                  println("TO: " + dest(0) + "   " + dest(1))
-                  return field
-                } else {
-                  println("One given number is out of range for the given field")
-                }
-              } else {
-                println("One or more arguments do not match a number")
-              }
-            } else {
-              println("Wrong amount of arguments")
-            }
+        //Will always be executed as it the least amount you want to jump
+        controller.moveFromPositionToPosition(origin(0), destinations(0), controller.field.matrix.cell(origin(0).x, origin(0).y).value, alreadyMoved = false)
 
-          } else {
-            println("One or more arguments do not match a number")
+        if (destinations.size != 1) {
+          for (elem <- destinations.sliding(2, 1)) {
+            controller.moveFromPositionToPosition(elem(0), elem(1), controller.field.matrix.cell(elem(0).x, elem(0).y).value, alreadyMoved = true)
           }
-        } else {
-          println("Wrong amount of arguments")
         }
 
-        field
+        println("TO: " + destinationInput.head + "   " + destinationInput(1))
+        controller.changePlayerTurn()
       }
     }
   }
+
+  def isDestinationInputValid(input: List[String]): Boolean = {
+    if (input.size % 2 == 0) {
+      if (allStringsMatchNumber(input))
+        return true
+    } else {
+      println("Wrong amount of arguments for the destination position")
+    }
+    false
+  }
+
+  def isOriginInputValid(input: List[String]): Boolean = {
+    if (input.size == 2) {
+      if (allStringsMatchNumber(input))
+        return true
+    } else {
+      println("Wrong amount of arguments for the origin position")
+    }
+    false
+  }
+
+  def allStringsMatchNumber(list: List[String]): Boolean = {
+    for (elem <- list) {
+      if (!elem.matches(numberRegex)) {
+        println("One or more arguments do not match a number")
+        return false
+      }
+    }
+    true
+  }
+
+  override def update(): Unit = println(controller.matrixToString)
 }

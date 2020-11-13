@@ -1,5 +1,6 @@
-package Field
+package model
 
+import model.Cell
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
