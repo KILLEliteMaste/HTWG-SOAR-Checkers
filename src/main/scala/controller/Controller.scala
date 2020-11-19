@@ -4,6 +4,8 @@ import model.{Cell, Field, FieldMatrix, Position}
 import util.Observable
 
 case class Controller(var field: Field) extends Observable {
+  var updated = false
+  var ret:Int = 0
   var player: Int = 1
 
   def createNewField():Unit = {
@@ -68,17 +70,24 @@ case class Controller(var field: Field) extends Observable {
           *  zwischen Start- und Endpunkt andere Figuren stehen. Falls nein update Position.
           * */
           case _ :: _ :: Nil =>
+            updated = false
             if ((positionTo.x - positionFrom.x) % (positionTo.y - positionFrom.y) == 0 && positionTo.x < 9 &&
                   positionTo.y < 9 && positionTo.x >= 0 && positionTo.y >= 0) {
-              for (i <- positionFrom.x to (positionFrom.x - positionTo.y)) {
+              for (i <- positionFrom.x to (positionTo.x - positionFrom.x)) {
                 if (field.matrix.cell(positionFrom.x + i, positionFrom.y + i).value != 0) {
                   //falls sich ein Stein im Laufweg befindet, wird dieser vom Spielfeld entfernt und der King wird diagonal hinter dem Token platziert
-                  field.matrix = moveToNewPosition(positionFrom, Position(positionFrom.x + i + 1, positionFrom.y + i + 1),
-                    field).replaceCell(positionFrom.x + i, positionFrom.y + i, Cell(0))
+                  if(field.matrix.cell(positionFrom.x + i, positionFrom.y + i).value == 3 | field.matrix.cell(positionFrom.x + i, positionFrom.y + i).value == 4) {
+                    field.matrix = moveToNewPosition(positionFrom, Position(positionFrom.x + i + getDirectionx(positionFrom, positionTo),
+                      positionFrom.y + i + getDirectiony(positionTo, positionTo))
+                      , field).replaceCell(positionFrom.x + i, positionFrom.y + i, Cell(0))
+                    updated = true
+                  }
                 }
               }
             }
-              field.matrix = moveToNewPosition (positionFrom, positionTo, field)
+            if(!updated) {
+              field.matrix = moveToNewPosition(positionFrom, positionTo, field)
+            }
         }
       }
 
@@ -120,13 +129,37 @@ case class Controller(var field: Field) extends Observable {
         }
         for(i <- 0 to 7) {
           if(field.matrix.rows(0)(i).value == 3) {
-            field.matrix = moveToNewPosition(positionTo, positionTo, field).replaceCell(7,i,Cell(4))
+            field.matrix = moveToNewPosition(positionTo, positionTo, field).replaceCell(0,i,Cell(4))
           }
         }
       } else {
 
       }
     }
+  }
+  def getDirectionx(origin: Position, destination: Position):Int = {
+    if (destination.x - origin.x > 0) {
+      ret = 1
+    }
+    else if (destination.x - origin.x == 0) {
+      ret = 0
+    }
+    else {
+    ret = -1
+    }
+    ret
+  }
+  def getDirectiony(origin: Position, destination: Position):Int = {
+    if(destination.y - origin.y > 0) {
+      ret = 1
+    }
+    else if(destination.y - origin.y == 0) {
+      ret = 0
+    }
+    else {
+      ret = -1
+    }
+    ret
   }
 
   def moveToNewPosition(origin: Position, destination: Position, field: Field): FieldMatrix[Cell] = {
