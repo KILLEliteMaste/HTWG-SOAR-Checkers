@@ -57,8 +57,31 @@ case class Controller(var field: Field) extends Observable {
               field.matrix = moveToNewPosition(positionFrom, positionTo, field).replaceCell(positionFrom.x + 1, positionFrom.y + 1, Cell(0))
             }
         }
+        for(i <- 0 to 7) {
+          if(field.matrix.rows(7)(i).value == 1) {
+            field.matrix = moveToNewPosition(positionTo, positionTo, field).replaceCell(7,i,Cell(2))
+          }
+        }
       } else {
+        List(positionTo.x -positionFrom.x, positionTo.y - positionFrom.y) match {
+          /* wenn in x- und y- Richtung gleich weit gezogen wird und dabei nicht das Spielfeld verlassen wird, prüfe ob
+          *  zwischen Start- und Endpunkt andere Figuren stehen. Falls nein update Position.
+          * */
+          case _ :: _ :: Nil =>
+            if ((positionTo.x - positionFrom.x) % (positionTo.y - positionFrom.y) == 0 && positionTo.x < 9 &&
+                  positionTo.y < 9 && positionTo.x >= 0 && positionTo.y >= 0) {
+              for (i <- positionFrom.x to (positionFrom.x - positionTo.y)) {
+                if (field.matrix.cell(positionFrom.x + i, positionFrom.y + i).value != 0) {
+                  //falls sich ein Stein im Laufweg befindet, wird dieser vom Spielfeld entfernt und der King wird diagonal hinter dem Token platziert
+                  field.matrix = moveToNewPosition(positionFrom, Position(positionFrom.x + i + 1, positionFrom.y + i + 1),
+                    field).replaceCell(positionFrom.x + i, positionFrom.y + i, Cell(0))
+                }
+              }
+            }
+              field.matrix = moveToNewPosition (positionFrom, positionTo, field)
+        }
       }
+
     } else {
       if (stoneToMove == 3) {
         //SCHWARZ
@@ -94,6 +117,11 @@ case class Controller(var field: Field) extends Observable {
             if (value == 1 || value == 2) {
               field.matrix = moveToNewPosition(positionFrom, positionTo, field).replaceCell(positionFrom.x + 1, positionFrom.y + 1, Cell(0))
             }
+        }
+        for(i <- 0 to 7) {
+          if(field.matrix.rows(0)(i).value == 3) {
+            field.matrix = moveToNewPosition(positionTo, positionTo, field).replaceCell(7,i,Cell(4))
+          }
         }
       } else {
 
