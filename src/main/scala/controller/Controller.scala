@@ -70,7 +70,7 @@ case class Controller(var field: Field) extends Observable {
           case _ :: _ :: Nil =>
             if ((positionTo.x - positionFrom.x) % (positionTo.y - positionFrom.y) == 0 && positionTo.x < 9 &&
                   positionTo.y < 9 && positionTo.x >= 0 && positionTo.y >= 0) {
-              for (i <- positionFrom.x to (positionFrom.x - positionTo.y)) {
+              for (i <- positionFrom.x to (positionFrom.x - positionTo.x)) {
                 if (field.matrix.cell(positionFrom.x + i, positionFrom.y + i).value != 0) {
                   //falls sich ein Stein im Laufweg befindet, wird dieser vom Spielfeld entfernt und der King wird diagonal hinter dem Token platziert
                   field.matrix = moveToNewPosition(positionFrom, Position(positionFrom.x + i + 1, positionFrom.y + i + 1),
