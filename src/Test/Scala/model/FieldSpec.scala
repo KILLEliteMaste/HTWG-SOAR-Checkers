@@ -1,10 +1,9 @@
 package model
 
-import model.{Cell, Field, FieldMatrix}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-class FieldTest extends AnyWordSpec with Matchers {
+class FieldSpec extends AnyWordSpec with Matchers {
   "A Field" when {
     "constructed should be given the length of its edge as size" should {
       val smallfield = Field(2)
@@ -14,16 +13,15 @@ class FieldTest extends AnyWordSpec with Matchers {
     }
     "filled" in {
       val field = Field(10)
-
-      field.matrix.cell(0, 1).value should be(0)
-      field.matrix.cell(0, 0).value should be(1)
-      field.matrix.cell(1, 0).value should be(0)
-      field.matrix.cell(1, 1).value should be(1)
+      field.matrix.cell(0, 1).value should be(1)
+      field.matrix.cell(0, 0).value should be(0)
+      field.matrix.cell(1, 0).value should be(1)
+      field.matrix.cell(1, 1).value should be(0)
     }
   }
   "made a string" in {
     val smallfield = Field(10)
-    smallfield.toString shouldBe "▐ 1 ▐   ▐ 1 ▐   ▐ 1 ▐   ▐ 1 ▐   ▐ 1 ▐   ▐\n▐   ▐ 1 ▐   ▐ 1 ▐   ▐ 1 ▐   ▐ 1 ▐   ▐ 1 ▐\n▐ 1 ▐   ▐ 1 ▐   ▐ 1 ▐   ▐ 1 ▐   ▐ 1 ▐   ▐\n▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐\n▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐\n▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐\n▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐\n▐   ▐ 3 ▐   ▐ 3 ▐   ▐ 3 ▐   ▐ 3 ▐   ▐ 3 ▐\n▐ 3 ▐   ▐ 3 ▐   ▐ 3 ▐   ▐ 3 ▐   ▐ 3 ▐   ▐\n▐   ▐ 3 ▐   ▐ 3 ▐   ▐ 3 ▐   ▐ 3 ▐   ▐ 3 ▐\n"
+    smallfield.toString shouldBe "     0   1   2   3   4   5   6   7   8   9\n0  ▐   ▐ 1 ▐   ▐ 1 ▐   ▐ 1 ▐   ▐ 1 ▐   ▐ 1 ▐\n1  ▐ 1 ▐   ▐ 1 ▐   ▐ 1 ▐   ▐ 1 ▐   ▐ 1 ▐   ▐\n2  ▐   ▐ 1 ▐   ▐ 1 ▐   ▐ 1 ▐   ▐ 1 ▐   ▐ 1 ▐\n3  ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐\n4  ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐\n5  ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐\n6  ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐   ▐\n7  ▐ 3 ▐   ▐ 3 ▐   ▐ 3 ▐   ▐ 3 ▐   ▐ 3 ▐   ▐\n8  ▐   ▐ 3 ▐   ▐ 3 ▐   ▐ 3 ▐   ▐ 3 ▐   ▐ 3 ▐\n9  ▐ 3 ▐   ▐ 3 ▐   ▐ 3 ▐   ▐ 3 ▐   ▐ 3 ▐   ▐\n"
   }
   "A FieldMatrix" when {
     "created" should {
