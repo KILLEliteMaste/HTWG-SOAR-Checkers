@@ -60,5 +60,41 @@ class ControllerSpec extends AnyWordSpec with Matchers {
         controller.getDirectiony(Position(2,1), Position(2,1)) should be (0)
       }
     }
+    "positions in vector are" should {
+      "in bounds" in {
+        controller.checkIfAllPositionsAreInBounds(Vector(Position(2,1),Position(3,0),Position(5,4)),
+          controller.field) should be(true,"")
+      }
+
+      "not in bounds" in{
+        controller.checkIfAllPositionsAreInBounds(Vector(Position(10,1),Position(-2,0),Position(5,4)),
+          controller.field) should be(false,"The given positions are not inside the field")
+      }
+    }
+    "checking all cells empty" should{
+      controller.createNewField()
+      "empty" in {
+        controller.checkIfAllCellsAreEmpty(controller.field,Vector(Position(0,0), Position(6,0),
+          Position(3,1))) should be (true,"")
+      }
+      "not empty" in {
+        controller.checkIfAllCellsAreEmpty(controller.field,Vector(Position(1,0), Position(2,1),
+          Position(3,1))) should be (false,"One destination is not empty to be able to move to this position")
+      }
+    }
+    "checking all cells belongs to player" should{
+      "belongs to player" in{
+        controller.checkIfAllCellsBelongToPlayer(1,controller.field,Vector(Position(2,1),
+          Position(1,4))) should be (true,"")
+      }
+      "dont belongs to player 1" in{
+        controller.checkIfAllCellsBelongToPlayer(1,controller.field,Vector(Position(5,0),
+          Position(5,4))) should be (false,"Cell does not contain a stone that belongs to Player 1")
+      }
+      "dont belongs to player 2" in{
+        controller.checkIfAllCellsBelongToPlayer(2,controller.field,Vector(Position(2,1),
+          Position(1,4))) should be (false,"Cell does not contain a stone that belongs to Player 2")
+      }
+    }
   }
 }
