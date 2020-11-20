@@ -1,4 +1,4 @@
-package Field
+package model
 
 /**
  * Cell value definition:

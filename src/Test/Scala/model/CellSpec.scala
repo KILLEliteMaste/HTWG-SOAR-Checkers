@@ -1,9 +1,9 @@
-package Field
+package model
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-class CellTest extends AnyWordSpec with Matchers {
+class CellSpec extends AnyWordSpec with Matchers {
   "A Cell" when {
     "not set to any value " should {
       val emptyCell = Cell(0)
