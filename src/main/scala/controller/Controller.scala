@@ -10,10 +10,12 @@ case class Controller(var field: Field) extends Observable {
 
   def createNewField(): Unit = {
     field = Field(field.fieldSize)
+    player = 1
   }
 
   def createNewField(size: Int): Unit = {
     field = Field(size)
+    player = 1
   }
 
   def changePlayerTurn(): String = {
