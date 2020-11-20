@@ -24,7 +24,19 @@ class TUI(controller: Controller) extends Observer {
         //ORIGIN POSITION
         if (!isOriginInputValid(inputSplit)) return
         val origin = Vector(Position(inputSplit.head.toInt, inputSplit(1).toInt))
-        if (!controller.checkIfAllPositionsAreInBounds(origin, controller.field) || !controller.checkIfAllCellsBelongToPlayer(player, controller.field, origin)) return
+
+        val (checkIfAllPositionsAreInBounds, checkIfAllPositionsAreInBoundsStr) = controller.checkIfAllPositionsAreInBounds(origin, controller.field)
+        if (!checkIfAllPositionsAreInBounds) {
+          println(checkIfAllPositionsAreInBoundsStr)
+          return
+        }
+
+        val (checkIfAllCellsBelongToPlayer, checkIfAllCellsBelongToPlayerStr) = controller.checkIfAllCellsBelongToPlayer(player, controller.field, origin)
+        if (!checkIfAllCellsBelongToPlayer) {
+          println(checkIfAllCellsBelongToPlayerStr)
+          return
+        }
+
         println("MOVE FROM: " + inputSplit.head + " " + inputSplit(1) + " to:")
 
         //DESTINATION POSITIONS
@@ -37,9 +49,19 @@ class TUI(controller: Controller) extends Observer {
         }
         val destinations = vectorBuilder.result()
 
-        if (!controller.checkIfAllPositionsAreInBounds(destinations, controller.field)) return
+
+        val (checkIfAllPositionsAreInBounds0, checkIfAllPositionsAreInBoundsStr0) = controller.checkIfAllPositionsAreInBounds(destinations, controller.field)
+        if (!checkIfAllPositionsAreInBounds0) {
+          println(checkIfAllPositionsAreInBoundsStr0)
+          return
+        }
+
         //Has to be empty otherwise you cannot move to this position
-        if (!controller.checkIfAllCellsAreEmpty(controller.field, destinations)) return
+        val (checkIfAllCellsAreEmpty, checkIfAllCellsAreEmptyStr) = controller.checkIfAllCellsAreEmpty(controller.field, destinations)
+        if (!checkIfAllCellsAreEmpty) {
+          println(checkIfAllCellsAreEmptyStr)
+          return
+        }
 
         //Will always be executed as it the least amount you want to jump
         controller.moveFromPositionToPosition(origin(0), destinations(0), controller.field.matrix.cell(origin(0).x, origin(0).y).value, alreadyMoved = false)
@@ -51,7 +73,7 @@ class TUI(controller: Controller) extends Observer {
         }
 
         println("TO: " + destinationInput.head + "   " + destinationInput(1))
-        controller.changePlayerTurn()
+        println(controller.changePlayerTurn())
       }
     }
   }
