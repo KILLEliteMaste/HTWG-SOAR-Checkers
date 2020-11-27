@@ -11,6 +11,14 @@ package model
 case class Cell(value: Int) {
   def isSet: Boolean = value != 0
 
+  def color: String = {
+    if (value == 1 || value == 2) {
+      "WHITE"
+    } else if (value == 3 || value == 4) {
+      "BLACK"
+    } else "NONE"
+  }
+
   override def toString: String = {
     ("▐ " + value.toString + " ▐").replace("▐ 0 ▐", "▐   ▐")
   }

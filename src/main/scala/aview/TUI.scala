@@ -50,9 +50,9 @@ class TUI(controller: Controller) extends Observer {
         val destinations = vectorBuilder.result()
 
 
-        val (checkIfAllPositionsAreInBounds0, checkIfAllPositionsAreInBoundsStr0) = controller.checkIfAllPositionsAreInBounds(destinations, controller.field)
-        if (!checkIfAllPositionsAreInBounds0) {
-          println(checkIfAllPositionsAreInBoundsStr0)
+        val (checkIfAllPositionsAreInBoundsDestinations, checkIfAllPositionsAreInBoundsStrDestinations) = controller.checkIfAllPositionsAreInBounds(destinations, controller.field)
+        if (!checkIfAllPositionsAreInBoundsDestinations) {
+          println(checkIfAllPositionsAreInBoundsStrDestinations)
           return
         }
 

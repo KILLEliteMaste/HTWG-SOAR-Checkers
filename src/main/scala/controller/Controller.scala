@@ -24,7 +24,65 @@ case class Controller(var field: Field) extends Observable {
     "It's player " + player + " turn"
   }
 
+  def isStoneOpponentsColor(stoneToJumpOver: Int, stoneToMove: Int): Boolean = {
+    if (stoneToMove == 1 || stoneToMove == 2) {
+      stoneToJumpOver == 3 || stoneToJumpOver == 4
+    } else {
+      stoneToJumpOver == 1 || stoneToJumpOver == 2
+    }
+  }
+
+  def caseJumpOverStone(positionFrom: Position, positionTo: Position, stoneToMove: Int, x: Int, y: Int): Unit = {
+    val value = field.matrix.cell(positionFrom.x + x, positionFrom.y + y).value
+    if (isStoneOpponentsColor(value, stoneToMove)) {
+      field.matrix = moveToNewPosition(positionFrom, positionTo, field).replaceCell(positionFrom.x + x, positionFrom.y + y, Cell(0))
+    }
+  }
+
   def moveFromPositionToPosition(positionFrom: Position, positionTo: Position, stoneToMove: Int, alreadyMoved: Boolean): Unit = {
+    val differenceX = positionTo.x - positionFrom.x
+    val differenceY = positionTo.y - positionFrom.y
+
+    List(differenceX, differenceY) match {
+      //WHITE
+      case 1 :: -1 :: Nil => if (stoneToMove == 1 && field.matrix.cell(positionTo.x, positionTo.y).value == 0 && !alreadyMoved) field.matrix = moveToNewPosition(positionFrom, positionTo, field)
+      case 1 :: 1 :: Nil => if (stoneToMove == 1 && field.matrix.cell(positionTo.x, positionTo.y).value == 0 && !alreadyMoved) field.matrix = moveToNewPosition(positionFrom, positionTo, field)
+      //BLACK
+      case -1 :: -1 :: Nil => if (stoneToMove == 3 && field.matrix.cell(positionTo.x, positionTo.y).value == 0 && !alreadyMoved) field.matrix = moveToNewPosition(positionFrom, positionTo, field)
+      case -1 :: 1 :: Nil => if (stoneToMove == 3 && field.matrix.cell(positionTo.x, positionTo.y).value == 0 && !alreadyMoved) field.matrix = moveToNewPosition(positionFrom, positionTo, field)
+      //JUMP OVER STONE
+      case _ :: _ :: Nil => {
+        if (Math.abs(differenceX) == 2 && Math.abs(differenceY) == 2)
+          caseJumpOverStone(positionFrom, positionTo, stoneToMove, differenceX / 2, differenceY / 2)
+      }
+    }
+    for (i <- 0 until field.fieldSize) {
+      if (field.matrix.rows(field.fieldSize - 1)(i).value == 1) {
+        field.matrix = moveToNewPosition(positionTo, positionTo, field).replaceCell(field.fieldSize - 1, i, Cell(2))
+      }
+      if (field.matrix.rows(0)(i).value == 3) {
+        field.matrix = moveToNewPosition(positionTo, positionTo, field).replaceCell(field.fieldSize - 1, i, Cell(4))
+      }
+    }
+    if (stoneToMove == 2 || stoneToMove == 4) {
+      if (Math.abs(differenceX) == Math.abs(differenceY)) {
+        //Nur laufen
+        //Laufen mit eigener stein
+        //Laufen mit gegnerischer stein (jump)
+        if (!alreadyMoved){
+
+
+
+        }
+
+        caseJumpOverStone(positionFrom, positionTo, stoneToMove, differenceX / 2, differenceY / 2)
+      } else {
+        println("CANNOT EXECUTE")
+      }
+    }
+  }
+
+  def moveFromPositionToPositionAAAA(positionFrom: Position, positionTo: Position, stoneToMove: Int, alreadyMoved: Boolean): Unit = {
     if (player == 1) {
       //1 == white stone  2 == white King stone
       if (stoneToMove == 1) {
