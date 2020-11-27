@@ -64,165 +64,38 @@ case class Controller(var field: Field) extends Observable {
         field.matrix = moveToNewPosition(positionTo, positionTo, field).replaceCell(0, i, Cell(4))
       }
     }
-    if (stoneToMove == 2 || stoneToMove == 4) {
-      if (Math.abs(differenceX) == Math.abs(differenceY)) {
+    if ((stoneToMove == 2 || stoneToMove == 4) && !alreadyMoved) {
+      if (Math.abs(differenceX).equals(Math.abs(differenceY))) {
         //Nur laufen
         //Laufen mit eigener stein
         //Laufen mit gegnerischer stein (jump)
-        if (!alreadyMoved){
-
-
-
+        val directionX = if (differenceX < 0) -1 else 1
+        val directionY = if (differenceY < 0) -1 else 1
+        var posX = directionX
+        var posY = directionY
+        var i = 0
+        while (i < differenceX) {
+          if (field.matrix.rows(positionFrom.x + posX)(positionFrom.y + posY).value != 0) {
+            if (isStoneOpponentsColor(field.matrix.rows(positionFrom.x + posX)(positionFrom.y + posY).value, stoneToMove)) {
+              if (positionFrom.x + posX + posX != positionTo.x) {
+                field.matrix = moveToNewPosition(positionFrom, positionTo, field)
+                return //true
+              } else {
+                return //false
+              }
+            } else {
+              return
+            }
+          }
+          posX = posX + directionX
+          posY = posY + directionY
+          i = i + 1
         }
-
-        caseJumpOverStone(positionFrom, positionTo, stoneToMove, differenceX / 2, differenceY / 2)
+        moveToNewPosition(positionFrom, positionTo, field)
       } else {
         println("CANNOT EXECUTE")
       }
     }
-  }
-
-  def moveFromPositionToPositionAAAA(positionFrom: Position, positionTo: Position, stoneToMove: Int, alreadyMoved: Boolean): Unit = {
-    if (player == 1) {
-      //1 == white stone  2 == white King stone
-      if (stoneToMove == 1) {
-        //WEISS
-        //2,3                   Start
-        //3,2   1,-1            Bewegen 1 feld LINKS(unten)
-        //3,4   1,1             Bewegen 1 feld RECHTS(unten)
-        //
-        //4,1   2,-2            Über stein drüber LINKS(unten)              BEDINGUNG: Nur wenn schwarzer stein dazwischen   1,-1    3,2 liegt der stein
-        //4,5   2,2             Über stein drüber RECHTS(unten)             BEDINGUNG: Nur wenn schwarzer stein dazwischen
-        //
-        //0,5   -2,2            Über stein drüber RÜCKWÄRTS RECHTS(oben)    BEDINGUNG: Nur wenn schwarzer stein dazwischen
-        //0,1   -2,-2           Über stein drüber RÜCKWÄRTS LINKS(oben)     BEDINGUNG: Nur wenn schwarzer stein dazwischen
-        List(positionTo.x - positionFrom.x, positionTo.y - positionFrom.y) match {
-          case 1 :: -1 :: Nil => if (field.matrix.cell(positionTo.x, positionTo.y).value == 0 && !alreadyMoved) field.matrix = moveToNewPosition(positionFrom, positionTo, field)
-          case 1 :: 1 :: Nil => if (field.matrix.cell(positionTo.x, positionTo.y).value == 0 && !alreadyMoved) field.matrix = moveToNewPosition(positionFrom, positionTo, field)
-          case -2 :: -2 :: Nil =>
-            val value = field.matrix.cell(positionFrom.x - 1, positionFrom.y - 1).value
-            if (value == 3 || value == 4) {
-              field.matrix = moveToNewPosition(positionFrom, positionTo, field).replaceCell(positionFrom.x - 1, positionFrom.y - 1, Cell(0))
-            }
-          case 2 :: -2 :: Nil =>
-            val value = field.matrix.cell(positionFrom.x + 1, positionFrom.y - 1).value
-            if (value == 3 || value == 4) {
-              field.matrix = moveToNewPosition(positionFrom, positionTo, field).replaceCell(positionFrom.x + 1, positionFrom.y - 1, Cell(0))
-            }
-          case -2 :: 2 :: Nil =>
-            val value = field.matrix.cell(positionFrom.x - 1, positionFrom.y + 1).value
-            if (value == 3 || value == 4) {
-              field.matrix = moveToNewPosition(positionFrom, positionTo, field).replaceCell(positionFrom.x - 1, positionFrom.y + 1, Cell(0))
-            }
-          case 2 :: 2 :: Nil =>
-            val value = field.matrix.cell(positionFrom.x + 1, positionFrom.y + 1).value
-            if (value == 3 || value == 4) {
-              field.matrix = moveToNewPosition(positionFrom, positionTo, field).replaceCell(positionFrom.x + 1, positionFrom.y + 1, Cell(0))
-            }
-        }
-        for (i <- 0 to 7) {
-          if (field.matrix.rows(7)(i).value == 1) {
-            field.matrix = moveToNewPosition(positionTo, positionTo, field).replaceCell(7, i, Cell(2))
-          }
-        }
-      } else {
-        List(positionTo.x - positionFrom.x, positionTo.y - positionFrom.y) match {
-          /* wenn in x- und y- Richtung gleich weit gezogen wird und dabei nicht das Spielfeld verlassen wird, prüfe ob
-          *  zwischen Start- und Endpunkt andere Figuren stehen. Falls nein update Position.
-          * */
-          case _ :: _ :: Nil =>
-            updated = false
-            if ((positionTo.x - positionFrom.x) % (positionTo.y - positionFrom.y) == 0 && positionTo.x < 9 &&
-              positionTo.y < 9 && positionTo.x >= 0 && positionTo.y >= 0) {
-              for (i <- positionFrom.x to (positionTo.x - positionFrom.x)) {
-                if (field.matrix.cell(positionFrom.x + i, positionFrom.y + i).value != 0) {
-                  //falls sich ein Stein im Laufweg befindet, wird dieser vom Spielfeld entfernt und der King wird diagonal hinter dem Token platziert
-                  if (field.matrix.cell(positionFrom.x + i, positionFrom.y + i).value == 3 | field.matrix.cell(positionFrom.x + i, positionFrom.y + i).value == 4) {
-                    field.matrix = moveToNewPosition(positionFrom, Position(positionFrom.x + i + getDirectionx(positionFrom, positionTo),
-                      positionFrom.y + i + getDirectiony(positionTo, positionTo))
-                      , field).replaceCell(positionFrom.x + i, positionFrom.y + i, Cell(0))
-                    updated = true
-                  }
-                }
-              }
-            }
-            if (!updated) {
-              field.matrix = moveToNewPosition(positionFrom, positionTo, field)
-            }
-        }
-      }
-
-    } else {
-      if (stoneToMove == 3) {
-        //SCHWARZ
-        //5,2                  Start
-        //4,1   -1,-1          Bewegen 1 feld LINKS(oben)
-        //4,3   -1,1           Bewegen 1 feld RECHTS(oben)
-        //
-        //3,0   -2,-2          Über stein drüber LINKS(oben)                BEDINGUNG: Nur wenn weißer stein dazwischen
-        //3,4   -2,2           Über stein drüber RECHTS(oben)               BEDINGUNG: Nur wenn weißer stein dazwischen
-        //
-        //7,4   2,2            Über stein drüber RÜCKWÄRTS RECHTS(unten)    BEDINGUNG: Nur wenn weißer stein dazwischen
-        //7,0   2,-2           Über stein drüber RÜCKWÄRTS LINKS(unten)     BEDINGUNG: Nur wenn weißer stein dazwischen
-        List(positionTo.x - positionFrom.x, positionTo.y - positionFrom.y) match {
-          case -1 :: -1 :: Nil => if (field.matrix.cell(positionTo.x, positionTo.y).value == 0 && !alreadyMoved) field.matrix = moveToNewPosition(positionFrom, positionTo, field)
-          case -1 :: 1 :: Nil => if (field.matrix.cell(positionTo.x, positionTo.y).value == 0 && !alreadyMoved) field.matrix = moveToNewPosition(positionFrom, positionTo, field)
-          case -2 :: -2 :: Nil =>
-            val value = field.matrix.cell(positionFrom.x - 1, positionFrom.y - 1).value
-            if (value == 1 || value == 2) {
-              field.matrix = moveToNewPosition(positionFrom, positionTo, field).replaceCell(positionFrom.x - 1, positionFrom.y - 1, Cell(0))
-            }
-          case 2 :: -2 :: Nil =>
-            val value = field.matrix.cell(positionFrom.x + 1, positionFrom.y - 1).value
-            if (value == 1 || value == 2) {
-              field.matrix = moveToNewPosition(positionFrom, positionTo, field).replaceCell(positionFrom.x + 1, positionFrom.y - 1, Cell(0))
-            }
-          case -2 :: 2 :: Nil =>
-            val value = field.matrix.cell(positionFrom.x - 1, positionFrom.y + 1).value
-            if (value == 1 || value == 2) {
-              field.matrix = moveToNewPosition(positionFrom, positionTo, field).replaceCell(positionFrom.x - 1, positionFrom.y + 1, Cell(0))
-            }
-          case 2 :: 2 :: Nil =>
-            val value = field.matrix.cell(positionFrom.x + 1, positionFrom.y + 1).value
-            if (value == 1 || value == 2) {
-              field.matrix = moveToNewPosition(positionFrom, positionTo, field).replaceCell(positionFrom.x + 1, positionFrom.y + 1, Cell(0))
-            }
-        }
-        for (i <- 0 to 7) {
-          if (field.matrix.rows(0)(i).value == 3) {
-            field.matrix = moveToNewPosition(positionTo, positionTo, field).replaceCell(0, i, Cell(4))
-          }
-        }
-      } else {
-
-      }
-    }
-  }
-
-  def getDirectionx(origin: Position, destination: Position): Int = {
-    if (destination.x - origin.x > 0) {
-      ret = 1
-    }
-    else if (destination.x - origin.x == 0) {
-      ret = 0
-    }
-    else {
-      ret = -1
-    }
-    ret
-  }
-
-  def getDirectiony(origin: Position, destination: Position): Int = {
-    if (destination.y - origin.y > 0) {
-      ret = 1
-    }
-    else if (destination.y - origin.y == 0) {
-      ret = 0
-    }
-    else {
-      ret = -1
-    }
-    ret
   }
 
   /**
