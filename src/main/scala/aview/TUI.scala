@@ -64,7 +64,10 @@ class TUI(controller: Controller) extends Observer {
         }
 
         //Will always be executed as it the least amount you want to jump
+        val m1 = controller.field.matrix.toString
         controller.moveFromPositionToPosition(origin(0), destinations(0), controller.field.matrix.cell(origin(0).x, origin(0).y).value, alreadyMoved = false)
+        if (m1.equals(controller.field.matrix.toString))
+          return
 
         if (destinations.size != 1) {
           for (elem <- destinations.sliding(2, 1)) {
