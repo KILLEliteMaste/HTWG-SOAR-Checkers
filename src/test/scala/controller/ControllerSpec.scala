@@ -102,7 +102,32 @@ class ControllerSpec extends AnyWordSpec with Matchers {
         controller.changePlayerTurn()
         controller.field.matrix.cell(1, 6).value should be(3)
       }
-
+      "upgrade to king(white)" in {
+        controller.createNewField(8)
+        controller.moveFromPositionToPosition(Position(2, 5), Position(3, 4), 1, alreadyMoved = false)
+        controller.changePlayerTurn()
+        controller.moveFromPositionToPosition(Position(5, 4), Position(4, 3), 3, alreadyMoved = false)
+        controller.changePlayerTurn()
+        controller.moveFromPositionToPosition(Position(2, 7), Position(3, 6), 1, alreadyMoved = false)
+        controller.changePlayerTurn()
+        controller.moveFromPositionToPosition(Position(6, 5), Position(5, 4), 3, alreadyMoved = false)
+        controller.changePlayerTurn()
+        controller.moveFromPositionToPosition(Position(1, 6), Position(2, 7), 1, alreadyMoved = false)
+        controller.changePlayerTurn()
+        controller.moveFromPositionToPosition(Position(4, 3), Position(3, 2), 3, alreadyMoved = false)
+        controller.changePlayerTurn()
+        controller.moveFromPositionToPosition(Position(2, 1), Position(4, 3), 1, alreadyMoved = false)
+        controller.moveFromPositionToPosition(Position(4, 3), Position(6, 5), 1, alreadyMoved = true)
+        controller.changePlayerTurn()
+        controller.moveFromPositionToPosition(Position(6, 3), Position(5, 4), 3, alreadyMoved = false)
+        controller.changePlayerTurn()
+        controller.moveFromPositionToPosition(Position(2, 3), Position(3, 2), 1, alreadyMoved = false)
+        controller.changePlayerTurn()
+        controller.moveFromPositionToPosition(Position(7, 4), Position(6, 3), 3, alreadyMoved = false)
+        controller.changePlayerTurn()
+        controller.moveFromPositionToPosition(Position(6, 5), Position(7, 4), 1, alreadyMoved = false)
+        controller.field.matrix.cell(7,4).value should be(2)
+      }
       "upgrade to king(black)" in {
         controller.createNewField(8)
         controller.moveFromPositionToPosition(Position(2, 5), Position(3, 4), 1, alreadyMoved = false)
@@ -128,7 +153,7 @@ class ControllerSpec extends AnyWordSpec with Matchers {
         controller.field.matrix.cell(0, 5).value should be(4)
       }
       //geht noch nicht
-      /*      "double jump with king from upper right to under left" in{
+            "double jump with king from upper right to under left" in{
               controller.createNewField(8)
               controller.moveFromPositionToPosition(Position(2, 5), Position(3, 4), 1, alreadyMoved = false)
               controller.changePlayerTurn()
@@ -160,21 +185,37 @@ class ControllerSpec extends AnyWordSpec with Matchers {
               controller.moveFromPositionToPosition(Position(0,5), Position(2, 3) , 4, alreadyMoved = false)
               controller.moveFromPositionToPosition(Position(2,3), Position(4, 1) , 4, alreadyMoved = true)
               controller.field.matrix.cell(4,1).value should be(4)
-            }*/
-
+            }
+      "move more then 1 cell with king" in {
+        controller.createNewField(8)
+        controller.moveFromPositionToPosition(Position(2, 5), Position(3, 4), 1, alreadyMoved = false)
+        controller.changePlayerTurn()
+        controller.moveFromPositionToPosition(Position(5, 0), Position(4, 1), 3, alreadyMoved = false)
+        controller.changePlayerTurn()
+        controller.moveFromPositionToPosition(Position(3, 4), Position(4, 3), 1, alreadyMoved = false)
+        controller.changePlayerTurn()
+        controller.moveFromPositionToPosition(Position(6, 1), Position(5, 0), 3, alreadyMoved = false)
+        controller.changePlayerTurn()
+        controller.moveFromPositionToPosition(Position(1, 6), Position(2, 5), 1, alreadyMoved = false)
+        controller.changePlayerTurn()
+        controller.moveFromPositionToPosition(Position(5, 2), Position(3, 4), 3, alreadyMoved = false)
+        controller.moveFromPositionToPosition(Position(3, 4), Position(1, 6), 3, alreadyMoved = true)
+        controller.changePlayerTurn()
+        controller.moveFromPositionToPosition(Position(1, 4), Position(2, 5), 1, alreadyMoved = false)
+        controller.changePlayerTurn()
+        controller.moveFromPositionToPosition(Position(5, 4), Position(4, 5), 3, alreadyMoved = false)
+        controller.changePlayerTurn()
+        controller.moveFromPositionToPosition(Position(0, 5), Position(1, 4), 1, alreadyMoved = false)
+        controller.changePlayerTurn()
+        controller.moveFromPositionToPosition(Position(1, 6), Position(0, 5), 3, alreadyMoved = false)
+        controller.changePlayerTurn()
+        controller.moveFromPositionToPosition(Position(2, 7), Position(3, 6), 1, alreadyMoved = false)
+        controller.changePlayerTurn()
+        controller.moveFromPositionToPosition(Position(0, 5), Position(2, 7), 4, alreadyMoved = false)
+        println(controller.field)
+        controller.field.matrix.cell(2, 7).value should be(4)
+      }
     }
-    /*"getting direction of move" should {
-      "x" in {
-        controller.getDirectionx(Position(2, 1), Position(3, 0)) should be(1)
-        controller.getDirectionx(Position(5, 0), Position(4, 1)) should be(-1)
-        controller.getDirectionx(Position(2, 1), Position(2, 1)) should be(0)
-      }
-      "y" in {
-        controller.getDirectiony(Position(2, 1), Position(3, 0)) should be(-1)
-        controller.getDirectiony(Position(5, 0), Position(4, 1)) should be(1)
-        controller.getDirectiony(Position(2, 1), Position(2, 1)) should be(0)
-      }
-    }*/
     "positions in vector are" should {
       "in bounds" in {
         controller.checkIfAllPositionsAreInBounds(Vector(Position(2, 1), Position(3, 0), Position(5, 4)),
