@@ -93,7 +93,6 @@ case class Controller(var field: Field) extends Observable {
         }
         moveToNewPosition(positionFrom, positionTo, field)
       } else {
-        println("CANNOT EXECUTE")
       }
     }
   }

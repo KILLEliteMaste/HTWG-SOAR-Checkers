@@ -1,9 +1,14 @@
 package aview
 
+import java.io.{ByteArrayInputStream, ByteArrayOutputStream, File, FileOutputStream, StringReader}
+import java.nio.charset.{CharsetDecoder, StandardCharsets}
+
 import controller.Controller
 import model.Field
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+
+import scala.io.StdIn
 
 class TUISpec extends AnyWordSpec with Matchers {
   "Text User Input" when {
@@ -43,6 +48,21 @@ class TUISpec extends AnyWordSpec with Matchers {
         tui.isDestinationInputValid(List("1", "2", "7", "6")) should be(true)
       }
     }
-
+    "ProcessInputLine" should {
+      "be able to move" in {
+        val in = new StringReader("3 2")
+        Console.withIn(in) {
+          tui.processInputLine("2 1")
+          controller.field.matrix.cell(3, 2).value shouldBe 1
+        }
+      }
+      "should not work because origin position is out of bounds" in {
+        val out = new ByteArrayOutputStream()
+        Console.withOut(out) {
+          tui.processInputLine("9 9")
+          out.toString.replaceAll("[^A-z ]", "") shouldBe ("The given positions are not inside the field")
+        }
+      }
+    }
   }
 }
