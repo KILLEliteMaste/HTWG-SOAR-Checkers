@@ -75,7 +75,7 @@ class TUISpec extends AnyWordSpec with Matchers {
         val out = new ByteArrayOutputStream()
         Console.withOut(out) {
           tui.processInputLine("9 9")
-          out.toString.replaceAll("\r\n", "") shouldEqual "The given positions are not inside the field"
+          out.toString.replaceAll("\r?\n", "") shouldEqual "The given positions are not inside the field"
         }
       }
       "should not work because destination cell is not empty" in {
