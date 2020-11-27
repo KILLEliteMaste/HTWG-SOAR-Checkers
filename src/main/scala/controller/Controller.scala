@@ -74,11 +74,11 @@ case class Controller(var field: Field) extends Observable {
         var posX = directionX
         var posY = directionY
         var i = 0
-        while (i < differenceX) {
+        while (i < Math.abs(differenceX)) {
           if (field.matrix.rows(positionFrom.x + posX)(positionFrom.y + posY).value != 0) {
             if (isStoneOpponentsColor(field.matrix.rows(positionFrom.x + posX)(positionFrom.y + posY).value, stoneToMove)) {
               if (positionFrom.x + posX + posX != positionTo.x) {
-                field.matrix = moveToNewPosition(positionFrom, positionTo, field)
+                field.matrix = moveToNewPosition(positionFrom, positionTo, field).replaceCell(positionTo.x - directionX, positionTo.y - directionY, Cell(0))
                 return //true
               } else {
                 return //false

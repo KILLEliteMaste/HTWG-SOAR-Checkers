@@ -163,7 +163,7 @@ class ControllerSpec extends AnyWordSpec with Matchers {
             }*/
 
     }
-    "getting direction of move" should {
+    /*"getting direction of move" should {
       "x" in {
         controller.getDirectionx(Position(2, 1), Position(3, 0)) should be(1)
         controller.getDirectionx(Position(5, 0), Position(4, 1)) should be(-1)
@@ -174,7 +174,7 @@ class ControllerSpec extends AnyWordSpec with Matchers {
         controller.getDirectiony(Position(5, 0), Position(4, 1)) should be(1)
         controller.getDirectiony(Position(2, 1), Position(2, 1)) should be(0)
       }
-    }
+    }*/
     "positions in vector are" should {
       "in bounds" in {
         controller.checkIfAllPositionsAreInBounds(Vector(Position(2, 1), Position(3, 0), Position(5, 4)),
