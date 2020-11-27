@@ -61,7 +61,7 @@ case class Controller(var field: Field) extends Observable {
         field.matrix = moveToNewPosition(positionTo, positionTo, field).replaceCell(field.fieldSize - 1, i, Cell(2))
       }
       if (field.matrix.rows(0)(i).value == 3) {
-        field.matrix = moveToNewPosition(positionTo, positionTo, field).replaceCell(field.fieldSize - 1, i, Cell(4))
+        field.matrix = moveToNewPosition(positionTo, positionTo, field).replaceCell(0, i, Cell(4))
       }
     }
     if (stoneToMove == 2 || stoneToMove == 4) {
