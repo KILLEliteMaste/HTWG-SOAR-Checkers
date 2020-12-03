@@ -1,11 +1,16 @@
 package model
 
-case class Field(fieldSize: Int) {
+import scala.collection.mutable
 
-  var statusString: String =""
+case class Field(fieldSize: Int) {
+  val fieldStatistics = new mutable.HashMap[Int, Int]()
+  fieldStatistics.put(1, 0)
+  fieldStatistics.put(2, 0)
+  fieldStatistics.put(3, 0)
+  fieldStatistics.put(4, 0)
+  var statusString: String = ""
 
   def totalFieldSize: Int = fieldSize * fieldSize
-
 
   var matrix: FieldMatrix[Cell] = {
     val builder = Vector.newBuilder[Vector[Cell]]
@@ -17,6 +22,7 @@ case class Field(fieldSize: Int) {
         } else {
           builder.+=(Vector.tabulate(fieldSize)(n => if (n % 2 == 0) Cell(0) else Cell(1)))
         }
+        fieldStatistics.put(1, (fieldStatistics.get(1).sum + fieldSize / 2))
       } else if (fieldSize - 3 < index) {
         //Fill the rows for black
         if (index % 2 == 0) {
@@ -24,6 +30,7 @@ case class Field(fieldSize: Int) {
         } else {
           builder.+=(Vector.tabulate(fieldSize)(n => if (n % 2 == 0) Cell(0) else Cell(3)))
         }
+        fieldStatistics.put(3, (fieldStatistics.get(3).sum + fieldSize / 2))
       } else {
         //Empty row
         builder.+=(Vector.fill(fieldSize)(Cell(0)))

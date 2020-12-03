@@ -3,25 +3,27 @@ package controller
 import model.{Cell, Field, FieldMatrix, Position}
 import util.Observable
 
-case class Controller(var field: Field) extends Observable {
-  var updated = false
-  var ret: Int = 0
-  var player: Int = 1
+case class Controller() extends Observable {
+  var field: Field = Field(8)
+  var gameState: GameState.Value = GameState.IDLE
+  var statusMessage: String = ""
+  var playerState: PlayerState = new PlayerState1
 
   def createNewField(): Unit = {
-    field = Field(field.fieldSize)
-    player = 1
+    createNewField(field.fieldSize)
   }
 
   def createNewField(size: Int): Unit = {
     field = Field(size)
-    player = 1
+    playerState = new PlayerState1
+    gameState = GameState.RUNNING
+    statusMessage = ""
+    notifyObservers()
   }
 
-  def changePlayerTurn(): String = {
-    if (player == 1) player = 2 else player = 1
+  def changePlayerTurn(): Unit = {
+    playerState.handle(this)
     notifyObservers()
-    "It's player " + player + " turn"
   }
 
   def isStoneOpponentsColor(stoneToJumpOver: Int, stoneToMove: Int): Boolean = {
@@ -51,10 +53,9 @@ case class Controller(var field: Field) extends Observable {
       case -1 :: -1 :: Nil => if (stoneToMove == 3 && field.matrix.cell(positionTo.x, positionTo.y).value == 0 && !alreadyMoved) field.matrix = moveToNewPosition(positionFrom, positionTo, field)
       case -1 :: 1 :: Nil => if (stoneToMove == 3 && field.matrix.cell(positionTo.x, positionTo.y).value == 0 && !alreadyMoved) field.matrix = moveToNewPosition(positionFrom, positionTo, field)
       //JUMP OVER STONE
-      case _ :: _ :: Nil => {
+      case _ :: _ :: Nil =>
         if (Math.abs(differenceX) == 2 && Math.abs(differenceY) == 2)
           caseJumpOverStone(positionFrom, positionTo, stoneToMove, differenceX / 2, differenceY / 2)
-      }
     }
     for (i <- 0 until field.fieldSize) {
       if (field.matrix.rows(field.fieldSize - 1)(i).value == 1) {
@@ -79,9 +80,6 @@ case class Controller(var field: Field) extends Observable {
             if (isStoneOpponentsColor(field.matrix.rows(positionFrom.x + posX)(positionFrom.y + posY).value, stoneToMove)) {
               if (positionFrom.x + posX + posX != positionTo.x) {
                 field.matrix = moveToNewPosition(positionFrom, positionTo, field).replaceCell(positionTo.x - directionX, positionTo.y - directionY, Cell(0))
-                return //true
-              } else {
-                return //false
               }
             } else {
               return
@@ -92,10 +90,22 @@ case class Controller(var field: Field) extends Observable {
           i = i + 1
         }
         moveToNewPosition(positionFrom, positionTo, field)
-      } else {
       }
     }
+    checkGameState()
   }
+
+  def checkGameState(): Unit = {
+    Tuple4(field.fieldStatistics.get(1).sum, field.fieldStatistics.get(2).sum,
+      field.fieldStatistics.get(3).sum, field.fieldStatistics.get(4).sum) match {
+      //Only 1 black / white king on each side left
+      case x if (x._1 == 0) && (x._2 == 1) && (x._3 == 0) && (x._4 == 1) => gameState = GameState.DRAW
+      case x if (x._1 >= 0) && (x._2 >= 0) && (x._3 == 0) && (x._4 == 0) => gameState = GameState.P1_WON
+      case x if (x._1 == 0) && (x._2 == 0) && (x._3 >= 0) && (x._4 >= 0) => gameState = GameState.P2_WON
+      case _ =>
+    }
+  }
+
 
   /**
    *
@@ -119,39 +129,43 @@ case class Controller(var field: Field) extends Observable {
    * @param field  The field with the fieldsize
    * @return If the given position are inside the bound of the fieldsize
    */
-  def checkIfAllPositionsAreInBounds(vector: Vector[Position], field: Field): (Boolean, String) = {
+  def checkIfAllPositionsAreInBounds(vector: Vector[Position], field: Field): Boolean = {
     for (position <- vector) {
       if (position.x < 0 || position.x >= field.fieldSize || position.y < 0 || position.y >= field.fieldSize) {
-        return (false, "The given positions are not inside the field")
+        statusMessage = "The given positions are not inside the field"
+        return false
       }
     }
-    (true, "")
+    true
   }
 
-  def checkIfAllCellsAreEmpty(field: Field, positions: Vector[Position]): (Boolean, String) = {
+  def checkIfAllCellsAreEmpty(field: Field, positions: Vector[Position]): Boolean = {
     for (elem <- positions) {
       if (field.matrix.cell(elem.x, elem.y).value != 0) {
-        return (false, "One destination is not empty to be able to move to this position")
+        statusMessage = "One destination is not empty to be able to move to this position"
+        return false
       }
     }
-    (true, "")
+    true
   }
 
-  def checkIfAllCellsBelongToPlayer(player: Int, field: Field, positions: Vector[Position]): (Boolean, String) = {
-    if (player == 1) {
+  def checkIfAllCellsBelongToPlayer(field: Field, positions: Vector[Position]): Boolean = {
+    if (playerState.isInstanceOf[PlayerState1]) {
       for (elem <- positions) {
         if (!List(1, 2).contains(field.matrix.cell(elem.x, elem.y).value)) {
-          return (false, "Cell does not contain a stone that belongs to Player 1")
+          statusMessage = "Cell does not contain a stone that belongs to Player 1"
+          return false
         }
       }
     } else {
       for (elem <- positions) {
         if (!List(3, 4).contains(field.matrix.cell(elem.x, elem.y).value)) {
-          return (false, "Cell does not contain a stone that belongs to Player 2")
+          statusMessage = "Cell does not contain a stone that belongs to Player 2"
+          return false
         }
       }
     }
-    (true, "")
+    true
   }
 
   def matrixToString: String = field.toString

@@ -21,13 +21,13 @@ class CellSpec extends AnyWordSpec with Matchers {
     "set to 1" should {
       val cell1 = Cell(1)
       "be WHITE" in {
-        cell1.color should be ("WHITE")
+        cell1.color should be("WHITE")
       }
     }
     "set to 3" should {
       val cell3 = Cell(3)
       "be BLACK" in {
-        cell3.color should be ("BLACK")
+        cell3.color should be("BLACK")
       }
     }
     "set to a specific value" should {
@@ -39,7 +39,7 @@ class CellSpec extends AnyWordSpec with Matchers {
         nonEmptyCell.isSet should be(true)
       }
       "have no color" in {
-        nonEmptyCell.color should be ("NONE")
+        nonEmptyCell.color should be("NONE")
       }
       "show number in String" in {
         nonEmptyCell.toString.matches("▐ 5 ▐")

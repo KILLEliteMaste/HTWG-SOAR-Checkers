@@ -1,26 +1,12 @@
 import aview.TUI
-import controller.Controller
-import model.Field
-
-import scala.io.StdIn._
+import controller.{Controller, UserInterface}
 
 case object Game {
-  val controller: Controller = Controller(Field(8))
-  val tui = new TUI(controller)
-  controller.notifyObservers()
 
   def main(args: Array[String]): Unit = {
-    var input: String = ""
+    val uiType = "tui"
 
-    //Syntax for moving:
-    //X Y -> e.g. 5 6
-    //X Y X Y X Y X Y -> To XY then to XY...
-    println("It's player 1 turn (white stone)")
-    do {
-      input = readLine()
-      tui.processInputLine(input)
-    } while (input != "q" || input != "quit")
-    println("Game ended")
+    UserInterface(uiType, Controller())
   }
 }
 
