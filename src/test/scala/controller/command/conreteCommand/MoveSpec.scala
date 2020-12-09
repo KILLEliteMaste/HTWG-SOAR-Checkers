@@ -1,11 +1,11 @@
 package controller.command.conreteCommand
 
-import controller.{Controller, PlayerState}
+import controller.Controller
 import model.Position
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-class MoveTest extends AnyWordSpec with Matchers {
+class MoveSpec extends AnyWordSpec with Matchers {
 
   "MoveTest" when {
     val move = Move()
@@ -44,7 +44,7 @@ class MoveTest extends AnyWordSpec with Matchers {
       "be able to move" in {
         controller.createNewField()
         move.handleCommand(List("2", "1", "3", "2"), controller)
-        controller.field.matrix.cell(3, 2).value shouldBe 1
+        controller.field.matrix.cell(3, 2).get.value shouldBe 1
       }
       "be able to jump twice" in {
         controller.createNewField()
@@ -59,7 +59,7 @@ class MoveTest extends AnyWordSpec with Matchers {
         controller.moveFromPositionToPosition(Position(1, 6), Position(2, 5), 1, alreadyMoved = false)
         controller.changePlayerTurn()
         move.handleCommand(List("5", "2", "3", "4", "1", "6"), controller)
-        controller.field.matrix.cell(1, 6).value shouldBe 3
+        controller.field.matrix.cell(1, 6).get.value shouldBe 3
       }
       "should not work because origin position is out of bounds" in {
         controller.createNewField()

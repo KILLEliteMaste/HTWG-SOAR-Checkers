@@ -1,12 +1,17 @@
-import aview.TUI
-import controller.{Controller, UserInterface}
+import aview.UserInterface
+import controller.Controller
+
+import scala.util.{Failure, Success, Try}
 
 case object Game {
 
   def main(args: Array[String]): Unit = {
     val uiType = "tui"
 
-    UserInterface(uiType, Controller())
+    Try(UserInterface(uiType, Controller())) match {
+      case Failure(v) => println("Could not start UI because: " + v.getMessage)
+      case Success(v) => println("GOOD BYE")
+    }
   }
 }
 

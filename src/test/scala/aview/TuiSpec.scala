@@ -6,13 +6,13 @@ import org.scalatest.wordspec.AnyWordSpec
 
 import java.io.{ByteArrayOutputStream, StringReader}
 
-class TUISpec extends AnyWordSpec with Matchers {
+class TuiSpec extends AnyWordSpec with Matchers {
   "Text User Input" when {
     "run" should {
       "run" in {
         val controller = new Controller
-        val tui = TUI(controller)
-        val in = new StringReader("q")
+        val tui = Tui(controller)
+        val in = new StringReader("quit")
         val out = new ByteArrayOutputStream()
         Console.withIn(in) {
           Console.withOut(out) {

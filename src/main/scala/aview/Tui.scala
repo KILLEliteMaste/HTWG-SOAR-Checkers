@@ -5,7 +5,7 @@ import util.Observer
 
 import scala.io.StdIn._
 
-case class TUI(controller: Controller) extends UI with Observer {
+case class Tui(controller: Controller) extends UI with Observer {
   controller.add(this)
 
   def run(): Unit = {
@@ -15,10 +15,10 @@ case class TUI(controller: Controller) extends UI with Observer {
     println("move <X Y> <X Y X Y...>   | Move a stone <FROM> <TO> with <TO> taking multiple target positions to jump over stones")
 
     var input: String = ""
-
+    println(controller)
     update()
     controller.gameState = GameState.RUNNING
-    while (!input.equals("q")) {
+    while (!input.toLowerCase().equals("quit")) {
       input = readLine()
       processInputLine(input,controller)
     }

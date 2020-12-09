@@ -1,16 +1,17 @@
 package controller.command.conreteCommand
 
 import controller.Controller
-import controller.command.UndoableCommand
+import controller.command.Command
 import model.Position
 
-case class Move() extends UndoableCommand {
+case class Move() extends Command {
 
-  val numberRegex = "(\\d+)"
+  val numberRegex = "(\\d{1,2})"
   val splitAtRegex = "\\s+"
   var statusMessage = ""
 
   override def handleCommand(input: List[String], controller: Controller): String = {
+
     //ORIGIN POSITION
     if (!isOriginInputValid(input)) return statusMessage
     val origin = Vector(Position(input.head.toInt, input(1).toInt))
@@ -25,7 +26,7 @@ case class Move() extends UndoableCommand {
     if (!checkIfAllCellsBelongToPlayer) {
       return controller.statusMessage
     }
-    statusMessage = "MOVE FROM: " + input.head + " " + input(1) + " to:"
+    statusMessage = "MOVE FROM: " + input.head + " " + input(1) + " "
 
     //DESTINATION POSITIONS
 
@@ -50,25 +51,24 @@ case class Move() extends UndoableCommand {
       return controller.statusMessage
     }
 
+
+    controller.doStep()
+
     //Will always be executed as it the least amount you want to jump
     val m1 = controller.field.matrix.toString
-    controller.moveFromPositionToPosition(origin(0), destinations(0), controller.field.matrix.cell(origin(0).x, origin(0).y).value, alreadyMoved = false)
+    controller.moveFromPositionToPosition(origin(0), destinations(0), controller.field.matrix.cell(origin(0).x, origin(0).y).map(cell => cell.value).getOrElse(0), alreadyMoved = false)
     if (m1.equals(controller.field.matrix.toString))
       return "Could not execute move"
 
     if (destinations.size != 1) {
       for (elem <- destinations.sliding(2, 1)) {
-        controller.moveFromPositionToPosition(elem(0), elem(1), controller.field.matrix.cell(elem(0).x, elem(0).y).value, alreadyMoved = true)
+        controller.moveFromPositionToPosition(elem(0), elem(1), controller.field.matrix.cell(elem(0).x, elem(0).y).map(cell => cell.value).getOrElse(0), alreadyMoved = true)
       }
     }
 
     controller.changePlayerTurn()
     statusMessage += "TO: " + destinationInput.head + "   " + destinationInput(1)
     statusMessage
-  }
-
-  override def undo(input: List[String]): String = {
-    "UNDO the last move"
   }
 
   def isDestinationInputValid(input: List[String]): Boolean = {
@@ -92,7 +92,7 @@ case class Move() extends UndoableCommand {
   def allStringsMatchNumber(list: List[String]): Boolean = {
     for (elem <- list) {
       if (!elem.matches(numberRegex)) {
-        statusMessage = "One or more arguments do not match a number"
+        statusMessage = "One or more arguments do not match a number or are too long"
         return false
       }
     }
