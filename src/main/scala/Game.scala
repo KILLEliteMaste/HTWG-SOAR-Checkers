@@ -1,26 +1,17 @@
-import aview.TUI
+import aview.UserInterface
 import controller.Controller
-import model.Field
 
-import scala.io.StdIn._
+import scala.util.{Failure, Success, Try}
 
 case object Game {
-  val controller: Controller = Controller(Field(8))
-  val tui = new TUI(controller)
-  controller.notifyObservers()
 
   def main(args: Array[String]): Unit = {
-    var input: String = ""
+    val uiType = "tui"
 
-    //Syntax for moving:
-    //X Y -> e.g. 5 6
-    //X Y X Y X Y X Y -> To XY then to XY...
-    println("It's player 1 turn (white stone)")
-    do {
-      input = readLine()
-      tui.processInputLine(input)
-    } while (input != "q" || input != "quit")
-    println("Game ended")
+    Try(UserInterface(uiType, Controller())) match {
+      case Failure(v) => println("Could not start UI because: " + v.getMessage)
+      case Success(v) => println("GOOD BYE")
+    }
   }
 }
 

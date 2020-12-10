@@ -1,27 +1,33 @@
 package controller
 
+import model.Color.WHITE
+import model.Color.BLACK
 import model.{Cell, Field, FieldMatrix, Position}
-import util.Observable
+import util.{Observable, UndoManager}
 
-case class Controller(var field: Field) extends Observable {
-  var updated = false
-  var ret: Int = 0
-  var player: Int = 1
+
+case class Controller() extends Observable with Serializable {
+  var field: Field = Field(8)
+  var gameState: GameState.Value = GameState.IDLE
+  var statusMessage: String = ""
+  var playerState: PlayerState = new PlayerState1
+  private val undoManager = UndoManager(this)
 
   def createNewField(): Unit = {
-    field = Field(field.fieldSize)
-    player = 1
+    createNewField(field.fieldSize)
   }
 
   def createNewField(size: Int): Unit = {
     field = Field(size)
-    player = 1
+    playerState = new PlayerState1
+    gameState = GameState.RUNNING
+    statusMessage = ""
+    notifyObservers()
   }
 
-  def changePlayerTurn(): String = {
-    if (player == 1) player = 2 else player = 1
+  def changePlayerTurn(): Unit = {
+    playerState.handle(this)
     notifyObservers()
-    "It's player " + player + " turn"
   }
 
   def isStoneOpponentsColor(stoneToJumpOver: Int, stoneToMove: Int): Boolean = {
@@ -33,9 +39,12 @@ case class Controller(var field: Field) extends Observable {
   }
 
   def caseJumpOverStone(positionFrom: Position, positionTo: Position, stoneToMove: Int, x: Int, y: Int): Unit = {
-    val value = field.matrix.cell(positionFrom.x + x, positionFrom.y + y).value
-    if (isStoneOpponentsColor(value, stoneToMove)) {
-      field.matrix = moveToNewPosition(positionFrom, positionTo, field).replaceCell(positionFrom.x + x, positionFrom.y + y, Cell(0))
+    field.matrix.cell(positionFrom.x + x, positionFrom.y + y) match {
+      case Some(cell) =>
+        if (isStoneOpponentsColor(cell.value, stoneToMove)) {
+          field.matrix = moveToNewPosition(positionFrom, positionTo, field).replaceCell(positionFrom.x + x, positionFrom.y + y, None)
+        }
+      case None =>
     }
   }
 
@@ -45,23 +54,22 @@ case class Controller(var field: Field) extends Observable {
 
     List(differenceX, differenceY) match {
       //WHITE
-      case 1 :: -1 :: Nil => if (stoneToMove == 1 && field.matrix.cell(positionTo.x, positionTo.y).value == 0 && !alreadyMoved) field.matrix = moveToNewPosition(positionFrom, positionTo, field)
-      case 1 :: 1 :: Nil => if (stoneToMove == 1 && field.matrix.cell(positionTo.x, positionTo.y).value == 0 && !alreadyMoved) field.matrix = moveToNewPosition(positionFrom, positionTo, field)
+      case 1 :: -1 :: Nil => if (stoneToMove == 1 && field.matrix.cell(positionTo.x, positionTo.y).isEmpty && !alreadyMoved) field.matrix = moveToNewPosition(positionFrom, positionTo, field)
+      case 1 :: 1 :: Nil => if (stoneToMove == 1 && field.matrix.cell(positionTo.x, positionTo.y).isEmpty && !alreadyMoved) field.matrix = moveToNewPosition(positionFrom, positionTo, field)
       //BLACK
-      case -1 :: -1 :: Nil => if (stoneToMove == 3 && field.matrix.cell(positionTo.x, positionTo.y).value == 0 && !alreadyMoved) field.matrix = moveToNewPosition(positionFrom, positionTo, field)
-      case -1 :: 1 :: Nil => if (stoneToMove == 3 && field.matrix.cell(positionTo.x, positionTo.y).value == 0 && !alreadyMoved) field.matrix = moveToNewPosition(positionFrom, positionTo, field)
+      case -1 :: -1 :: Nil => if (stoneToMove == 3 && field.matrix.cell(positionTo.x, positionTo.y).isEmpty && !alreadyMoved) field.matrix = moveToNewPosition(positionFrom, positionTo, field)
+      case -1 :: 1 :: Nil => if (stoneToMove == 3 && field.matrix.cell(positionTo.x, positionTo.y).isEmpty && !alreadyMoved) field.matrix = moveToNewPosition(positionFrom, positionTo, field)
       //JUMP OVER STONE
-      case _ :: _ :: Nil => {
+      case _ :: _ :: Nil =>
         if (Math.abs(differenceX) == 2 && Math.abs(differenceY) == 2)
           caseJumpOverStone(positionFrom, positionTo, stoneToMove, differenceX / 2, differenceY / 2)
-      }
     }
     for (i <- 0 until field.fieldSize) {
-      if (field.matrix.rows(field.fieldSize - 1)(i).value == 1) {
-        field.matrix = moveToNewPosition(positionTo, positionTo, field).replaceCell(field.fieldSize - 1, i, Cell(2))
+      if (field.matrix.rows(field.fieldSize - 1)(i).exists(cell => cell.value == 1)) {
+        field.matrix = moveToNewPosition(positionTo, positionTo, field).replaceCell(field.fieldSize - 1, i, Some(Cell(2)))
       }
-      if (field.matrix.rows(0)(i).value == 3) {
-        field.matrix = moveToNewPosition(positionTo, positionTo, field).replaceCell(0, i, Cell(4))
+      if (field.matrix.rows(0)(i).exists(cell => cell.value == 3)) {
+        field.matrix = moveToNewPosition(positionTo, positionTo, field).replaceCell(0, i, Some(Cell(4)))
       }
     }
     if ((stoneToMove == 2 || stoneToMove == 4) && !alreadyMoved) {
@@ -75,13 +83,11 @@ case class Controller(var field: Field) extends Observable {
         var posY = directionY
         var i = 0
         while (i < Math.abs(differenceX)) {
-          if (field.matrix.rows(positionFrom.x + posX)(positionFrom.y + posY).value != 0) {
-            if (isStoneOpponentsColor(field.matrix.rows(positionFrom.x + posX)(positionFrom.y + posY).value, stoneToMove)) {
+
+          if (field.matrix.rows(positionFrom.x + posX)(positionFrom.y + posY).exists(cell => cell.value != 0)) {
+            if (isStoneOpponentsColor(field.matrix.rows(positionFrom.x + posX)(positionFrom.y + posY).get.value, stoneToMove)) {
               if (positionFrom.x + posX + posX != positionTo.x) {
-                field.matrix = moveToNewPosition(positionFrom, positionTo, field).replaceCell(positionTo.x - directionX, positionTo.y - directionY, Cell(0))
-                return //true
-              } else {
-                return //false
+                field.matrix = moveToNewPosition(positionFrom, positionTo, field).replaceCell(positionTo.x - directionX, positionTo.y - directionY, None)
               }
             } else {
               return
@@ -92,10 +98,22 @@ case class Controller(var field: Field) extends Observable {
           i = i + 1
         }
         moveToNewPosition(positionFrom, positionTo, field)
-      } else {
       }
     }
+    checkGameState()
   }
+
+  def checkGameState(): Unit = {
+    Tuple4(field.fieldStatistics.get(1).sum, field.fieldStatistics.get(2).sum,
+      field.fieldStatistics.get(3).sum, field.fieldStatistics.get(4).sum) match {
+      //Only 1 black / white king on each side left
+      case x if (x._1 == 0) && (x._2 == 1) && (x._3 == 0) && (x._4 == 1) => gameState = GameState.DRAW
+      case x if (x._1 >= 0) && (x._2 >= 0) && (x._3 == 0) && (x._4 == 0) => gameState = GameState.P1_WON
+      case x if (x._1 == 0) && (x._2 == 0) && (x._3 >= 0) && (x._4 >= 0) => gameState = GameState.P2_WON
+      case _ =>
+    }
+  }
+
 
   /**
    *
@@ -104,7 +122,7 @@ case class Controller(var field: Field) extends Observable {
    * @param field       The field which will be moved in
    * @return A new FieldMatrix
    */
-  def moveToNewPosition(origin: Position, destination: Position, field: Field): FieldMatrix[Cell] = {
+  def moveToNewPosition(origin: Position, destination: Position, field: Field): FieldMatrix[Option[Cell]] = {
     val cellOrigin = field.matrix.cell(origin.x, origin.y)
     val cellDestination = field.matrix.cell(destination.x, destination.y)
 
@@ -119,39 +137,60 @@ case class Controller(var field: Field) extends Observable {
    * @param field  The field with the fieldsize
    * @return If the given position are inside the bound of the fieldsize
    */
-  def checkIfAllPositionsAreInBounds(vector: Vector[Position], field: Field): (Boolean, String) = {
+  def checkIfAllPositionsAreInBounds(vector: Vector[Position], field: Field): Boolean = {
     for (position <- vector) {
       if (position.x < 0 || position.x >= field.fieldSize || position.y < 0 || position.y >= field.fieldSize) {
-        return (false, "The given positions are not inside the field")
+        statusMessage = "The given positions are not inside the field"
+        return false
       }
     }
-    (true, "")
+    true
   }
 
-  def checkIfAllCellsAreEmpty(field: Field, positions: Vector[Position]): (Boolean, String) = {
+  def checkIfAllCellsAreEmpty(field: Field, positions: Vector[Position]): Boolean = {
     for (elem <- positions) {
-      if (field.matrix.cell(elem.x, elem.y).value != 0) {
-        return (false, "One destination is not empty to be able to move to this position")
+      if (field.matrix.cell(elem.x, elem.y).exists(cell => cell.value != 0)) {
+        statusMessage = "One destination is not empty to be able to move to this position"
+        return false
       }
     }
-    (true, "")
+    true
   }
 
-  def checkIfAllCellsBelongToPlayer(player: Int, field: Field, positions: Vector[Position]): (Boolean, String) = {
-    if (player == 1) {
+  def checkIfAllCellsBelongToPlayer(field: Field, positions: Vector[Position]): Boolean = {
+    if (playerState.isInstanceOf[PlayerState1]) {
       for (elem <- positions) {
-        if (!List(1, 2).contains(field.matrix.cell(elem.x, elem.y).value)) {
-          return (false, "Cell does not contain a stone that belongs to Player 1")
+        if (field.matrix.cell(elem.x, elem.y).exists(cell => cell.color != WHITE)) {
+          statusMessage = "Cell does not contain a stone that belongs to Player 1"
+          return false
         }
       }
     } else {
       for (elem <- positions) {
-        if (!List(3, 4).contains(field.matrix.cell(elem.x, elem.y).value)) {
-          return (false, "Cell does not contain a stone that belongs to Player 2")
+        if (field.matrix.cell(elem.x, elem.y).exists(cell => cell.color != BLACK)) {
+          statusMessage = "Cell does not contain a stone that belongs to Player 2"
+          return false
         }
       }
     }
-    (true, "")
+    true
+  }
+
+
+  def doStep(): Unit = {
+    undoManager.doStep()
+  }
+
+  def undo(): String = {
+    val ret= undoManager.undoStep()
+    notifyObservers()
+    ret
+  }
+
+  def redo(): String = {
+    val ret = undoManager.redoStep()
+    notifyObservers()
+    ret
   }
 
   def matrixToString: String = field.toString

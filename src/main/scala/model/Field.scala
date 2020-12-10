@@ -1,32 +1,39 @@
 package model
 
-case class Field(fieldSize: Int) {
+import scala.collection.mutable
 
-  var statusString: String =""
+case class Field(fieldSize: Int) {
+  val fieldStatistics = new mutable.HashMap[Int, Int]()
+  fieldStatistics.put(1, 0)
+  fieldStatistics.put(2, 0)
+  fieldStatistics.put(3, 0)
+  fieldStatistics.put(4, 0)
+  var statusString: String = ""
 
   def totalFieldSize: Int = fieldSize * fieldSize
 
-
-  var matrix: FieldMatrix[Cell] = {
-    val builder = Vector.newBuilder[Vector[Cell]]
+  var matrix: FieldMatrix[Option[Cell]] = {
+    val builder = Vector.newBuilder[Vector[Option[Cell]]]
     for {index <- 1 to fieldSize} {
       if (index < 4) {
         //Fill the rows for white
         if (index % 2 == 0) {
-          builder.+=(Vector.tabulate(fieldSize)(n => if (n % 2 == 0) Cell(1) else Cell(0)))
+          builder.+=(Vector.tabulate(fieldSize)(n => if (n % 2 == 0) Some(Cell(1)) else None))
         } else {
-          builder.+=(Vector.tabulate(fieldSize)(n => if (n % 2 == 0) Cell(0) else Cell(1)))
+          builder.+=(Vector.tabulate(fieldSize)(n => if (n % 2 == 0) None else Some(Cell(1))))
         }
+        fieldStatistics.put(1, (fieldStatistics.get(1).sum + fieldSize / 2))
       } else if (fieldSize - 3 < index) {
         //Fill the rows for black
         if (index % 2 == 0) {
-          builder.+=(Vector.tabulate(fieldSize)(n => if (n % 2 == 0) Cell(3) else Cell(0)))
+          builder.+=(Vector.tabulate(fieldSize)(n => if (n % 2 == 0) Some(Cell(3)) else None))
         } else {
-          builder.+=(Vector.tabulate(fieldSize)(n => if (n % 2 == 0) Cell(0) else Cell(3)))
+          builder.+=(Vector.tabulate(fieldSize)(n => if (n % 2 == 0) None else Some(Cell(3))))
         }
+        fieldStatistics.put(3, (fieldStatistics.get(3).sum + fieldSize / 2))
       } else {
         //Empty row
-        builder.+=(Vector.fill(fieldSize)(Cell(0)))
+        builder.+=(Vector.fill(fieldSize)(None))
       }
     }
     FieldMatrix(builder.result())
@@ -43,7 +50,7 @@ case class Field(fieldSize: Int) {
       output += counter + "  "
       counter = counter + 1
       for (cell <- row) {
-        output += cell
+        output += cell.getOrElse("▐   ▐")
       }
       output += "\n"
     }
@@ -61,7 +68,7 @@ case class FieldMatrix[T](rows: Vector[Vector[T]]) {
 
   def replaceCell(row: Int, col: Int, cell: T): FieldMatrix[T] = copy(rows.updated(row, rows(row).updated(col, cell)))
 
-  def fill(filling: T): FieldMatrix[T] = copy(Vector.tabulate(size, size) { (row, col) => filling })
+  //def fill(filling: T): FieldMatrix[T] = copy(Vector.tabulate(size, size) { (row, col) => filling })
 
   override def toString: String = {
     rows.toString()
