@@ -1,6 +1,7 @@
 package aview
 
 import controller.{Controller, GameState}
+import scalafx.beans.property.DoubleProperty
 import util.Observer
 
 import scala.io.StdIn._
@@ -15,15 +16,15 @@ case class Tui(controller: Controller) extends UI with Observer {
     println("move <X Y> <X Y X Y...>   | Move a stone <FROM> <TO> with <TO> taking multiple target positions to jump over stones")
 
     var input: String = ""
-    println(controller)
     update()
     controller.gameState = GameState.RUNNING
     while (!input.toLowerCase().equals("quit")) {
       input = readLine()
-      processInputLine(input,controller)
+      println(processInputLine(input, controller))
     }
     println("Game ended")
   }
+
 
   override def update(): Unit = {
     println(controller.matrixToString)

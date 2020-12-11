@@ -1,0 +1,54 @@
+.gameFieldButton {
+    -fx-border-color: black;
+    -fx-border-width: 1 1 1 1;
+    -fx-alignment: center;
+}
+
+.gameFieldButton:hover {
+    -fx-border-color: yellow;
+}
+
+.gameFieldButtonSelected{
+    -fx-border-width: 3 3 3 3;
+    -fx-border-color: #ee4545;
+}
+
+.gameFieldButton:selected{
+    --fx-border-color: #a74dd7;
+}
+
+.gameFieldGridTileColour1 {
+    -fx-background-color: #ec6464;
+}
+
+.gameFieldGridTileColour2 {
+    -fx-background-color: #5363de;
+}
+
+.controlGridButton {
+    -fx-background-color: #374354;
+    -fx-border-color: black;
+    -fx-border-width: 1 1 1 1;
+    -fx-alignment: center;
+    -fx-font-family: "Fira Code";
+    -fx-font-size: 20;
+}
+
+.statusGrid {
+    -fx-background-color: #374354;
+    -fx-border-color: black;
+    -fx-border-width: 1 1 1 1;
+    -fx-alignment: center;
+    -fx-font-family: "Fira Code";
+    -fx-font-size: 14;
+    /*-fx-text-alignment: center;
+    -fx-text-fill: red;*/
+}
+
+.whiteTile {
+    -fx-background-color: #a2a2a2;
+}
+
+.blackTile {
+    -fx-background-color: #3c3c3c;
+}

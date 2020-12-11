@@ -68,8 +68,6 @@ case class FieldMatrix[T](rows: Vector[Vector[T]]) {
 
   def replaceCell(row: Int, col: Int, cell: T): FieldMatrix[T] = copy(rows.updated(row, rows(row).updated(col, cell)))
 
-  //def fill(filling: T): FieldMatrix[T] = copy(Vector.tabulate(size, size) { (row, col) => filling })
-
   override def toString: String = {
     rows.toString()
   }

@@ -10,11 +10,8 @@ class MoveSpec extends AnyWordSpec with Matchers {
   "MoveTest" when {
     val move = Move()
     "Origin input is valid" should {
-      "2 arguments" in {
-        move.isOriginInputValid(List("1", "2")) should be(true)
-      }
-      "only numbers" in {
-        move.isOriginInputValid(List("6", "4")) should be(true)
+      "4 arguments" in {
+        move.isOriginInputValid(List("2", "1","3","0")) should be(true)
       }
     }
     "Origin input is invalid" should {
@@ -63,7 +60,7 @@ class MoveSpec extends AnyWordSpec with Matchers {
       }
       "should not work because origin position is out of bounds" in {
         controller.createNewField()
-        val ret = move.handleCommand(List("9", "9"), controller)
+        val ret = move.handleCommand(List("9", "9","9","9"), controller)
         ret shouldEqual "The given positions are not inside the field"
       }
       "should not work because destination cell is not empty" in {

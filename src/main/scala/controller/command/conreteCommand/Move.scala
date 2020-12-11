@@ -11,25 +11,20 @@ case class Move() extends Command {
   var statusMessage = ""
 
   override def handleCommand(input: List[String], controller: Controller): String = {
-
     //ORIGIN POSITION
     if (!isOriginInputValid(input)) return statusMessage
     val origin = Vector(Position(input.head.toInt, input(1).toInt))
 
-    val checkIfAllPositionsAreInBounds = controller.checkIfAllPositionsAreInBounds(origin, controller.field)
-
-    if (!checkIfAllPositionsAreInBounds) {
+    if (!controller.checkIfAllPositionsAreInBounds(origin, controller.field)) {
       return controller.statusMessage
     }
 
-    val checkIfAllCellsBelongToPlayer = controller.checkIfAllCellsBelongToPlayer(controller.field, origin)
-    if (!checkIfAllCellsBelongToPlayer) {
+    if (!controller.checkIfAllCellsBelongToPlayer(controller.field, origin)) {
       return controller.statusMessage
     }
     statusMessage = "MOVE FROM: " + input.head + " " + input(1) + " "
 
     //DESTINATION POSITIONS
-
     val destinationInput = input.drop(2)
     if (!isDestinationInputValid(destinationInput)) return statusMessage
 
@@ -51,7 +46,6 @@ case class Move() extends Command {
       return controller.statusMessage
     }
 
-
     controller.doStep()
 
     //Will always be executed as it the least amount you want to jump
@@ -67,7 +61,7 @@ case class Move() extends Command {
     }
 
     controller.changePlayerTurn()
-    statusMessage += "TO: " + destinationInput.head + "   " + destinationInput(1)
+    statusMessage += "TO: " + destinationInput.head + " " + destinationInput(1)
     statusMessage
   }
 
@@ -82,10 +76,12 @@ case class Move() extends Command {
   }
 
   def isOriginInputValid(input: List[String]): Boolean = {
-    if (input.size >= 2) {
-      if (allStringsMatchNumber(input))
+    if (input.size >= 4) {
+      if (allStringsMatchNumber(input)) {
         return true
+      }
     }
+    statusMessage = "You need at least a start and end position"
     false
   }
 
