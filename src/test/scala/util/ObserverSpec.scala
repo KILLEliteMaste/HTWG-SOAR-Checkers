@@ -18,7 +18,7 @@ class ObserverSpec extends AnyWordSpec with Matchers {
       controller.add(observer)
       "notify observers after changing turns" in {
         controller.changePlayerTurn()
-        observer.updated shouldBe true
+        observer.update() shouldBe ()
       }
       "remove an observer" in {
         controller.remove(observer)
