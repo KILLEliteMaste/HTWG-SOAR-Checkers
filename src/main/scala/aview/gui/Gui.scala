@@ -1,21 +1,19 @@
 package aview.gui
 
 import aview.UI
-import controller.{Controller, GameState}
-import model.Position
+import controller.GameState
+import controller.controllerbase.Controller
 import scalafx.application.{JFXApp, Platform}
 import scalafx.scene.Scene
 import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control.{Alert, Button}
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.layout.{BorderPane, ColumnConstraints, GridPane, RowConstraints}
-import scalafx.scene.media.{AudioClip, Media, MediaPlayer}
+import scalafx.scene.media.AudioClip
 import scalafx.scene.text.Text
-import util.Observer
+import util.{Observer, Position}
 
 import scala.collection.mutable.ListBuffer
-import scala.io.Source
-import scala.reflect.io.File
 
 case class Gui(controller: Controller) extends UI with Observer with JFXApp {
   controller.add(this)
@@ -25,13 +23,13 @@ case class Gui(controller: Controller) extends UI with Observer with JFXApp {
   val buttons: Buttons = Buttons(gui)
 
   var gameGrid: GridPane = new GridPane {
-    for (_ <- 0 until controller.field.fieldSize) {
+    for (_ <- 0 until controller.field.getFieldSize) {
       val row = new RowConstraints() {
-        percentHeight = 100.0 / controller.field.fieldSize
+        percentHeight = 100.0 / controller.field.getFieldSize
       }
       rowConstraints.add(row)
       val column = new ColumnConstraints() {
-        percentWidth = 100.0 / controller.field.fieldSize
+        percentWidth = 100.0 / controller.field.getFieldSize
       }
       styleClass = List("gameGridRowColumn")
       columnConstraints.add(column)
@@ -43,14 +41,14 @@ case class Gui(controller: Controller) extends UI with Observer with JFXApp {
     gameGrid.columnConstraints.clear()
     gameGrid.rowConstraints.clear()
     gameGrid.styleClass = List("gameGridRowColumn")
-    for (_ <- 0 until controller.field.fieldSize) {
+    for (_ <- 0 until controller.field.getFieldSize) {
       val row = new RowConstraints() {
 
-        percentHeight = 100.0 / controller.field.fieldSize
+        percentHeight = 100.0 / controller.field.getFieldSize
       }
       gameGrid.rowConstraints.add(row)
       val column = new ColumnConstraints() {
-        percentWidth = 100.0 / controller.field.fieldSize
+        percentWidth = 100.0 / controller.field.getFieldSize
       }
       gameGrid.columnConstraints.add(column)
     }
@@ -114,8 +112,8 @@ case class Gui(controller: Controller) extends UI with Observer with JFXApp {
     }
   }
   //Resize only diagonal
-  stage.minHeightProperty().bind(stage.widthProperty().multiply(1.2));
-  stage.maxHeightProperty().bind(stage.widthProperty().multiply(1.2));
+  stage.minHeightProperty().bind(stage.widthProperty().multiply(1.2))
+  stage.maxHeightProperty().bind(stage.widthProperty().multiply(1.2))
 
   def run(): Unit = {
     main(Array())
@@ -138,10 +136,10 @@ case class Gui(controller: Controller) extends UI with Observer with JFXApp {
 
   def setBoard(): Unit = {
     gameGrid.getChildren.removeAll(gameGrid.getChildren)
-    for (x <- 0 until controller.field.fieldSize; y <- 0 until controller.field.fieldSize) {
+    for (x <- 0 until controller.field.getFieldSize; y <- 0 until controller.field.getFieldSize) {
       val stone: Button = buttons.gameFieldButton(x, y)
-      if (controller.field.matrix.cell(x, y).isDefined) {
-        val img = controller.field.matrix.cell(x, y).get.value match {
+      if (controller.field.getFieldMatrix.cell(x, y).isDefined) {
+        val img = controller.field.getFieldMatrix.cell(x, y).get.getValue match {
           case 1 => new Image("/white.jpg");
           case 2 => new Image("/whiteKing.png");
           case 3 => new Image("/black.jpg");

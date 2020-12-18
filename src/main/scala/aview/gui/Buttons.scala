@@ -1,10 +1,9 @@
 package aview.gui
 
-import model.Position
-import scalafx.Includes.handle
 import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control.{Alert, Button, ButtonType}
 import scalafx.scene.layout.GridPane
+import util.Position
 
 case class Buttons(gui: Gui) {
   def getUndoButton: Button = {
@@ -13,7 +12,7 @@ case class Buttons(gui: Gui) {
     }
     undoButton.setMaxSize(Double.MaxValue, Double.MaxValue)
 
-    undoButton.onAction = handle {
+    undoButton.onAction = _ => {
       if (gui.processInputLine("undo", gui.controller).equals("Cannot undo")) {
         new Alert(AlertType.Error) {
           initOwner(gui.stage)
@@ -31,7 +30,7 @@ case class Buttons(gui: Gui) {
       styleClass = List("controlGridButton")
     }
     redoButton.setMaxSize(Double.MaxValue, Double.MaxValue)
-    redoButton.onAction = handle {
+    redoButton.onAction = _ => {
       if (gui.controller.redo().equals("Cannot redo")) {
         new Alert(AlertType.Error) {
           initOwner(gui.stage)
@@ -49,7 +48,7 @@ case class Buttons(gui: Gui) {
       styleClass = List("controlGridButton")
     }
     moveButton.setMaxSize(Double.MaxValue, Double.MaxValue)
-    moveButton.onAction = handle {
+    moveButton.onAction = _ => {
       var str = ""
       gui.moveList.foreach(x => str = str + x.x + " " + x.y + " ")
       gui.moveList.clear()
@@ -65,7 +64,7 @@ case class Buttons(gui: Gui) {
       styleClass = List("controlGridButton")
     }
     newGameButton.setMaxSize(Double.MaxValue, Double.MaxValue)
-    newGameButton.onAction = handle {
+    newGameButton.onAction = _ => {
       //DO NOT CHANGE VARIABLE LETTER CASE
       val ButtonFieldEight = new ButtonType("8")
       val ButtonFieldTen = new ButtonType("10")

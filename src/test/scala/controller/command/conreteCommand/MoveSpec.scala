@@ -1,9 +1,9 @@
 package controller.command.conreteCommand
 
-import controller.Controller
-import model.Position
+import controller.controllerbase.Controller
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+import util.Position
 
 class MoveSpec extends AnyWordSpec with Matchers {
 
@@ -11,28 +11,28 @@ class MoveSpec extends AnyWordSpec with Matchers {
     val move = Move()
     "Origin input is valid" should {
       "4 arguments" in {
-        move.isOriginInputValid(List("2", "1","3","0")) should be(true)
+        move.isOriginInputValid(List("2", "1","3","0")) shouldBe true
       }
     }
     "Origin input is invalid" should {
       "not only numbers" in {
-        move.isOriginInputValid(List("5", "Hi")) should be(false)
+        move.isOriginInputValid(List("5", "Hi")) shouldBe false
       }
     }
     "Destination input is invalid" should {
       "not only numbers" in {
-        move.isDestinationInputValid(List("1", "Hi")) should be(false)
+        move.isDestinationInputValid(List("1", "Hi")) shouldBe false
       }
       "not % 2 arguments" in {
-        move.isDestinationInputValid(List("1", "2", "7")) should be(false)
+        move.isDestinationInputValid(List("1", "2", "7")) shouldBe false
       }
     }
     "Destination input is valid" should {
       "only numbers" in {
-        move.isDestinationInputValid(List("1", "2", "7", "6", "2", "3")) should be(true)
+        move.isDestinationInputValid(List("1", "2", "7", "6", "2", "3")) shouldBe true
       }
       "% 2 arguments" in {
-        move.isDestinationInputValid(List("1", "2", "7", "6")) should be(true)
+        move.isDestinationInputValid(List("1", "2", "7", "6")) shouldBe true
       }
     }
 
@@ -41,7 +41,7 @@ class MoveSpec extends AnyWordSpec with Matchers {
       "be able to move" in {
         controller.createNewField()
         move.handleCommand(List("2", "1", "3", "2"), controller)
-        controller.field.matrix.cell(3, 2).get.value shouldBe 1
+        controller.field.getFieldMatrix.cell(3, 2).get.getValue shouldBe 1
       }
       "be able to jump twice" in {
         controller.createNewField()
@@ -56,7 +56,7 @@ class MoveSpec extends AnyWordSpec with Matchers {
         controller.moveFromPositionToPosition(Position(1, 6), Position(2, 5), 1, alreadyMoved = false)
         controller.changePlayerTurn()
         move.handleCommand(List("5", "2", "3", "4", "1", "6"), controller)
-        controller.field.matrix.cell(1, 6).get.value shouldBe 3
+        controller.field.getFieldMatrix.cell(1, 6).get.getValue shouldBe 3
       }
       "should not work because origin position is out of bounds" in {
         controller.createNewField()

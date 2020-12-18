@@ -1,7 +1,7 @@
 package aview
 
-import controller.{Controller, GameState}
-import scalafx.beans.property.DoubleProperty
+import controller.GameState
+import controller.controllerbase.Controller
 import util.Observer
 
 import scala.io.StdIn._

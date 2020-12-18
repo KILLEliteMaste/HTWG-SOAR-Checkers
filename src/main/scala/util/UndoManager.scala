@@ -1,7 +1,8 @@
 package util
 
 import controller.GameState.GameState
-import controller.{Controller, PlayerState}
+import controller.PlayerState
+import controller.controllerbase.Controller
 import model.{Cell, Field, FieldMatrix}
 
 import scala.collection.mutable
@@ -11,13 +12,13 @@ case class UndoManager(controller: Controller) {
   private val redoStack = mutable.Stack[OldController]()
 
   def doStep(): Unit = {
-    undoStack.push(OldController(controller.field.copy(), controller.field.matrix.copy(), controller.playerState, controller.gameState, controller.statusMessage))
+    undoStack.push(OldController(controller.field.copyField, controller.field.getFieldMatrix.copyFieldMatrix, controller.playerState, controller.gameState, controller.statusMessage))
   }
 
   def undoStep(): String = {
     if (undoStack.isEmpty)
       return "Cannot undo"
-    redoStack.push(OldController(controller.field.copy(), controller.field.matrix.copy(), controller.playerState, controller.gameState, controller.statusMessage))
+    redoStack.push(OldController(controller.field.copyField, controller.field.getFieldMatrix.copyFieldMatrix, controller.playerState, controller.gameState, controller.statusMessage))
     setControllerToOldState(undoStack.pop())
     "Undo to old state"
   }
@@ -25,7 +26,7 @@ case class UndoManager(controller: Controller) {
   def redoStep(): String = {
     if (redoStack.isEmpty)
       return "Cannot redo"
-    undoStack.push(OldController(controller.field.copy(), controller.field.matrix.copy(), controller.playerState, controller.gameState, controller.statusMessage))
+    undoStack.push(OldController(controller.field.copyField, controller.field.getFieldMatrix.copyFieldMatrix, controller.playerState, controller.gameState, controller.statusMessage))
     val f2 = redoStack.pop()
     setControllerToOldState(f2)
     "Redo to old state"
@@ -33,7 +34,7 @@ case class UndoManager(controller: Controller) {
 
   def setControllerToOldState(oldController: OldController): Unit = {
     controller.field = oldController.field
-    controller.field.matrix = oldController.fieldMatrix
+    controller.field.setFieldMatrix(oldController.fieldMatrix)
     controller.playerState = oldController.playerState
     controller.gameState = oldController.gameState
     controller.statusMessage = oldController.statusMessage

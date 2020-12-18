@@ -1,6 +1,6 @@
 package controller.command
 
-import controller.Controller
+import controller.controllerbase.Controller
 
 trait Command {
   def handleCommand(input: List[String], controller: Controller): String

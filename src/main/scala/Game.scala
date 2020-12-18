@@ -1,16 +1,15 @@
 import aview.UserInterface
-import controller.Controller
-import scalafx.scene.media.AudioClip
+import controller.controllerbase
+import controller.controllerbase.Controller
+import model.fieldbase.FieldImpl
 
-import java.util.concurrent.Executors
-import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success, Try}
 
 case object Game {
 
   def main(args: Array[String]): Unit = {
-    val uiTypeGui = "gui"
-    val controller = Controller()
+    val uiTypeGui = "both"
+    val controller = Controller(FieldImpl(8))
 
     Try(UserInterface(uiTypeGui, controller)) match {
       case Failure(v) => println("Could not start UI because: " + v.getMessage + v.printStackTrace())

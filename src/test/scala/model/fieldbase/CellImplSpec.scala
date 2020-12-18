@@ -1,46 +1,45 @@
-package model
+package model.fieldbase
 
-import model.Color.{BLACK, WHITE, UNKNOWN}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-class CellSpec extends AnyWordSpec with Matchers {
+class CellImplSpec extends AnyWordSpec with Matchers {
   "A Cell" when {
     "not set to any value " should {
-      val emptyCell = Cell(1)
+      val emptyCell = CellImpl(1)
 
       "have value 1" in {
-        emptyCell.value should be(1)
+        emptyCell.getValue shouldBe 1
       }
       "not be set" in {
-        emptyCell.isSet should be(true)
+        emptyCell.isSet shouldBe true
       }
       "show unplayable mark" in {
         emptyCell.toString.matches("/s{3}")
       }
     }
     "set to 1" should {
-      val cell1 = Cell(1)
+      val cell1 = CellImpl(1)
       "be WHITE" in {
-        cell1.color shouldBe WHITE
+        cell1.getColor shouldBe "WHITE"
       }
     }
     "set to 3" should {
-      val cell3 = Cell(3)
+      val cell3 = CellImpl(3)
       "be BLACK" in {
-        cell3.color shouldBe BLACK
+        cell3.getColor shouldBe "BLACK"
       }
     }
     "set to a specific value" should {
-      val nonEmptyCell = Cell(5)
+      val nonEmptyCell = CellImpl(5)
       "return that value" in {
-        nonEmptyCell.value shouldBe(5)
+        nonEmptyCell.getValue shouldBe 5
       }
       "be set" in {
-        nonEmptyCell.isSet should be(true)
+        nonEmptyCell.isSet shouldBe true
       }
       "have no color" in {
-        nonEmptyCell.color shouldBe UNKNOWN
+        nonEmptyCell.getColor shouldBe "UNKNOWN"
       }
       "show number in String" in {
         nonEmptyCell.toString.matches("▐ 5 ▐")

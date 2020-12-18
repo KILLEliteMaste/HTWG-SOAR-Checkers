@@ -1,6 +1,6 @@
 package controller.command.conreteCommand
 
-import controller.Controller
+import controller.controllerbase.Controller
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -9,7 +9,7 @@ class UndoSpec extends AnyWordSpec with Matchers {
     "gets undone" should {
       "undo unsuccessful" in {
         val controller = new Controller
-        Undo().handleCommand(List(""), controller) should be("Cannot undo")
+        Undo().handleCommand(List(""), controller) shouldBe "Cannot undo"
       }
     }
   }

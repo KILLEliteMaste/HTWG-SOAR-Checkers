@@ -1,6 +1,6 @@
 package aview
-import controller.Controller
 
+import controller.controllerbase.Controller
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
