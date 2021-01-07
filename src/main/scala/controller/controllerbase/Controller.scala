@@ -1,12 +1,11 @@
 package controller.controllerbase
 
 import controller.{ControllerInterface, GameState, PlayerState, PlayerState1}
-import model.fieldbase.FieldImpl
 import model.{Cell, Field, FieldMatrix}
 import util.{Observable, Position, UndoManager}
 
 case class Controller(var field: Field) extends Observable with ControllerInterface {
-  def this() = this(FieldImpl(8))
+//  def this() = this(FieldImpl(8))
 
   var gameState: GameState.Value = GameState.IDLE
   var statusMessage: String = ""

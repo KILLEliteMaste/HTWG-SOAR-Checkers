@@ -1,6 +1,7 @@
 package controller
 
 import controller.controllerbase.Controller
+import model.fieldbase.FieldImpl
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import util.Position
@@ -8,7 +9,7 @@ import util.Position
 
 class ControllerSpec extends AnyWordSpec with Matchers {
   "Controller" when {
-    val controller = new Controller()
+    val controller = new Controller(FieldImpl(8))
     "a new Field get created" should {
       "without int" in {
         controller.createNewField(8)
@@ -266,16 +267,16 @@ class ControllerSpec extends AnyWordSpec with Matchers {
 
     "do, undo or redo executed" should {
       "do" in {
-        val controller = new Controller()
+        val controller = new Controller(FieldImpl(8))
         controller.doStep()
       }
       "undo" in {
-        val controller = new Controller()
+        val controller = new Controller(FieldImpl(8))
         controller.doStep()
         controller.undo() shouldBe "Undo to old state"
       }
       "redo" in {
-        val controller = new Controller()
+        val controller = new Controller(FieldImpl(8))
         controller.doStep()
         controller.undo()
         controller.redo() shouldBe "Redo to old state"
@@ -283,11 +284,11 @@ class ControllerSpec extends AnyWordSpec with Matchers {
     }
     "unable to undo and redo upon empty stack" should {
       "not redo" in {
-        val controller = new Controller()
+        val controller = new Controller(FieldImpl(8))
         controller.redo() shouldBe "Cannot redo"
       }
       "not undo" in {
-        val controller = new Controller()
+        val controller = new Controller(FieldImpl(8))
         controller.undo() shouldBe "Cannot undo"
       }
     }

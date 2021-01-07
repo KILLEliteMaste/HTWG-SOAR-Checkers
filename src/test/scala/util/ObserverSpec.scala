@@ -9,7 +9,7 @@ import org.scalatest.wordspec.AnyWordSpec
 class ObserverSpec extends AnyWordSpec with Matchers {
   "A Controller" when {
     "observed by observer" should {
-      val controller = new Controller()
+      val controller = new Controller(FieldImpl(8))
       val observer: Observer = new Observer {
         var updated: Boolean = false
 

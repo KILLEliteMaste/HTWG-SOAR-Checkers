@@ -1,6 +1,7 @@
 package controller.command.conreteCommand
 
 import controller.controllerbase.Controller
+import model.fieldbase.FieldImpl
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import util.Position
@@ -37,7 +38,7 @@ class MoveSpec extends AnyWordSpec with Matchers {
     }
 
     "ProcessInputLine" should {
-      val controller = new Controller
+      val controller = new Controller(FieldImpl(8))
       "be able to move" in {
         controller.createNewField()
         move.handleCommand(List("2", "1", "3", "2"), controller)

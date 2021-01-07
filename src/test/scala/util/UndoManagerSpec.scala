@@ -9,8 +9,8 @@ import model.fieldbase.FieldImpl
 class UndoManagerSpec extends AnyWordSpec with Matchers {
   "An UndoManager" when {
 
-    val undoManager = UndoManager(new Controller())
-    val controller = new Controller()
+    val undoManager = UndoManager(new Controller(FieldImpl(8)))
+    val controller = new Controller(FieldImpl(8))
     "have a do, undo and redo" should {
       "do" in {
 
