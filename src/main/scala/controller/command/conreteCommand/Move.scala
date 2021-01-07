@@ -1,8 +1,8 @@
 package controller.command.conreteCommand
 
-import controller.Controller
 import controller.command.Command
-import model.Position
+import controller.controllerbase.Controller
+import util.Position
 
 case class Move() extends Command {
 
@@ -49,14 +49,14 @@ case class Move() extends Command {
     controller.doStep()
 
     //Will always be executed as it the least amount you want to jump
-    val m1 = controller.field.matrix.toString
-    controller.moveFromPositionToPosition(origin(0), destinations(0), controller.field.matrix.cell(origin(0).x, origin(0).y).map(cell => cell.value).getOrElse(0), alreadyMoved = false)
-    if (m1.equals(controller.field.matrix.toString))
+    val m1 = controller.field.getFieldMatrix.toString
+    controller.moveFromPositionToPosition(origin(0), destinations(0), controller.field.getFieldMatrix.cell(origin(0).x, origin(0).y).map(cell => cell.getValue).getOrElse(0), alreadyMoved = false)
+    if (m1.equals(controller.field.getFieldMatrix.toString))
       return "Could not execute move"
 
     if (destinations.size != 1) {
       for (elem <- destinations.sliding(2, 1)) {
-        controller.moveFromPositionToPosition(elem(0), elem(1), controller.field.matrix.cell(elem(0).x, elem(0).y).map(cell => cell.value).getOrElse(0), alreadyMoved = true)
+        controller.moveFromPositionToPosition(elem(0), elem(1), controller.field.getFieldMatrix.cell(elem(0).x, elem(0).y).map(cell => cell.getValue).getOrElse(0), alreadyMoved = true)
       }
     }
 

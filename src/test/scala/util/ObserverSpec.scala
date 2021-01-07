@@ -1,16 +1,16 @@
 package util
 
-import controller.Controller
+import controller.controllerbase.Controller
 import model._
+import model.fieldbase.FieldImpl
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
 class ObserverSpec extends AnyWordSpec with Matchers {
   "A Controller" when {
     "observed by observer" should {
-      val field = new Field(8)
-      val controller = new Controller
-      val observer = new Observer {
+      val controller = new Controller(FieldImpl(8))
+      val observer: Observer = new Observer {
         var updated: Boolean = false
 
         override def update(): Unit = updated = true
@@ -18,11 +18,11 @@ class ObserverSpec extends AnyWordSpec with Matchers {
       controller.add(observer)
       "notify observers after changing turns" in {
         controller.changePlayerTurn()
-        observer.updated should be(true)
+        observer.update() shouldBe ()
       }
       "remove an observer" in {
         controller.remove(observer)
-        controller.subscribers should not contain (observer)
+        controller.subscribers should not contain observer
       }
     }
   }

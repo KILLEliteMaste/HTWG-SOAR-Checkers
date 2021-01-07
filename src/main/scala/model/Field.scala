@@ -1,74 +1,20 @@
 package model
 
-import scala.collection.mutable
+trait Field {
 
-case class Field(fieldSize: Int) {
-  val fieldStatistics = new mutable.HashMap[Int, Int]()
-  fieldStatistics.put(1, 0)
-  fieldStatistics.put(2, 0)
-  fieldStatistics.put(3, 0)
-  fieldStatistics.put(4, 0)
-  var statusString: String = ""
+  def getTotalFieldSize: Int
 
-  def totalFieldSize: Int = fieldSize * fieldSize
+  def getFieldSize: Int
 
-  var matrix: FieldMatrix[Option[Cell]] = {
-    val builder = Vector.newBuilder[Vector[Option[Cell]]]
-    for {index <- 1 to fieldSize} {
-      if (index < 4) {
-        //Fill the rows for white
-        if (index % 2 == 0) {
-          builder.+=(Vector.tabulate(fieldSize)(n => if (n % 2 == 0) Some(Cell(1)) else None))
-        } else {
-          builder.+=(Vector.tabulate(fieldSize)(n => if (n % 2 == 0) None else Some(Cell(1))))
-        }
-        fieldStatistics.put(1, (fieldStatistics.get(1).sum + fieldSize / 2))
-      } else if (fieldSize - 3 < index) {
-        //Fill the rows for black
-        if (index % 2 == 0) {
-          builder.+=(Vector.tabulate(fieldSize)(n => if (n % 2 == 0) Some(Cell(3)) else None))
-        } else {
-          builder.+=(Vector.tabulate(fieldSize)(n => if (n % 2 == 0) None else Some(Cell(3))))
-        }
-        fieldStatistics.put(3, (fieldStatistics.get(3).sum + fieldSize / 2))
-      } else {
-        //Empty row
-        builder.+=(Vector.fill(fieldSize)(None))
-      }
-    }
-    FieldMatrix(builder.result())
-  }
+  def getFieldStatistics(stone: Int): Int
 
-  override def toString: String = {
-    var str = "  "
-    for (i <- 0 until fieldSize) {
-      str += "   " + i
-    }
-    var output = str + "\n"
-    var counter = 0
-    for (row <- matrix.rows) {
-      output += counter + "  "
-      counter = counter + 1
-      for (cell <- row) {
-        output += cell.getOrElse("▐   ▐")
-      }
-      output += "\n"
-    }
-    output = output.replace("▐▐", "▐")
-    output
-  }
-}
+  def setFieldStatistics(stone: Int, amount: Int): Unit
 
-case class FieldMatrix[T](rows: Vector[Vector[T]]) {
-  def this(size: Int, filling: T) = this(Vector.tabulate(size, size) { (row, col) => filling })
+  def getFieldMatrix: FieldMatrix[Option[Cell]]
 
-  val size: Int = rows.size
+  def setFieldMatrix(newMatrix: FieldMatrix[Option[Cell]]): Unit
 
-  def cell(row: Int, col: Int): T = rows(row)(col)
+  def getNewField(size: Int): Field
 
-  def replaceCell(row: Int, col: Int, cell: T): FieldMatrix[T] = copy(rows.updated(row, rows(row).updated(col, cell)))
-
-  override def toString: String = {
-    rows.toString()
-  }
+  def copyField: Field
 }

@@ -1,6 +1,7 @@
 package aview
-import controller.Controller
 
+import controller.controllerbase.Controller
+import model.fieldbase.FieldImpl
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -10,7 +11,7 @@ class TuiSpec extends AnyWordSpec with Matchers {
   "Text User Input" when {
     "run" should {
       "run" in {
-        val controller = new Controller
+        val controller = new Controller(FieldImpl(8))
         val tui = Tui(controller)
         val in = new StringReader("quit")
         val out = new ByteArrayOutputStream()

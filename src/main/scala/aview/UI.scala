@@ -1,9 +1,8 @@
 package aview
 
-
-import controller.Controller
 import controller.command.conreteCommand.{Move, New, Redo, Undo}
 import controller.command.Command
+import controller.controllerbase.Controller
 import scalafx.beans.property.StringProperty
 
 import scala.collection.mutable

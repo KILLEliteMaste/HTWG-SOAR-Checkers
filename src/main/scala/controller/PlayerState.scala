@@ -1,5 +1,7 @@
 package controller
 
+import controller.controllerbase.Controller
+
 trait PlayerState {
   def handle(controller: Controller)
 }
