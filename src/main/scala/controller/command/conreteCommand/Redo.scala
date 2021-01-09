@@ -2,9 +2,10 @@ package controller.command.conreteCommand
 
 import controller.command.Command
 import controller.controllerbase.Controller
+import controller.ControllerInterface
 
 case class Redo() extends Command {
-  override def handleCommand(input: List[String], controller: Controller): String = {
+  override def handleCommand(input: List[String], controller: ControllerInterface): String = {
     controller.redo()
   }
 }

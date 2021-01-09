@@ -2,8 +2,10 @@ package model.fieldbase
 
 import model.FieldMatrix
 
+
 case class FieldMatrixImpl[T](rows: Vector[Vector[T]]) extends FieldMatrix[T] {
   def this(size: Int, filling: T) = this(Vector.tabulate(size, size) { (row, col) => filling })
+  def this() = this(null)
 
   override def cell(row: Int, col: Int): T = rows(row)(col)
 
@@ -18,4 +20,6 @@ case class FieldMatrixImpl[T](rows: Vector[Vector[T]]) extends FieldMatrix[T] {
   }
 
   override def copyFieldMatrix: FieldMatrix[T] = this.copy()
+
+  override def createNewFieldMatrix(value: Vector[Vector[T]]): FieldMatrix[T] = new FieldMatrixImpl[T](value)
 }

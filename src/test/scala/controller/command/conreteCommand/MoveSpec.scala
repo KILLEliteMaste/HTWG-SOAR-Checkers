@@ -1,7 +1,7 @@
 package controller.command.conreteCommand
 
 import controller.controllerbase.Controller
-import model.fieldbase.FieldImpl
+import model.fieldbase.{FieldImpl, GameImpl}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import util.Position
@@ -12,7 +12,7 @@ class MoveSpec extends AnyWordSpec with Matchers {
     val move = Move()
     "Origin input is valid" should {
       "4 arguments" in {
-        move.isOriginInputValid(List("2", "1","3","0")) shouldBe true
+        move.isOriginInputValid(List("2", "1", "3", "0")) shouldBe true
       }
     }
     "Origin input is invalid" should {
@@ -38,11 +38,11 @@ class MoveSpec extends AnyWordSpec with Matchers {
     }
 
     "ProcessInputLine" should {
-      val controller = new Controller(FieldImpl(8))
+      val controller = new Controller(new GameImpl(8))
       "be able to move" in {
         controller.createNewField()
         move.handleCommand(List("2", "1", "3", "2"), controller)
-        controller.field.getFieldMatrix.cell(3, 2).get.getValue shouldBe 1
+        controller.game.getField.getFieldMatrix.cell(3, 2).get.getValue shouldBe 1
       }
       "be able to jump twice" in {
         controller.createNewField()
@@ -57,11 +57,11 @@ class MoveSpec extends AnyWordSpec with Matchers {
         controller.moveFromPositionToPosition(Position(1, 6), Position(2, 5), 1, alreadyMoved = false)
         controller.changePlayerTurn()
         move.handleCommand(List("5", "2", "3", "4", "1", "6"), controller)
-        controller.field.getFieldMatrix.cell(1, 6).get.getValue shouldBe 3
+        controller.game.getField.getFieldMatrix.cell(1, 6).get.getValue shouldBe 3
       }
       "should not work because origin position is out of bounds" in {
         controller.createNewField()
-        val ret = move.handleCommand(List("9", "9","9","9"), controller)
+        val ret = move.handleCommand(List("9", "9", "9", "9"), controller)
         ret shouldEqual "The given positions are not inside the field"
       }
       "should not work because destination cell is not empty" in {
@@ -82,7 +82,7 @@ class MoveSpec extends AnyWordSpec with Matchers {
       "should not work to move straight" in {
         controller.createNewField()
         move.handleCommand(List("2", "1", "3", "1"), controller)
-        controller.playerState.toString shouldBe "It's Player 1 turn"
+        controller.game.getPlayerState.toString shouldBe "It's Player 1 turn"
       }
     }
   }

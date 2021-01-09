@@ -1,12 +1,13 @@
 package aview
 
-import controller.GameState
+import controller.ControllerInterface
 import controller.controllerbase.Controller
+import model.GameState
 import util.Observer
 
 import scala.io.StdIn._
 
-case class Tui(controller: Controller) extends UI with Observer {
+case class Tui(controller: ControllerInterface) extends UI with Observer {
   controller.add(this)
 
   def run(): Unit = {
@@ -17,7 +18,8 @@ case class Tui(controller: Controller) extends UI with Observer {
 
     var input: String = ""
     update()
-    controller.gameState = GameState.RUNNING
+
+    controller.getGame.setGameState(GameState.RUNNING)
     while (!input.toLowerCase().equals("quit")) {
       input = readLine()
       println(processInputLine(input, controller))
@@ -28,7 +30,7 @@ case class Tui(controller: Controller) extends UI with Observer {
 
   override def update(): Unit = {
     println(controller.matrixToString)
-    println(controller.playerState)
+    println(controller.getGame.getPlayerState)
   }
 
 }

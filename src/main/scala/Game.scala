@@ -1,15 +1,19 @@
 import aview.UserInterface
-import controller.controllerbase
-import controller.controllerbase.Controller
-import model.fieldbase.FieldImpl
+import com.google.inject.Guice
+import controller.ControllerInterface
+import model.CheckersModule
 
 import scala.util.{Failure, Success, Try}
 
 case object Game {
 
   def main(args: Array[String]): Unit = {
+
+
     val uiTypeGui = "both"
-    val controller = Controller(FieldImpl(8))
+    val injector = Guice.createInjector(new CheckersModule)
+    val controller = injector.getInstance(classOf[ControllerInterface])
+    //val controller = Controller(GameImpl(8))
 
     Try(UserInterface(uiTypeGui, controller)) match {
       case Failure(v) => println("Could not start UI because: " + v.getMessage + v.printStackTrace())

@@ -45,5 +45,14 @@ class CellImplSpec extends AnyWordSpec with Matchers {
         nonEmptyCell.toString.matches("▐ 5 ▐")
       }
     }
+    "an empty cell" should {
+      val cell = new CellImpl()
+      "have value 0" in {
+        cell.getValue shouldBe 0
+      }
+      "create a new cell with the given value" in {
+        cell.createNewCell(1).getValue shouldBe 1
+      }
+    }
   }
 }

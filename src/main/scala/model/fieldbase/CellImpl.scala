@@ -10,6 +10,8 @@ import model.Cell
  * 4: black king
  */
 case class CellImpl(value: Int) extends Cell {
+  def this() = this(0)
+
   override def isSet: Boolean = value != 0
 
   override def getColor: String = {
@@ -27,4 +29,6 @@ case class CellImpl(value: Int) extends Cell {
   override def getValue: Int = value
 
   override def createNewKing: Cell = CellImpl(value + 1)
+
+  override def createNewCell(value: Int): Cell = CellImpl(value)
 }
