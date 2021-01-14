@@ -2,7 +2,7 @@
     <fieldSize> 8 </fieldSize>
     <playerState> It's Player 1 turn </playerState>
     <statusMessage> </statusMessage>
-    <gameState> IDLE </gameState>
+    <gameState> SAVED </gameState>
     <fieldStatistic1> 12 </fieldStatistic1>
     <fieldStatistic2> 0 </fieldStatistic2>
     <fieldStatistic3> 12 </fieldStatistic3>
