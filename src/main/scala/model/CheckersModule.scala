@@ -23,6 +23,6 @@ case class CheckersModule() extends AbstractModule with ScalaModule {
     bind[Game].annotatedWithName("10").toInstance(GameImpl(10))
     bind[Game].annotatedWithName("12").toInstance(GameImpl(12))
 
-    bind[FileIO].to[model.fileiocomponent.fileioxml.FileIOImpl]
+    bind[FileIO].to[model.fileiocomponent.fileiojson.FileIOImpl]
   }
 }
