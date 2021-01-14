@@ -25,6 +25,7 @@ case class FileIOImpl() extends FileIO {
       case 12 => injector.instance[Game](Names.named("12"))
       case _ => injector.instance[Game](Names.named("8"))
     }*/
+
     //States
     val playerState = if ((gameJson \ "playerState").toString.contains("1")) new PlayerState1 else new PlayerState2
     game.setPlayerState(playerState)

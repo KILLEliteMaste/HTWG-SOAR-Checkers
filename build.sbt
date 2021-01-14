@@ -6,12 +6,6 @@ scalaVersion := "2.12.7"
 libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.2"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.2" % "test"
 
-// Add dependency on ScalaFX library
-libraryDependencies += "org.scalafx" %% "scalafx" % "15.0.1-R20"
-
-
-
-
 libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "2.0.0-M3"
 libraryDependencies += "com.typesafe.play" %% "play-json" % "2.9.2"
 libraryDependencies += "com.google.inject" % "guice" % "4.2.3"
@@ -19,13 +13,8 @@ libraryDependencies += "net.codingwell" %% "scala-guice" % "4.2.11"
 
 
 
-/*
-libraryDependencies += "com.google.inject" % "guice" % "4.2.3"
-libraryDependencies += "net.codingwell" %% "scala-guice" % "4.2.11"
-//XML
-libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "1.1.1"
-//JSON
-libraryDependencies += "com.typesafe.play" %% "play-json" % "2.6.6"*/
+// Add dependency on ScalaFX library
+libraryDependencies += "org.scalafx" %% "scalafx" % "15.0.1-R20"
 
 // Determine OS version of JavaFX binaries
 lazy val osName = System.getProperty("os.name") match {
@@ -42,4 +31,4 @@ libraryDependencies ++= javaFXModules.map(m =>
 )
 //coverageExcludedPackages := ".*gui.*;.*UiFactory"
 coverageExcludedPackages := ".*gui.*"
-coverageExcludedFiles := ".*UiFactory.*"
+coverageExcludedFiles := ".*UiFactory.*;.*Game.*"

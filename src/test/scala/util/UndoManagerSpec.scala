@@ -3,7 +3,7 @@ package util
 import controller.controllerbase.Controller
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import model.fieldbase.GameImpl
+import model.gamebase.GameImpl
 
 class UndoManagerSpec extends AnyWordSpec with Matchers {
   "An UndoManager" when {

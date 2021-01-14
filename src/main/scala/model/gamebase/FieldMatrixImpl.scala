@@ -1,4 +1,4 @@
-package model.fieldbase
+package model.gamebase
 
 import model.FieldMatrix
 

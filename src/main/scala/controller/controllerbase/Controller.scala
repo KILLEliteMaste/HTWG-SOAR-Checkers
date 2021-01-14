@@ -11,7 +11,7 @@ import util.{Position, UndoManager}
 case class Controller @Inject()(var game: Game) extends ControllerInterface {
 
   private val undoManager = UndoManager(this)
-  val injector: Injector = Guice.createInjector(new CheckersModule())
+  val injector: Injector = Guice.createInjector(CheckersModule())
   val fileIo: FileIO = injector.instance[FileIO]
 
 

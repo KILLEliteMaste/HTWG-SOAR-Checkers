@@ -1,7 +1,7 @@
 package aview
 
 import controller.controllerbase.Controller
-import model.fieldbase.GameImpl
+import model.gamebase.GameImpl
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 

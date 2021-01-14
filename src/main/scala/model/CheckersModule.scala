@@ -3,7 +3,7 @@ package model
 import com.google.inject.AbstractModule
 import com.google.inject.name.Names
 import controller.ControllerInterface
-import model.fieldbase.{CellImpl, FieldImpl, FieldMatrixImpl, GameImpl}
+import model.gamebase.{CellImpl, FieldImpl, FieldMatrixImpl, GameImpl}
 import model.fileiocomponent.FileIO
 import net.codingwell.scalaguice.ScalaModule
 

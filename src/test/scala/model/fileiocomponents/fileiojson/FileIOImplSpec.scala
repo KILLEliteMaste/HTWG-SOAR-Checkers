@@ -3,7 +3,7 @@ package model.fileiocomponents.fileiojson
 import model.GameState
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import model.fieldbase.GameImpl
+import model.gamebase.GameImpl
 import model.fileiocomponent.fileiojson.FileIOImpl
 import play.api.libs.json.{JsValue, Json}
 

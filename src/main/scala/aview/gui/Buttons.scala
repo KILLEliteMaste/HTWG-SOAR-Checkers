@@ -48,7 +48,8 @@ case class Buttons(gui: Gui) {
     }
     loadButton.setMaxSize(Double.MaxValue, Double.MaxValue)
     loadButton.onAction = _ => {
-      gui.controller.load()
+
+      gui.processInputLine("load", gui.controller)
       gui.update()
     }
     loadButton
@@ -60,7 +61,7 @@ case class Buttons(gui: Gui) {
     }
     saveButton.setMaxSize(Double.MaxValue, Double.MaxValue)
     saveButton.onAction = _ => {
-      gui.controller.save()
+      gui.processInputLine("save", gui.controller)
       gui.update()
     }
     saveButton

@@ -1,7 +1,7 @@
 package aview
 
 import controller.ControllerInterface
-import controller.command.conreteCommand.{Move, New, Redo, Undo}
+import controller.command.conreteCommand.{Save,Load, Move, New, Redo, Undo}
 import controller.command.Command
 import controller.controllerbase.Controller
 import scalafx.beans.property.StringProperty
@@ -14,6 +14,8 @@ abstract class UI extends UserInterface {
   commands.put("move", Move())
   commands.put("undo", Undo())
   commands.put("redo", Redo())
+  commands.put("load", Load())
+  commands.put("save", Save())
   var returnMessage: StringProperty = new StringProperty() {
     onChange { (_, oldValue, newValue) => println(newValue) }
   }

@@ -1,4 +1,4 @@
-package model.fieldbase
+package model.gamebase
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec

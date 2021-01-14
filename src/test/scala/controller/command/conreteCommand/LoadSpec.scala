@@ -5,12 +5,14 @@ import model.gamebase.GameImpl
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-class RedoSpec extends AnyWordSpec with Matchers {
-  "Redo" when {
-    "game gets redo" should {
+class LoadSpec extends AnyWordSpec with Matchers {
+  "LoadTest" when {
+    "loaded correctly when" should {
       val controller = new Controller(new GameImpl(8))
-      "fails" in {
-        Redo().handleCommand(List(""), controller) shouldBe "Cannot redo"
+      val load = new Load
+      "with same size" in {
+        controller.createNewField(8)
+        load.handleCommand(List("load"), controller) shouldBe "LOADED"
       }
     }
   }

@@ -3,7 +3,7 @@ package controller
 import com.google.inject.Guice
 import controller.controllerbase.Controller
 import model.GameState
-import model.fieldbase.{FieldImpl, GameImpl}
+import model.gamebase.{FieldImpl, GameImpl}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import util.Position

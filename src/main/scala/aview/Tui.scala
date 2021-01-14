@@ -13,6 +13,10 @@ case class Tui(controller: ControllerInterface) extends UI with Observer {
   def run(): Unit = {
     println("The following commands are available for the text UI:")
     println("new <Number>   | Create a new field. When a number is given as an argument the field size will be changed")
+    println("save | Saves the state of the game to a .json|.xml file")
+    println("load | Loades a game from an .json|.xml file")
+    println("undo | Undo move")
+    println("redo | redo move")
     println("quit   | Quits the game")
     println("move <X Y> <X Y X Y...>   | Move a stone <FROM> <TO> with <TO> taking multiple target positions to jump over stones")
 

@@ -1,4 +1,4 @@
-package model.fieldbase
+package model.gamebase
 
 import com.google.inject.name.Named
 import model.{Field, FieldMatrix}

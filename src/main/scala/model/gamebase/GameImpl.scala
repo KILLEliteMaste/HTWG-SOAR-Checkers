@@ -1,4 +1,4 @@
-package model.fieldbase
+package model.gamebase
 
 import com.google.inject.name.Named
 import model.GameState.GameState
@@ -10,7 +10,7 @@ case class GameImpl @Inject()(@Named("DefaultSize") size: Int) extends Game {
   var gameState: GameState.Value = GameState.IDLE
   var statusMessage: String = ""
   var playerState: PlayerState = new PlayerState1
-  var field: Field = FieldImpl(8)
+  var field: Field = FieldImpl(size)
 
   override def getGameState: GameState = gameState
 
