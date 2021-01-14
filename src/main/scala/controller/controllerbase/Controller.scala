@@ -180,8 +180,8 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
   override def matrixToString: String = game.getField.toString
 
   def save(): Unit = {
-    fileIo.save(game)
     game.setGameState(GameState.SAVED)
+    fileIo.save(game)
     notifyObservers()
   }
 
