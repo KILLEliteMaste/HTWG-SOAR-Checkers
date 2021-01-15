@@ -8,12 +8,11 @@ import scala.util.{Failure, Success, Try}
 case object Game {
 
   def main(args: Array[String]): Unit = {
+    val uiTypeGui = if (System.getenv("CHECKERS_UI_TYPE").equals("null")) "both" else System.getenv("CHECKERS_UI_TYPE")
 
 
-    val uiTypeGui = "both"
     val injector = Guice.createInjector(new CheckersModule)
     val controller = injector.getInstance(classOf[ControllerInterface])
-    //val controller = Controller(GameImpl(8))
 
     Try(UserInterface(uiTypeGui, controller)) match {
       case Failure(v) => println("Could not start UI because: " + v.getMessage + v.printStackTrace())
