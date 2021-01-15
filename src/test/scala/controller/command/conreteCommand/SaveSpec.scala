@@ -5,12 +5,14 @@ import model.gamebase.GameImpl
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-class RedoSpec extends AnyWordSpec with Matchers {
-  "Redo" when {
-    "game gets redo" should {
+class SaveSpec extends AnyWordSpec with Matchers {
+  "NewTest" when {
+    "saved correctly when" should {
       val controller = new Controller(new GameImpl(8))
-      "fails" in {
-        Redo().handleCommand(List(""), controller) shouldBe "Cannot redo"
+      val save = new Save
+      "with same size" in {
+        controller.createNewField(8)
+        save.handleCommand(List("save"), controller) shouldBe "SAVED"
       }
     }
   }

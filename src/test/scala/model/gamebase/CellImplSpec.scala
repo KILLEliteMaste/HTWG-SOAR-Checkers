@@ -1,4 +1,4 @@
-package model.fieldbase
+package model.gamebase
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -43,6 +43,15 @@ class CellImplSpec extends AnyWordSpec with Matchers {
       }
       "show number in String" in {
         nonEmptyCell.toString.matches("▐ 5 ▐")
+      }
+    }
+    "an empty cell" should {
+      val cell = new CellImpl()
+      "have value 0" in {
+        cell.getValue shouldBe 0
+      }
+      "create a new cell with the given value" in {
+        cell.createNewCell(1).getValue shouldBe 1
       }
     }
   }

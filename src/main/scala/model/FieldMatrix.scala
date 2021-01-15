@@ -1,5 +1,7 @@
 package model
 
+import com.google.inject.Inject
+
 trait FieldMatrix[T] {
   def cell(row: Int, col: Int): T
 
@@ -10,4 +12,6 @@ trait FieldMatrix[T] {
   def getSize: Int
 
   def copyFieldMatrix: FieldMatrix[T]
+
+  def createNewFieldMatrix(value : Vector[Vector[T]]): FieldMatrix[T]
 }

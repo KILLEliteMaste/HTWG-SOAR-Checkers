@@ -9,4 +9,6 @@ trait Cell {
   def getColor: String
 
   def createNewKing: Cell
+
+  def createNewCell(value:Int):Cell
 }

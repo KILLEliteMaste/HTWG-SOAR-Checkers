@@ -1,8 +1,10 @@
 package controller
-import util.Position
-import model.{Cell, Field, FieldMatrix}
 
-trait ControllerInterface {
+import aview.gui.Gui
+import util.{Observable, Position}
+import model.{Cell, Field, FieldMatrix, Game}
+
+trait ControllerInterface extends Observable {
 
   def createNewField(): Unit
 
@@ -18,21 +20,8 @@ trait ControllerInterface {
 
   def checkGameState(): Unit
 
-  /**
-   *
-   * @param origin      The Origin position to move from
-   * @param destination The destination position to move to
-   * @param field       The field which will be moved in
-   * @return A new FieldMatrix
-   */
   def moveToNewPosition(origin: Position, destination: Position, field: Field): FieldMatrix[Option[Cell]]
 
-  /**
-   *
-   * @param vector A vector containing one or more positions inside another vector
-   * @param field  The field with the fieldsize
-   * @return If the given position are inside the bound of the fieldsize
-   */
   def checkIfAllPositionsAreInBounds(vector: Vector[Position], field: Field): Boolean
 
   def checkIfAllCellsAreEmpty(field: Field, positions: Vector[Position]): Boolean
@@ -46,4 +35,10 @@ trait ControllerInterface {
   def redo(): String
 
   def matrixToString: String
+
+  def save(): Unit
+
+  def load(): Unit
+
+  def getGame: Game
 }

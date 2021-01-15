@@ -1,15 +1,14 @@
 package util
 
 import controller.controllerbase.Controller
-import model._
-import model.fieldbase.FieldImpl
+import model.gamebase.GameImpl
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
 class ObserverSpec extends AnyWordSpec with Matchers {
   "A Controller" when {
     "observed by observer" should {
-      val controller = new Controller(FieldImpl(8))
+      val controller = new Controller(GameImpl(8))
       val observer: Observer = new Observer {
         var updated: Boolean = false
 

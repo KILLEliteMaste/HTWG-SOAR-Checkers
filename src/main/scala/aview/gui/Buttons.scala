@@ -11,7 +11,6 @@ case class Buttons(gui: Gui) {
       styleClass = List("controlGridButton")
     }
     undoButton.setMaxSize(Double.MaxValue, Double.MaxValue)
-
     undoButton.onAction = _ => {
       if (gui.processInputLine("undo", gui.controller).equals("Cannot undo")) {
         new Alert(AlertType.Error) {
@@ -41,6 +40,31 @@ case class Buttons(gui: Gui) {
       }
     }
     redoButton
+  }
+
+  def getLoadButton: Button = {
+    val loadButton = new Button("Load Game") {
+      styleClass = List("controlGridButton")
+    }
+    loadButton.setMaxSize(Double.MaxValue, Double.MaxValue)
+    loadButton.onAction = _ => {
+
+      gui.processInputLine("load", gui.controller)
+      gui.update()
+    }
+    loadButton
+  }
+
+  def getSaveButton: Button = {
+    val saveButton = new Button("Save Game") {
+      styleClass = List("controlGridButton")
+    }
+    saveButton.setMaxSize(Double.MaxValue, Double.MaxValue)
+    saveButton.onAction = _ => {
+      gui.processInputLine("save", gui.controller)
+      gui.update()
+    }
+    saveButton
   }
 
   def getMoveButton: Button = {

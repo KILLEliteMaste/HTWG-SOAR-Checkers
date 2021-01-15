@@ -1,10 +1,12 @@
-package model.fieldbase
+package model.gamebase
 
+import com.google.inject.name.Named
 import model.{Field, FieldMatrix}
 
+import javax.inject.Inject
 import scala.collection.mutable
 
-case class FieldImpl(fieldSize: Int) extends Field {
+case class FieldImpl@Inject()(@Named("DefaultSize")fieldSize: Int) extends Field {
 
   val fieldStatistics = new mutable.HashMap[Int, Int]()
   fieldStatistics.put(1, 0)

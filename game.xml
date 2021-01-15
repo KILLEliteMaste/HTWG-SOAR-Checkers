@@ -1,0 +1,204 @@
+<game>
+    <fieldSize> 8 </fieldSize>
+    <playerState> It's Player 1 turn </playerState>
+    <statusMessage> </statusMessage>
+    <gameState> IDLE </gameState>
+    <fieldStatistic1> 12 </fieldStatistic1>
+    <fieldStatistic2> 0 </fieldStatistic2>
+    <fieldStatistic3> 12 </fieldStatistic3>
+    <fieldStatistic4> 0 </fieldStatistic4>
+    <fieldMatrix>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 1 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 1 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 1 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 1 </value>
+        </cell>
+        <cell>
+            <value> 1 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 1 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 1 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 1 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 1 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 1 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 1 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 1 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 3 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 3 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 3 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 3 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 3 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 3 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 3 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 3 </value>
+        </cell>
+        <cell>
+            <value> 3 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 3 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 3 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 3 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+    </fieldMatrix>
+</game>
