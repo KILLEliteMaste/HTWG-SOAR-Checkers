@@ -19,8 +19,6 @@ case class FileIOImpl() extends FileIO {
     val game: Game = injector.instance[Game](Names.named(size.toString))
 
     val gameState = (file \\ "game" \ "gameState").text.trim
-    //game.setGameState(GameState.IDLE)
-    //println("++++++++++++"+gameState+"++++++++++")
     game.setGameState(GameState.withName(gameState))
     val playerState = (file \\ "game" \ "playerState").text.trim
     game.setPlayerState(if (playerState.contains("1")) new PlayerState1 else new PlayerState2)

@@ -30,18 +30,6 @@ class FieldImplSpec extends AnyWordSpec with Matchers {
       "have a size of 1" in {
         matrix.getSize shouldBe 1
       }
-      /*matrix.replaceCell(0, 0, Some(Cell(1)))
-      "have replaceable Cells" in {
-        matrix.cell(0, 0).toString shouldBe("▐   ▐")
-      }
-      matrix.fill(Some(Cell(1)))
-      "be fillable" in {
-        matrix.cell(0, 0).toString shouldBe("▐   ▐")
-      }
-      "look like" in {
-        println(matrix.toString)
-        matrix.toString shouldBe "Vector(Vector(▐   ▐))"
-      }*/
     }
   }
   "A big field " when {

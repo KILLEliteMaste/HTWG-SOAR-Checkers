@@ -5,13 +5,10 @@ scalaVersion := "2.12.12"
 
 libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.2"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.2" % "test"
-
 libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "2.0.0-M3"
 libraryDependencies += "com.typesafe.play" %% "play-json" % "2.9.2"
 libraryDependencies += "com.google.inject" % "guice" % "4.2.3"
 libraryDependencies += "net.codingwell" %% "scala-guice" % "4.2.11"
-
-// Add dependency on ScalaFX library
 libraryDependencies += "org.scalafx" %% "scalafx" % "15.0.1-R20"
 
 // Determine OS version of JavaFX binaries
@@ -27,6 +24,5 @@ lazy val javaFXModules = Seq("base", "controls", "fxml", "graphics", "media", "s
 libraryDependencies ++= javaFXModules.map(m =>
   "org.openjfx" % s"javafx-$m" % "15.0.1" classifier osName
 )
-//coverageExcludedPackages := ".*gui.*;.*UiFactory"
 coverageExcludedPackages := ".*gui.*"
 coverageExcludedFiles := ".*UiFactory.*;.*Game.*"
