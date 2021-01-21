@@ -82,13 +82,15 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
         var posY = directionY
         var i = 0
         while (i < Math.abs(differenceX)) {
-
           if (game.getField.getFieldMatrix.getRows(positionFrom.x + posX)(positionFrom.y + posY).exists(cell => cell.getValue != 0)) {
             if (isStoneOpponentsColor(game.getField.getFieldMatrix.getRows(positionFrom.x + posX)(positionFrom.y + posY).get.getValue, stoneToMove)) {
               if (positionFrom.x + posX + posX != positionTo.x) {
+                val cell: Cell = game.getField.getFieldMatrix.cell(positionTo.x - directionX, positionTo.y - directionY).get
+                game.getField.setFieldStatistics(cell.getValue, game.getField.getFieldStatistics(cell.getValue) - 1)
                 game.getField.setFieldMatrix(moveToNewPosition(positionFrom, positionTo, game.getField).replaceCell(positionTo.x - directionX, positionTo.y - directionY, None))
               }
             } else {
+              checkGameState()
               return
             }
           }
@@ -109,7 +111,7 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
       case x if (x._1 == 0) && (x._2 == 1) && (x._3 == 0) && (x._4 == 1) => game.setGameState(GameState.DRAW)
       case x if (x._1 >= 0) && (x._2 >= 0) && (x._3 == 0) && (x._4 == 0) => game.setGameState(GameState.P1_WON)
       case x if (x._1 == 0) && (x._2 == 0) && (x._3 >= 0) && (x._4 >= 0) => game.setGameState(GameState.P2_WON)
-      case _ =>
+      case _ => game.setGameState(GameState.RUNNING)
     }
   }
 

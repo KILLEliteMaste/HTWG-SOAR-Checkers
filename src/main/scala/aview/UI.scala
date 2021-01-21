@@ -1,9 +1,8 @@
 package aview
 
 import controller.ControllerInterface
-import controller.command.conreteCommand.{Save,Load, Move, New, Redo, Undo}
+import controller.command.conreteCommand.{Save, Load, Move, New, Redo, Undo}
 import controller.command.Command
-import controller.controllerbase.Controller
 import scalafx.beans.property.StringProperty
 
 import scala.collection.mutable
@@ -22,7 +21,8 @@ abstract class UI extends UserInterface {
 
   def processInputLine(input: String, controller: ControllerInterface): String = {
     val inputSplit = input.toLowerCase().split("\\s+").toList
-    returnMessage.value = commands.get(inputSplit.head).map(command => command.handleCommand(inputSplit.drop(1), controller)).getOrElse("No matching command found")
+    returnMessage.value = commands.get(inputSplit.head).map(command => command.handleCommand(inputSplit.drop(1), controller))
+      .getOrElse("No matching command found")
     returnMessage.value
   }
 

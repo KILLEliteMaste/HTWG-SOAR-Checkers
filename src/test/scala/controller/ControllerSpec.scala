@@ -155,7 +155,6 @@ class ControllerSpec extends AnyWordSpec with Matchers {
         controller.moveFromPositionToPosition(Position(0, 5), Position(1, 4), 1, alreadyMoved = false)
         controller.changePlayerTurn()
         controller.moveFromPositionToPosition(Position(1, 6), Position(0, 5), 3, alreadyMoved = false)
-        //println("++++++++++++++++++++++++++++++++++++++++++++\n"+controller.matrixToString)
         controller.game.getField.getFieldMatrix.cell(0, 5).get.getValue shouldBe 4
       }
       //geht noch nicht
@@ -226,7 +225,6 @@ class ControllerSpec extends AnyWordSpec with Matchers {
         controller.moveFromPositionToPosition(Position(3, 4), Position(4, 3), 1, alreadyMoved = false)
         controller.changePlayerTurn()
         controller.moveFromPositionToPosition(Position(1, 6), Position(5, 2), 4, alreadyMoved = false)
-        //println(controller.field)
         controller.game.getField.getFieldMatrix.cell(5, 2).get.getValue shouldBe 4
       }
     }

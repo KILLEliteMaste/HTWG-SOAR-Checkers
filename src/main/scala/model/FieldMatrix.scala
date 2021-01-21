@@ -1,7 +1,5 @@
 package model
 
-import com.google.inject.Inject
-
 trait FieldMatrix[T] {
   def cell(row: Int, col: Int): T
 

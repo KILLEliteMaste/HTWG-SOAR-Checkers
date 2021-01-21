@@ -16,15 +16,10 @@ case class FileIOImpl() extends FileIO {
     val injector = Guice.createInjector(new CheckersModule)
     val source: String = Source.fromFile("game.json").getLines.mkString
     val gameJson: JsValue = Json.parse(source)
-    val fieldJson = (gameJson \ "field")
+    val fieldJson = gameJson \ "field"
     val fieldSize = (fieldJson \ "size").get.as[Int]
 
     val game: Game = injector.instance[Game](Names.named(fieldSize.toString))
-    /*fieldSize match {
-      case 10 => injector.instance[Game](Names.named("10"))
-      case 12 => injector.instance[Game](Names.named("12"))
-      case _ => injector.instance[Game](Names.named("8"))
-    }*/
 
     //States
     val playerState = if ((gameJson \ "playerState").toString.contains("1")) new PlayerState1 else new PlayerState2
@@ -34,7 +29,6 @@ case class FileIOImpl() extends FileIO {
     game.getField.setFieldStatistics(2, (fieldJson \ "fieldStatistic2").get.as[Int])
     game.getField.setFieldStatistics(3, (fieldJson \ "fieldStatistic3").get.as[Int])
     game.getField.setFieldStatistics(4, (fieldJson \ "fieldStatistic4").get.as[Int])
-
     //Rows
     val f = injector.instance[FieldMatrix[Option[Cell]]]
     val c = injector.instance[Cell]
@@ -62,7 +56,6 @@ case class FileIOImpl() extends FileIO {
       })
       rowsBuilder.+=(builder.result)
     }
-
     Json.obj(
       "field" -> Json.obj(
         "size" -> JsNumber(game.getField.getFieldSize),
