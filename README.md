@@ -27,3 +27,10 @@ Plays for the King:
 
 Strike possibilities of the King:
 - The King must move directly behind the stone that has been hit.
+# Text UI
+
+<img src="https://i.imgur.com/y0ebwVVh.jpg" alt="drawing" width="500"/>
+
+# GUI
+
+<img src="https://i.imgur.com/TCmcRwT.gif" alt="drawing" width="500"/>
