@@ -31,10 +31,8 @@ case class Tui(controller: ControllerInterface) extends UI with Observer {
     println("Game ended")
   }
 
-
   override def update(): Unit = {
     println(controller.matrixToString)
     println(controller.getGame.getPlayerState)
   }
-
 }

@@ -45,6 +45,8 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
       case Some(cell) =>
         if (isStoneOpponentsColor(cell.getValue, stoneToMove)) {
           game.getField.setFieldMatrix(moveToNewPosition(positionFrom, positionTo, game.getField).replaceCell(positionFrom.x + x, positionFrom.y + y, None))
+          game.getField.setFieldStatistics(cell.getValue, game.getField.getFieldStatistics(cell.getValue) - 1)
+
         }
       case None =>
     }
@@ -69,9 +71,13 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
     for (i <- 0 until game.getField.getFieldSize) {
       if (game.getField.getFieldMatrix.getRows(game.getField.getFieldSize - 1)(i).exists(cell => cell.getValue == 1)) {
         game.getField.setFieldMatrix(moveToNewPosition(positionTo, positionTo, game.getField).replaceCell(game.getField.getFieldSize - 1, i, Some(game.getField.getFieldMatrix.getRows(game.getField.getFieldSize - 1)(i).get.createNewKing)))
+        game.getField.setFieldStatistics(1, game.getField.getFieldStatistics(1) - 1)
+        game.getField.setFieldStatistics(2, game.getField.getFieldStatistics(2) + 1)
       }
       if (game.getField.getFieldMatrix.getRows(0)(i).exists(cell => cell.getValue == 3)) {
         game.getField.setFieldMatrix(moveToNewPosition(positionTo, positionTo, game.getField).replaceCell(0, i, Some(game.getField.getFieldMatrix.getRows(0)(i).get.createNewKing)))
+        game.getField.setFieldStatistics(3, game.getField.getFieldStatistics(3) - 1)
+        game.getField.setFieldStatistics(4, game.getField.getFieldStatistics(4) + 1)
       }
     }
     if ((stoneToMove == 2 || stoneToMove == 4) && !alreadyMoved) {
@@ -114,6 +120,7 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
       case _ => game.setGameState(GameState.RUNNING)
     }
   }
+
 
   override def moveToNewPosition(origin: Position, destination: Position, field: Field): FieldMatrix[Option[Cell]] = {
     val cellOrigin = field.getFieldMatrix.cell(origin.x, origin.y)
