@@ -19,7 +19,7 @@ case class FileIOImpl() extends FileIO {
     val fieldJson = gameJson \ "field"
     val fieldSize = (fieldJson \ "size").get.as[Int]
 
-    val game: Game = injector.instance[Game](Names.named(fieldSize.toString))
+    val game: Game = injector.getInstance(classOf[Game])
 
     //States
     val playerState = if ((gameJson \ "playerState").toString.contains("1")) new PlayerState1 else new PlayerState2
@@ -30,8 +30,8 @@ case class FileIOImpl() extends FileIO {
     game.getField.setFieldStatistics(3, (fieldJson \ "fieldStatistic3").get.as[Int])
     game.getField.setFieldStatistics(4, (fieldJson \ "fieldStatistic4").get.as[Int])
     //Rows
-    val f = injector.instance[FieldMatrix[Option[Cell]]]
-    val c = injector.instance[Cell]
+    val f = injector.getInstance(classOf[FieldMatrix[Option[Cell]]])
+    val c = injector.getInstance(classOf[Cell])
     val vectorInts = (fieldJson \ "rows").get.as[Vector[Vector[Int]]]
     val vectorCell = vectorInts.map(_.map(x => if (x != 0) Some(c.createNewCell(x)) else None))
     game.getField.setFieldMatrix(f.createNewFieldMatrix(vectorCell))

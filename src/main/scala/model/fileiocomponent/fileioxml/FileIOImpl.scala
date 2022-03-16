@@ -16,7 +16,7 @@ case class FileIOImpl() extends FileIO {
 
     val injector = Guice.createInjector(new CheckersModule)
 
-    val game: Game = injector.instance[Game](Names.named(size.toString))
+    val game: Game = injector.getInstance(classOf[Game])
     game.setGameState(GameState.withName((file \\ "game" \ "gameState").text.trim))
     game.setPlayerState(if ((file \\ "game" \ "playerState").text.trim.contains("1")) new PlayerState1 else new PlayerState2)
     game.setStatusMessage((file \\ "game" \ "statusMessage").text.trim)
@@ -30,13 +30,13 @@ case class FileIOImpl() extends FileIO {
     for (row <- (fieldMatrix \ "cell").sliding(size, size)) {
       val rowBuilder = Vector.newBuilder[Option[Cell]]
       for (cell <- row) {
-        val c = injector.instance[Cell]
+        val c = injector.getInstance(classOf[Cell])
         val cellVal = (cell \ "value").text.trim.toInt
         if (cellVal != 0) rowBuilder.+=(Some(c.createNewCell(cellVal))) else rowBuilder.+=(None)
       }
       vectorBuilder.+=(rowBuilder.result)
     }
-    val f = injector.instance[FieldMatrix[Option[Cell]]]
+    val f = injector.getInstance(classOf[FieldMatrix[Option[Cell]]])
     game.getField.setFieldMatrix(f.createNewFieldMatrix(vectorBuilder.result))
     game
   }

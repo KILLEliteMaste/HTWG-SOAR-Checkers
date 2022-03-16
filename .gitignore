@@ -100,5 +100,8 @@ fabric.properties
 .idea/sbt.xml
 .idea/scala_compiler.xml
 .idea/uiDesigner.xml
+.idea/sonarlint/
+.idea/
 build.sbt
 project/
+null/

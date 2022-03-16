@@ -3,6 +3,7 @@ package aview
 import aview.gui.Gui
 import controller.ControllerInterface
 import controller.controllerbase.Controller
+import javafx.embed.swing.JFXPanel
 
 import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success, Try}
@@ -13,7 +14,11 @@ trait UserInterface {
 
 object UserInterface {
   def apply(kind: String, controller: ControllerInterface): Unit = kind match {
-    case "gui" | "GUI" => Gui(controller).run()
+    case "gui" | "GUI" => {
+      //Workaround for ScalaFX toolkit initialization. This fix is broadly used among other users.
+      new JFXPanel()
+      Gui(controller).run()
+    }
     case "tui" | "TUI" => Tui(controller).run()
     case "both" | "BOTH" =>
       ExecutionContext.global.execute(() => {

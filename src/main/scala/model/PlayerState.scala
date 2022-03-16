@@ -3,7 +3,7 @@ package model
 import controller.controllerbase.Controller
 
 trait PlayerState {
-  def handle(controller: Controller)
+  def handle(controller: Controller): Unit
 }
 
 class PlayerState1() extends PlayerState {

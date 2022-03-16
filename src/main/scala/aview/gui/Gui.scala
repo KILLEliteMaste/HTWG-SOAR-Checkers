@@ -3,7 +3,7 @@ package aview.gui
 import aview.UI
 import controller.ControllerInterface
 import model.GameState
-import scalafx.application.{JFXApp, Platform}
+import scalafx.application.{JFXApp3, Platform}
 import scalafx.scene.Scene
 import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control.{Alert, Button}
@@ -15,7 +15,7 @@ import util.{Observer, Position}
 
 import scala.collection.mutable.ListBuffer
 
-case class Gui(controller: ControllerInterface) extends UI with Observer with JFXApp {
+case class Gui(controller: ControllerInterface) extends UI with Observer with JFXApp3 {
   controller.add(this)
 
   val audio: AudioClip = new AudioClip(getClass.getClassLoader.getResource("click.mp3").toExternalForm)
@@ -100,26 +100,32 @@ case class Gui(controller: ControllerInterface) extends UI with Observer with JF
     add(buttons.getSaveButton, 5, 0)
   }
 
-  stage = new JFXApp.PrimaryStage {
-    title.value = "Checkers"
-    minWidth = 650
-    minHeight = 800
-
-    scene = new Scene {
-      stylesheets = List(getClass.getResource("/stylesheet.css").toExternalForm)
-      root = new BorderPane {
-        top = statusGrid
-        center = gameGrid
-        bottom = controlGrid
-      }
-    }
-  }
-  //Resize only diagonal
-  stage.minHeightProperty().bind(stage.widthProperty().multiply(1.2))
-  stage.maxHeightProperty().bind(stage.widthProperty().multiply(1.2))
 
   def run(): Unit = {
-    main(Array())
+    //new Thread {
+      main(Array())
+    //}.start()
+  }
+
+  override def start(): Unit = {
+    stage = new JFXApp3.PrimaryStage {
+      title.value = "Checkers"
+      minWidth = 650
+      minHeight = 800
+      scene = new Scene {
+        stylesheets = List(getClass.getResource("/stylesheet.css").toExternalForm)
+        root = new BorderPane {
+          top = statusGrid
+          center = gameGrid
+          bottom = controlGrid
+        }
+      }
+    }
+
+
+    //Resize only diagonal
+    stage.minHeightProperty().bind(stage.widthProperty().multiply(1.2))
+    stage.maxHeightProperty().bind(stage.widthProperty().multiply(1.2))
   }
 
 
@@ -168,3 +174,5 @@ case class Gui(controller: ControllerInterface) extends UI with Observer with JF
   //Display the board at startup
   setBoard()
 }
+
+
