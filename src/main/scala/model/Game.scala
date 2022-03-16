@@ -1,7 +1,5 @@
 package model
 
-import GameState.GameState
-
 trait Game {
   def getGameState: GameState
 

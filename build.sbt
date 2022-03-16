@@ -10,7 +10,6 @@ libraryDependencies += "com.typesafe.play" %% "play-json" % "2.10.0-RC5"
 
 libraryDependencies += "com.google.inject" % "guice" % "5.1.0"
 libraryDependencies += ("net.codingwell" %% "scala-guice" % "5.0.2").cross(CrossVersion.for3Use2_13)
-//libraryDependencies += ("org.scalafx" %% "scalafx" % "16.0.1-R20").cross(CrossVersion.for3Use2_13)
 libraryDependencies += "org.scalafx" %% "scalafx" % "17.0.1-R26"
 
 // Determine OS version of JavaFX binaries

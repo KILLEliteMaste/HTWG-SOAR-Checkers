@@ -7,9 +7,9 @@ import org.scalatest.wordspec.AnyWordSpec
 class FieldImplSpec extends AnyWordSpec with Matchers {
   "A Field" when {
     "constructed shouldBe given the length of its edge as size" should {
-      val smallfield = FieldImpl(4)
-      "have a total field size of 4" in {
-        smallfield.getFieldSize shouldBe 4
+      val smallfield = FieldImpl(8)
+      "have a total field size of 8" in {
+        smallfield.getFieldSize shouldBe 8
       }
     }
     "filled" in {
@@ -29,15 +29,6 @@ class FieldImplSpec extends AnyWordSpec with Matchers {
       val matrix = new FieldMatrixImpl[Option[Cell]](1, None)
       "have a size of 1" in {
         matrix.getSize shouldBe 1
-      }
-    }
-  }
-  "A big field " when {
-    "built" should {
-      val bigField = FieldImpl(7)
-      val fieldMatrix = new FieldMatrixImpl[Option[Cell]](7, None)
-      "have Cell(0)" in {
-        fieldMatrix.cell(4, 0) shouldBe None
       }
     }
   }

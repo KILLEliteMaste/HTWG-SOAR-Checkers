@@ -1,13 +1,12 @@
 package model.gamebase
 
 import com.google.inject.name.Named
-import model.GameState.GameState
 import model.{Field, Game, GameState, PlayerState, PlayerState1}
 
 import javax.inject.Inject
 
-case class GameImpl @Inject()(@Named("DefaultSize") size: Int) extends Game {
-  var gameState: GameState.Value = GameState.IDLE
+case class GameImpl @Inject()(@Named("DefaultSize") size: 8 | 10 | 12) extends Game {
+  var gameState: GameState = GameState.IDLE
   var statusMessage: String = ""
   var playerState: PlayerState = new PlayerState1
   var field: Field = FieldImpl(size)

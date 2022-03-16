@@ -12,7 +12,8 @@ case class Move() extends Command {
 
   override def handleCommand(input: List[String], controller: ControllerInterface): String = {
     //ORIGIN POSITION
-    if (!isOriginInputValid(input)) return statusMessage
+    if !isOriginInputValid(input) then return statusMessage
+
     val origin = Vector(Position(input.head.toInt, input(1).toInt))
 
     if (!controller.checkIfAllPositionsAreInBounds(origin, controller.getGame.getField)) {
@@ -53,12 +54,13 @@ case class Move() extends Command {
     controller.moveFromPositionToPosition(origin(0), destinations(0), controller.getGame.getField.getFieldMatrix.cell(origin(0).x, origin(0).y).map(cell => cell.getValue).getOrElse(0), alreadyMoved = false)
     if (m1.equals(controller.getGame.getField.getFieldMatrix.toString))
       return "Could not execute move"
+    end if
 
-    if (destinations.size != 1) {
+    if destinations.size != 1 then
       for (elem <- destinations.sliding(2, 1)) {
         controller.moveFromPositionToPosition(elem(0), elem(1), controller.getGame.getField.getFieldMatrix.cell(elem(0).x, elem(0).y).map(cell => cell.getValue).getOrElse(0), alreadyMoved = true)
       }
-    }
+    end if
 
     controller.changePlayerTurn()
     statusMessage += "TO: " + destinationInput.head + " " + destinationInput(1)
@@ -66,31 +68,31 @@ case class Move() extends Command {
   }
 
   def isDestinationInputValid(input: List[String]): Boolean = {
-    if (input.size % 2 == 0) {
-      if (allStringsMatchNumber(input))
+    if input.size % 2 == 0 then
+      if allStringsMatchNumber(input) then
         return true
-    } else {
-      statusMessage = "Wrong amount of arguments for the destination position"
-    }
+      else
+        statusMessage = "Wrong amount of arguments for the destination position"
+      end if
+    end if
+
     false
   }
 
   def isOriginInputValid(input: List[String]): Boolean = {
-    if (input.size >= 4) {
-      if (allStringsMatchNumber(input)) {
+    if input.size >= 4 then
+      if allStringsMatchNumber(input) then
         return true
-      }
-    }
+
     statusMessage = "You need at least a start and end position"
     false
   }
 
   def allStringsMatchNumber(list: List[String]): Boolean = {
     for (elem <- list) {
-      if (!elem.matches(numberRegex)) {
+      if !elem.matches(numberRegex) then
         statusMessage = "One or more arguments do not match a number or are too long"
         return false
-      }
     }
     true
   }

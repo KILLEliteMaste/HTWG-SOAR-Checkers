@@ -21,10 +21,12 @@ case class FileIOImpl() extends FileIO {
 
     val game: Game = injector.getInstance(classOf[Game])
 
+
     //States
     val playerState = if ((gameJson \ "playerState").toString.contains("1")) new PlayerState1 else new PlayerState2
     game.setPlayerState(playerState)
-    game.setGameState(GameState.withName((gameJson \ "gameState").get.as[String]))
+
+    game.setGameState(GameState.valueOf((gameJson \ "gameState").get.as[String]))
     game.getField.setFieldStatistics(1, (fieldJson \ "fieldStatistic1").get.as[Int])
     game.getField.setFieldStatistics(2, (fieldJson \ "fieldStatistic2").get.as[Int])
     game.getField.setFieldStatistics(3, (fieldJson \ "fieldStatistic3").get.as[Int])

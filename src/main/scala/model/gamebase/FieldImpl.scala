@@ -6,7 +6,7 @@ import model.{Field, FieldMatrix}
 import javax.inject.Inject
 import scala.collection.mutable
 
-case class FieldImpl@Inject()(@Named("DefaultSize")fieldSize: Int) extends Field {
+case class FieldImpl @Inject()(@Named("DefaultSize") fieldSize: 8 | 10 | 12) extends Field {
 
   val fieldStatistics = new mutable.HashMap[Int, Int]()
   fieldStatistics.put(1, 0)
@@ -52,7 +52,7 @@ case class FieldImpl@Inject()(@Named("DefaultSize")fieldSize: Int) extends Field
 
   override def getTotalFieldSize: Int = fieldSize * fieldSize
 
-  override def getFieldSize: Int = fieldSize
+  override def getFieldSize: 8 | 10 | 12 = fieldSize
 
   override def toString: String = {
     var str = "  "
@@ -75,5 +75,6 @@ case class FieldImpl@Inject()(@Named("DefaultSize")fieldSize: Int) extends Field
 
   override def copyField: Field = copy()
 
-  override def getNewField(size: Int): Field = FieldImpl(size)
+  override def getNewField(size: 8 | 10 | 12): Field = FieldImpl(size)
+
 }

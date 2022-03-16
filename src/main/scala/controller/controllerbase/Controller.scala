@@ -2,8 +2,8 @@ package controller.controllerbase
 
 import com.google.inject.{Guice, Inject, Injector}
 import controller.ControllerInterface
+import model.*
 import model.fileiocomponent.FileIO
-import model._
 import net.codingwell.scalaguice.InjectorExtensions.ScalaInjector
 import util.{Position, UndoManager}
 
@@ -19,7 +19,7 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
     createNewField(game.getField.getFieldSize)
   }
 
-  override def createNewField(size: Int): Unit = {
+  override def createNewField(size: 8 | 10 | 12): Unit = {
     game.setField(game.getField.getNewField(size))
     game.setPlayerState(new PlayerState1)
     game.setGameState(GameState.RUNNING)

@@ -1,7 +1,6 @@
 package controller.command.conreteCommand
 
 import controller.command.Command
-import controller.controllerbase.Controller
 import controller.ControllerInterface
 
 case class Redo() extends Command {

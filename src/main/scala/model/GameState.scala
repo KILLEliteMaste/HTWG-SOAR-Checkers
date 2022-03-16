@@ -1,8 +1,7 @@
 package model
 
-case object GameState extends Enumeration {
-  type GameState = Value
-  val IDLE, RUNNING, DRAW, P1_WON, P2_WON,LOADED,SAVED = Value
+enum GameState:
+  case IDLE, RUNNING, DRAW, P1_WON, P2_WON, LOADED, SAVED
 
   val map: Map[GameState, String] = Map[GameState, String](
     IDLE -> "Currently no active game",
@@ -17,4 +16,3 @@ case object GameState extends Enumeration {
   def message(gameState: GameState): String = {
     map(gameState)
   }
-}

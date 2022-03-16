@@ -1,8 +1,7 @@
 package util
 
-import model.GameState.GameState
 import controller.controllerbase.Controller
-import model.{Cell, Field, FieldMatrix, PlayerState}
+import model.{Cell, Field, FieldMatrix, GameState, PlayerState}
 
 import scala.collection.mutable
 

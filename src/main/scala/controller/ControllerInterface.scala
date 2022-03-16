@@ -1,14 +1,14 @@
 package controller
 
 import aview.gui.Gui
-import util.{Observable, Position}
 import model.{Cell, Field, FieldMatrix, Game}
+import util.{Observable, Position, UndoManager}
 
-trait ControllerInterface extends Observable {
+trait ControllerInterface extends Observable :
 
   def createNewField(): Unit
 
-  def createNewField(size: Int): Unit
+  def createNewField(size: 8 | 10 | 12): Unit
 
   def changePlayerTurn(): Unit
 
@@ -41,4 +41,3 @@ trait ControllerInterface extends Observable {
   def load(): Unit
 
   def getGame: Game
-}
