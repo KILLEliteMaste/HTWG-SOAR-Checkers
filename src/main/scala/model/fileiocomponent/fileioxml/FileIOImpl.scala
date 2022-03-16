@@ -17,21 +17,13 @@ case class FileIOImpl() extends FileIO {
     val injector = Guice.createInjector(new CheckersModule)
 
     val game: Game = injector.instance[Game](Names.named(size.toString))
-
-    val gameState = (file \\ "game" \ "gameState").text.trim
-    game.setGameState(GameState.withName(gameState))
-    val playerState = (file \\ "game" \ "playerState").text.trim
-    game.setPlayerState(if (playerState.contains("1")) new PlayerState1 else new PlayerState2)
-    val statusMessage = (file \\ "game" \ "statusMessage").text.trim
-    game.setStatusMessage(statusMessage)
-    val fieldStatistic1 = (file \\ "game" \ "fieldStatistic1").text.trim.toInt
-    game.getField.setFieldStatistics(1, fieldStatistic1)
-    val fieldStatistic2 = (file \\ "game" \ "fieldStatistic2").text.trim.toInt
-    game.getField.setFieldStatistics(2, fieldStatistic2)
-    val fieldStatistic3 = (file \\ "game" \ "fieldStatistic3").text.trim.toInt
-    game.getField.setFieldStatistics(3, fieldStatistic3)
-    val fieldStatistic4 = (file \\ "game" \ "fieldStatistic4").text.trim.toInt
-    game.getField.setFieldStatistics(4, fieldStatistic4)
+    game.setGameState(GameState.withName((file \\ "game" \ "gameState").text.trim))
+    game.setPlayerState(if ((file \\ "game" \ "playerState").text.trim.contains("1")) new PlayerState1 else new PlayerState2)
+    game.setStatusMessage((file \\ "game" \ "statusMessage").text.trim)
+    game.getField.setFieldStatistics(1, (file \\ "game" \ "fieldStatistic1").text.trim.toInt)
+    game.getField.setFieldStatistics(2, (file \\ "game" \ "fieldStatistic2").text.trim.toInt)
+    game.getField.setFieldStatistics(3, (file \\ "game" \ "fieldStatistic3").text.trim.toInt)
+    game.getField.setFieldStatistics(4, (file \\ "game" \ "fieldStatistic4").text.trim.toInt)
 
     val fieldMatrix = file \\ "game" \ "fieldMatrix"
     val vectorBuilder = Vector.newBuilder[Vector[Option[Cell]]]

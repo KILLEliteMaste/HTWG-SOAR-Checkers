@@ -23,6 +23,7 @@ abstract class UI extends UserInterface {
     val inputSplit = input.toLowerCase().split("\\s+").toList
     returnMessage.value = commands.get(inputSplit.head).map(command => command.handleCommand(inputSplit.drop(1), controller))
       .getOrElse("No matching command found")
+
     returnMessage.value
   }
 
