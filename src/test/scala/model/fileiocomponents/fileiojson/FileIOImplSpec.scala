@@ -11,8 +11,8 @@ class FileIOImplSpec extends AnyWordSpec with Matchers {
   "A FileIO system" should {
     val fileIO = new FileIOImpl()
     "be able to save and load a game" in {
-      fileIO.save(Controller(GameImpl(8)).getGame)
-      fileIO.load.getField.getFieldSize shouldBe 8
+      fileIO.save(Controller(new GameImpl(8)).getGame)
+      fileIO.load.field.fieldSize shouldBe 8
     }
   }
 }

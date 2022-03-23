@@ -73,15 +73,18 @@ case class Buttons(gui: Gui) {
     }
     moveButton.setMaxSize(Double.MaxValue, Double.MaxValue)
     moveButton.onAction = _ => {
-      var str = ""
-      gui.moveList.foreach(x => str = str + x.x + " " + x.y + " ")
+      val str:StringBuilder = StringBuilder()
+      
+      gui.moveList foreach (f(str,_))
+
       gui.moveList.clear()
       val retVal = gui.processInputLine("move " + str, gui.controller)
       if (retVal.contains("MOVE FROM")) gui.audio.play()
-      gui.update()
     }
     moveButton
   }
+
+  def f(sb:StringBuilder, pos:Position): Unit = sb.append(pos.x + " " + pos.y + " ")
 
   def getNewGameButton: Button = {
     val newGameButton = new Button("Restart Game") {

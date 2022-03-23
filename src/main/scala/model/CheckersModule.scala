@@ -1,5 +1,7 @@
 package model
 
+import com.google.inject.Provides
+import com.google.inject.multibindings.Multibinder
 import com.google.inject.AbstractModule
 import com.google.inject.name.Names
 import controller.ControllerInterface
@@ -12,21 +14,15 @@ class CheckersModule extends AbstractModule {
   val defaultSize: Int = 8
 
   override def configure(): Unit = {
-
     bindConstant().annotatedWith(Names.named("DefaultSize")).to(defaultSize)
 
-    bind(classOf[model.Game]).to(classOf[GameImpl])
-    bind(classOf[Field]).to(classOf[FieldImpl])
-    bind(classOf[Cell]).to(classOf[CellImpl])
-    bind(classOf[FieldMatrix[Option[Cell]]]).to(classOf[FieldMatrixImpl[Option[Cell]]])
+    bind(classOf[model.Game]).toInstance(new GameImpl(8))
+
+    bind(classOf[Cell]).toInstance(CellImpl(0))
+    
+    bind(classOf[FieldMatrix[Option[Cell]]]).toInstance(new FieldMatrixImpl[Option[Cell]](8, None))
     bind(classOf[ControllerInterface]).to(classOf[controller.controllerbase.Controller])
-
+    
     bind(classOf[FileIO]).to(classOf[FileIOImpl])
-
-
-    //bind[Game].annotatedWithName("8").toInstance(GameImpl(8))
-    //bind[Game].annotatedWithName("10").toInstance(GameImpl(10))
-    //bind[Game].annotatedWithName("12").toInstance(GameImpl(12))
-
   }
 }

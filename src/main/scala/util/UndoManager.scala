@@ -10,22 +10,22 @@ case class UndoManager(controller: Controller) {
   private val redoStack = mutable.Stack[OldController]()
 
   def doStep(): Unit = {
-    controller.getGame.getField.getFieldStatistics(1)
-    undoStack.push(OldController(controller.game.getField.copyField, controller.getGame.getField.getFieldStatistics(1),
-      controller.getGame.getField.getFieldStatistics(2),
-      controller.getGame.getField.getFieldStatistics(3),
-      controller.getGame.getField.getFieldStatistics(4),
-      controller.game.getField.getFieldMatrix.copyFieldMatrix,
-      controller.game.getPlayerState, controller.game.getGameState, controller.game.getStatusMessage))
+    controller.game.field.fieldStatistics.get(1).get
+    undoStack.push(OldController(controller.game.field.copyField, controller.game.field.fieldStatistics.get(1).get,
+      controller.game.field.fieldStatistics.get(2).get,
+      controller.game.field.fieldStatistics.get(3).get,
+      controller.game.field.fieldStatistics.get(4).get,
+      controller.game.field.fieldMatrix.copyFieldMatrix,
+      controller.game.playerState, controller.game.gameState, controller.game.statusMessage))
   }
 
   def undoStep(): String = {
     if (undoStack.isEmpty)
       return "Cannot undo"
-    redoStack.push(OldController(controller.game.getField.copyField, controller.getGame.getField.getFieldStatistics(1),
-      controller.getGame.getField.getFieldStatistics(2),
-      controller.getGame.getField.getFieldStatistics(3),
-      controller.getGame.getField.getFieldStatistics(4), controller.game.getField.getFieldMatrix.copyFieldMatrix, controller.game.getPlayerState, controller.game.getGameState, controller.game.getStatusMessage))
+    redoStack.push(OldController(controller.game.field.copyField, controller.game.field.fieldStatistics.get(1).get,
+      controller.game.field.fieldStatistics.get(2).get,
+      controller.game.field.fieldStatistics.get(3).get,
+      controller.game.field.fieldStatistics.get(4).get, controller.game.field.fieldMatrix.copyFieldMatrix, controller.game.playerState, controller.game.gameState, controller.game.statusMessage))
     setControllerToOldState(undoStack.pop())
     "Undo to old state"
   }
@@ -33,25 +33,23 @@ case class UndoManager(controller: Controller) {
   def redoStep(): String = {
     if (redoStack.isEmpty)
       return "Cannot redo"
-    undoStack.push(OldController(controller.game.getField.copyField, controller.getGame.getField.getFieldStatistics(1),
-      controller.getGame.getField.getFieldStatistics(2),
-      controller.getGame.getField.getFieldStatistics(3),
-      controller.getGame.getField.getFieldStatistics(4), controller.game.getField.getFieldMatrix.copyFieldMatrix, controller.game.getPlayerState, controller.game.getGameState, controller.game.getStatusMessage))
+    undoStack.push(OldController(controller.game.field.copyField, controller.game.field.fieldStatistics.get(1).get,
+      controller.game.field.fieldStatistics.get(2).get,
+      controller.game.field.fieldStatistics.get(3).get,
+      controller.game.field.fieldStatistics.get(4).get, controller.game.field.fieldMatrix.copyFieldMatrix, controller.game.playerState, controller.game.gameState, controller.game.statusMessage))
     val f2 = redoStack.pop()
     setControllerToOldState(f2)
     "Redo to old state"
   }
 
   def setControllerToOldState(oldController: OldController): Unit = {
-    controller.game.setField(oldController.field)
-    controller.game.getField.setFieldStatistics(1, oldController.s1)
-    controller.game.getField.setFieldStatistics(2, oldController.s2)
-    controller.game.getField.setFieldStatistics(3, oldController.s3)
-    controller.game.getField.setFieldStatistics(4, oldController.s4)
-    controller.game.getField.setFieldMatrix(oldController.fieldMatrix)
-    controller.game.setPlayerState(oldController.playerState)
-    controller.game.setGameState(oldController.gameState)
-    controller.game.setStatusMessage(oldController.statusMessage)
+    controller.setGame(controller.game.recreate(field = oldController.field, playerState = oldController.playerState, gameState = oldController.gameState, statusMessage = oldController.statusMessage))
+
+    controller.game.field.fieldStatistics.put(1, oldController.s1)
+    controller.game.field.fieldStatistics.put(2, oldController.s2)
+    controller.game.field.fieldStatistics.put(3, oldController.s3)
+    controller.game.field.fieldStatistics.put(4, oldController.s4)
+    controller.setGame(controller.game.recreate(field = controller.game.field.recreate(fieldMatrix = oldController.fieldMatrix)))
   }
 
   case class OldController(field: Field, s1: Int, s2: Int, s3: Int, s4: Int, fieldMatrix: FieldMatrix[Option[Cell]], playerState: PlayerState, gameState: GameState, statusMessage: String)

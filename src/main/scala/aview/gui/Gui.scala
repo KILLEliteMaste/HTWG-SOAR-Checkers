@@ -24,13 +24,13 @@ case class Gui(controller: ControllerInterface) extends UI with Observer with JF
   val buttons: Buttons = Buttons(gui)
 
   var gameGrid: GridPane = new GridPane {
-    for (_ <- 0 until controller.getGame.getField.getFieldSize) {
+    for (_ <- 0 until controller.getGame.field.fieldSize) {
       val row = new RowConstraints() {
-        percentHeight = 100.0 / controller.getGame.getField.getFieldSize
+        percentHeight = 100.0 / controller.getGame.field.fieldSize
       }
       rowConstraints.add(row)
       val column = new ColumnConstraints() {
-        percentWidth = 100.0 / controller.getGame.getField.getFieldSize
+        percentWidth = 100.0 / controller.getGame.field.fieldSize
       }
       styleClass = List("gameGridRowColumn")
       columnConstraints.add(column)
@@ -42,20 +42,20 @@ case class Gui(controller: ControllerInterface) extends UI with Observer with JF
     gameGrid.columnConstraints.clear()
     gameGrid.rowConstraints.clear()
     gameGrid.styleClass = List("gameGridRowColumn")
-    for (_ <- 0 until controller.getGame.getField.getFieldSize) {
+    for (_ <- 0 until controller.getGame.field.fieldSize) {
       val row = new RowConstraints() {
 
-        percentHeight = 100.0 / controller.getGame.getField.getFieldSize
+        percentHeight = 100.0 / controller.getGame.field.fieldSize
       }
       gameGrid.rowConstraints.add(row)
       val column = new ColumnConstraints() {
-        percentWidth = 100.0 / controller.getGame.getField.getFieldSize
+        percentWidth = 100.0 / controller.getGame.field.fieldSize
       }
       gameGrid.columnConstraints.add(column)
     }
   }
 
-  val playerStateText = new Text(controller.getGame.getPlayerState.toString)
+  val playerStateText = new Text(controller.getGame.playerState.toString)
   val statusMessageText: Text = new Text() {
     text <== returnMessage
   }
@@ -100,11 +100,8 @@ case class Gui(controller: ControllerInterface) extends UI with Observer with JF
     add(buttons.getSaveButton, 5, 0)
   }
 
-
   def run(): Unit = {
-    //new Thread {
       main(Array())
-    //}.start()
   }
 
   override def start(): Unit = {
@@ -121,8 +118,7 @@ case class Gui(controller: ControllerInterface) extends UI with Observer with JF
         }
       }
     }
-
-
+    
     //Resize only diagonal
     stage.minHeightProperty().bind(stage.widthProperty().multiply(1.2))
     stage.maxHeightProperty().bind(stage.widthProperty().multiply(1.2))
@@ -132,23 +128,22 @@ case class Gui(controller: ControllerInterface) extends UI with Observer with JF
   override def update(): Unit = {
     Platform.runLater(() -> {
       setBoard()
-      controller.getGame.getGameState match {
+      controller.getGame.gameState match {
         case GameState.DRAW => new Alert(AlertType.Information, "Draw!").showAndWait()
         case GameState.P1_WON => new Alert(AlertType.Information, "Player 1 won the game!").showAndWait()
         case GameState.P2_WON => new Alert(AlertType.Information, "Player 2 won the game!").showAndWait()
         case _ =>
       }
-      playerStateText.text = controller.getGame.getPlayerState.toString
-
+      playerStateText.text = controller.getGame.playerState.toString
     })
   }
 
   def setBoard(): Unit = {
     gameGrid.getChildren.removeAll(gameGrid.getChildren)
-    for (x <- 0 until controller.getGame.getField.getFieldSize; y <- 0 until controller.getGame.getField.getFieldSize) {
+    for (x <- 0 until controller.getGame.field.fieldSize; y <- 0 until controller.getGame.field.fieldSize) {
       val stone: Button = buttons.gameFieldButton(x, y)
-      if (controller.getGame.getField.getFieldMatrix.cell(x, y).isDefined) {
-        val img = controller.getGame.getField.getFieldMatrix.cell(x, y).get.getValue match {
+      if (controller.getGame.field.fieldMatrix.cell(x, y).isDefined) {
+        val img = controller.getGame.field.fieldMatrix.cell(x, y).get.value match {
           case 1 => new Image("/white.jpg");
           case 2 => new Image("/whiteKing.png");
           case 3 => new Image("/black.jpg");

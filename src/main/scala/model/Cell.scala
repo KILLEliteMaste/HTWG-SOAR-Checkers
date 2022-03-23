@@ -1,8 +1,7 @@
 package model
 
 
-trait Cell {
-  def getValue: Int
+trait Cell(val value: Int) {
 
   def isSet: Boolean
 

@@ -41,3 +41,5 @@ trait ControllerInterface extends Observable :
   def load(): Unit
 
   def getGame: Game
+  
+  def setGame(newGame :Game): Unit

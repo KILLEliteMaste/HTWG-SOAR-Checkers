@@ -9,7 +9,7 @@ class CellImplSpec extends AnyWordSpec with Matchers {
       val emptyCell = CellImpl(1)
 
       "have value 1" in {
-        emptyCell.getValue shouldBe 1
+        emptyCell.value shouldBe 1
       }
       "not be set" in {
         emptyCell.isSet shouldBe true
@@ -33,7 +33,7 @@ class CellImplSpec extends AnyWordSpec with Matchers {
     "set to a specific value" should {
       val nonEmptyCell = CellImpl(5)
       "return that value" in {
-        nonEmptyCell.getValue shouldBe 5
+        nonEmptyCell.value shouldBe 5
       }
       "be set" in {
         nonEmptyCell.isSet shouldBe true
@@ -46,12 +46,12 @@ class CellImplSpec extends AnyWordSpec with Matchers {
       }
     }
     "an empty cell" should {
-      val cell = new CellImpl()
+      val cell = new CellImpl(0)
       "have value 0" in {
-        cell.getValue shouldBe 0
+        cell.value shouldBe 0
       }
       "create a new cell with the given value" in {
-        cell.createNewCell(1).getValue shouldBe 1
+        cell.createNewCell(1).value shouldBe 1
       }
     }
   }

@@ -17,6 +17,6 @@ case class New() extends Command {
       }
 
     }
-    "Created a new field with size: " + controller.getGame.getField.getFieldSize
+    "Created a new field with size: " + controller.getGame.field.fieldSize
   }
 }

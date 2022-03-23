@@ -42,7 +42,7 @@ class MoveSpec extends AnyWordSpec with Matchers {
       "be able to move" in {
         controller.createNewField()
         move.handleCommand(List("2", "1", "3", "2"), controller)
-        controller.game.getField.getFieldMatrix.cell(3, 2).get.getValue shouldBe 1
+        controller.game.field.fieldMatrix.cell(3, 2).get.value shouldBe 1
       }
       "be able to jump twice" in {
         controller.createNewField()
@@ -57,7 +57,7 @@ class MoveSpec extends AnyWordSpec with Matchers {
         controller.moveFromPositionToPosition(Position(1, 6), Position(2, 5), 1, alreadyMoved = false)
         controller.changePlayerTurn()
         move.handleCommand(List("5", "2", "3", "4", "1", "6"), controller)
-        controller.game.getField.getFieldMatrix.cell(1, 6).get.getValue shouldBe 3
+        controller.game.field.fieldMatrix.cell(1, 6).get.value shouldBe 3
       }
       "should not work because origin position is out of bounds" in {
         controller.createNewField()
@@ -82,7 +82,7 @@ class MoveSpec extends AnyWordSpec with Matchers {
       "should not work to move straight" in {
         controller.createNewField()
         move.handleCommand(List("2", "1", "3", "1"), controller)
-        controller.game.getPlayerState.toString shouldBe "It's Player 1 turn"
+        controller.game.playerState.toString shouldBe "It's Player 1 turn"
       }
     }
   }

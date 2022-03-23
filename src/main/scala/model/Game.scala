@@ -1,19 +1,8 @@
 package model
 
-trait Game {
-  def getGameState: GameState
+import model.PlayerState
 
-  def setGameState(gameState: GameState): Unit
+trait Game(val size: 8 | 10 | 12, val playerState: PlayerState, val statusMessage: String, val field: Field, val gameState: GameState) {
 
-  def getPlayerState: PlayerState
-
-  def setPlayerState(playerState: PlayerState): Unit
-
-  def getStatusMessage: String
-
-  def setStatusMessage(status: String): Unit
-
-  def getField: Field
-
-  def setField(field: Field): Unit
+  def recreate(size: 8 | 10 | 12 = 8, playerState: PlayerState = playerState, statusMessage: String = statusMessage, field: Field = field, gameState: GameState = gameState): Game
 }

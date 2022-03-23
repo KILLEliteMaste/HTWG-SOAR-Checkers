@@ -11,7 +11,7 @@ class TuiSpec extends AnyWordSpec with Matchers {
   "Text User Input" when {
     "run" should {
       "run" in {
-        val controller = Controller(GameImpl(8))
+        val controller = Controller(new GameImpl(8))
         val tui = Tui(controller)
         val in = new StringReader("quit")
         val out = new ByteArrayOutputStream()

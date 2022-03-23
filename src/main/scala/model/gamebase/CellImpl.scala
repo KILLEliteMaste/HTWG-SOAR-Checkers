@@ -9,8 +9,7 @@ import model.Cell
  * 3: black men
  * 4: black king
  */
-case class CellImpl(value: Int) extends Cell {
-  def this() = this(0)
+case class CellImpl(override val value: Int) extends Cell(value) {
 
   override def isSet: Boolean = value != 0
 
@@ -25,8 +24,6 @@ case class CellImpl(value: Int) extends Cell {
   override def toString: String = {
     "▐ " + value.toString + " ▐"
   }
-
-  override def getValue: Int = value
 
   override def createNewKing: Cell = CellImpl(value + 1)
 

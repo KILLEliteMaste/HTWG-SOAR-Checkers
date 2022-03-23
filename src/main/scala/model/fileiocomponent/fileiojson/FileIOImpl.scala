@@ -9,7 +9,6 @@ import play.api.libs.json._
 
 import scala.io.Source
 
-
 case class FileIOImpl() extends FileIO {
 
   override def load: Game = {
@@ -19,25 +18,22 @@ case class FileIOImpl() extends FileIO {
     val fieldJson = gameJson \ "field"
     val fieldSize = (fieldJson \ "size").get.as[Int]
 
-    val game: Game = injector.getInstance(classOf[Game])
-
-
+    var game: Game = injector.getInstance(classOf[Game])
+    
     //States
     val playerState = if ((gameJson \ "playerState").toString.contains("1")) new PlayerState1 else new PlayerState2
-    game.setPlayerState(playerState)
+    game = game.recreate(playerState = playerState, gameState = GameState.valueOf((gameJson \ "gameState").get.as[String]))
 
-    game.setGameState(GameState.valueOf((gameJson \ "gameState").get.as[String]))
-    game.getField.setFieldStatistics(1, (fieldJson \ "fieldStatistic1").get.as[Int])
-    game.getField.setFieldStatistics(2, (fieldJson \ "fieldStatistic2").get.as[Int])
-    game.getField.setFieldStatistics(3, (fieldJson \ "fieldStatistic3").get.as[Int])
-    game.getField.setFieldStatistics(4, (fieldJson \ "fieldStatistic4").get.as[Int])
+    game.field.fieldStatistics.put(1, (fieldJson \ "fieldStatistic1").get.as[Int])
+    game.field.fieldStatistics.put(2, (fieldJson \ "fieldStatistic2").get.as[Int])
+    game.field.fieldStatistics.put(3, (fieldJson \ "fieldStatistic3").get.as[Int])
+    game.field.fieldStatistics.put(4, (fieldJson \ "fieldStatistic4").get.as[Int])
     //Rows
     val f = injector.getInstance(classOf[FieldMatrix[Option[Cell]]])
     val c = injector.getInstance(classOf[Cell])
     val vectorInts = (fieldJson \ "rows").get.as[Vector[Vector[Int]]]
     val vectorCell = vectorInts.map(_.map(x => if (x != 0) Some(c.createNewCell(x)) else None))
-    game.getField.setFieldMatrix(f.createNewFieldMatrix(vectorCell))
-    game
+    game.recreate(field = game.field.recreate(fieldMatrix = f.createNewFieldMatrix(vectorCell)))
   }
 
   override def save(game: Game): Unit = {
@@ -51,24 +47,24 @@ case class FileIOImpl() extends FileIO {
 
     val rowsBuilder = Vector.newBuilder[Vector[Int]]
 
-    for (row <- game.getField.getFieldMatrix.getRows) {
+    for (row <- game.field.fieldMatrix.rows) {
       val builder = Vector.newBuilder[Int]
       row.foreach(entry => {
-        if (entry.isEmpty) builder.+=(0) else builder.+=(entry.get.getValue)
+        if (entry.isEmpty) builder.+=(0) else builder.+=(entry.get.value)
       })
       rowsBuilder.+=(builder.result)
     }
     Json.obj(
       "field" -> Json.obj(
-        "size" -> JsNumber(game.getField.getFieldSize),
-        "fieldStatistic1" -> JsNumber(game.getField.getFieldStatistics(1)),
-        "fieldStatistic2" -> JsNumber(game.getField.getFieldStatistics(2)),
-        "fieldStatistic3" -> JsNumber(game.getField.getFieldStatistics(3)),
-        "fieldStatistic4" -> JsNumber(game.getField.getFieldStatistics(4)),
+        "size" -> JsNumber(game.field.fieldSize),
+        "fieldStatistic1" -> JsNumber(game.field.fieldStatistics.get(1).get),
+        "fieldStatistic2" -> JsNumber(game.field.fieldStatistics.get(2).get),
+        "fieldStatistic3" -> JsNumber(game.field.fieldStatistics.get(3).get),
+        "fieldStatistic4" -> JsNumber(game.field.fieldStatistics.get(4).get),
         "rows" -> Json.toJson(rowsBuilder.result)
       ),
-      "playerState" -> JsString(game.getPlayerState.toString),
-      "gameState" -> JsString(game.getGameState.toString)
+      "playerState" -> JsString(game.playerState.toString),
+      "gameState" -> JsString(game.gameState.toString)
     )
 
   }

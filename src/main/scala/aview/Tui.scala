@@ -23,7 +23,7 @@ case class Tui(controller: ControllerInterface) extends UI with Observer {
     var input: String = ""
     update()
 
-    controller.getGame.setGameState(GameState.RUNNING)
+    controller.setGame(controller.getGame.recreate(gameState = GameState.RUNNING))
     while (!input.toLowerCase().equals("quit")) {
       input = readLine()
       processInputLine(input, controller)
@@ -33,6 +33,6 @@ case class Tui(controller: ControllerInterface) extends UI with Observer {
 
   override def update(): Unit = {
     println(controller.matrixToString)
-    println(controller.getGame.getPlayerState)
+    println(controller.getGame.playerState)
   }
 }

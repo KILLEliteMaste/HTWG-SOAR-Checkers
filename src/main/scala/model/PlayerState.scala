@@ -8,7 +8,7 @@ trait PlayerState {
 
 class PlayerState1() extends PlayerState {
   override def handle(controller: Controller): Unit = {
-    controller.game.setPlayerState(new PlayerState2)
+    controller.setGame(controller.getGame.recreate(playerState = new PlayerState2))
   }
 
   override def toString = s"It's Player 1 turn"
@@ -16,7 +16,7 @@ class PlayerState1() extends PlayerState {
 
 class PlayerState2 extends PlayerState {
   override def handle(controller: Controller): Unit = {
-    controller.game.setPlayerState(new PlayerState1)
+    controller.setGame(controller.getGame.recreate(playerState = new PlayerState1))
   }
 
   override def toString = s"It's Player 2 turn"

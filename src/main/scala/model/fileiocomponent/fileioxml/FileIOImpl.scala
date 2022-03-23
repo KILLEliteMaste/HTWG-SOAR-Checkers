@@ -16,14 +16,12 @@ case class FileIOImpl() extends FileIO {
 
     val injector = Guice.createInjector(new CheckersModule)
 
-    val game: Game = injector.getInstance(classOf[Game])
-    game.setGameState(GameState.valueOf((file \\ "game" \ "gameState").text.trim))
-    game.setPlayerState(if ((file \\ "game" \ "playerState").text.trim.contains("1")) new PlayerState1 else new PlayerState2)
-    game.setStatusMessage((file \\ "game" \ "statusMessage").text.trim)
-    game.getField.setFieldStatistics(1, (file \\ "game" \ "fieldStatistic1").text.trim.toInt)
-    game.getField.setFieldStatistics(2, (file \\ "game" \ "fieldStatistic2").text.trim.toInt)
-    game.getField.setFieldStatistics(3, (file \\ "game" \ "fieldStatistic3").text.trim.toInt)
-    game.getField.setFieldStatistics(4, (file \\ "game" \ "fieldStatistic4").text.trim.toInt)
+    var  game: Game = injector.getInstance(classOf[Game])
+    game = game.recreate(gameState = GameState.valueOf((file \\ "game" \ "gameState").text.trim), playerState = if ((file \\ "game" \ "playerState").text.trim.contains("1")) new PlayerState1 else new PlayerState2, statusMessage = (file \\ "game" \ "statusMessage").text.trim)
+    game.field.fieldStatistics.put(1, (file \\ "game" \ "fieldStatistic1").text.trim.toInt)
+    game.field.fieldStatistics.put(2, (file \\ "game" \ "fieldStatistic2").text.trim.toInt)
+    game.field.fieldStatistics.put(3, (file \\ "game" \ "fieldStatistic3").text.trim.toInt)
+    game.field.fieldStatistics.put(4, (file \\ "game" \ "fieldStatistic4").text.trim.toInt)
 
     val fieldMatrix = file \\ "game" \ "fieldMatrix"
     val vectorBuilder = Vector.newBuilder[Vector[Option[Cell]]]
@@ -37,7 +35,7 @@ case class FileIOImpl() extends FileIO {
       vectorBuilder.+=(rowBuilder.result)
     }
     val f = injector.getInstance(classOf[FieldMatrix[Option[Cell]]])
-    game.getField.setFieldMatrix(f.createNewFieldMatrix(vectorBuilder.result))
+    game = game.recreate(field = game.field.recreate(fieldMatrix = f.createNewFieldMatrix(vectorBuilder.result)))
     game
   }
 
@@ -54,33 +52,33 @@ case class FileIOImpl() extends FileIO {
   def gameToXml(game: Game): Elem = {
     <game>
       <fieldSize>
-        {game.getField.getFieldSize}
+        {game.field.fieldSize}
       </fieldSize>
       <playerState>
-        {game.getPlayerState.toString}
+        {game.playerState.toString}
       </playerState>
       <statusMessage>
-        {game.getStatusMessage}
+        {game.statusMessage}
       </statusMessage>
       <gameState>
-        {game.getGameState.toString}
+        {game.gameState.toString}
       </gameState>
       <fieldStatistic1>
-        {game.getField.getFieldStatistics(1)}
+        {game.field.fieldStatistics.get(1).get}
       </fieldStatistic1>
       <fieldStatistic2>
-        {game.getField.getFieldStatistics(2)}
+        {game.field.fieldStatistics.get(2).get}
       </fieldStatistic2>
       <fieldStatistic3>
-        {game.getField.getFieldStatistics(3)}
+        {game.field.fieldStatistics.get(3).get}
       </fieldStatistic3>
       <fieldStatistic4>
-        {game.getField.getFieldStatistics(4)}
+        {game.field.fieldStatistics.get(4).get}
       </fieldStatistic4>
       <fieldMatrix>
         {for {
-        row <- 0 until game.getField.getFieldSize
-        col <- 0 until game.getField.getFieldSize
+        row <- 0 until game.field.fieldSize
+        col <- 0 until game.field.fieldSize
       } yield getCell(game, row, col)}
       </fieldMatrix>
     </game>
@@ -89,7 +87,7 @@ case class FileIOImpl() extends FileIO {
   def getCell(game: Game, row: Int, col: Int): Elem = {
     <cell>
       <value>
-        {game.getField.getFieldMatrix.cell(row, col).map(cell => cell.getValue).getOrElse(0).toString}
+        {game.field.fieldMatrix.cell(row, col).map(cell => cell.value).getOrElse(0).toString}
       </value>
     </cell>
   }

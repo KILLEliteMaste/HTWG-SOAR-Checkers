@@ -9,15 +9,16 @@ class FieldImplSpec extends AnyWordSpec with Matchers {
     "constructed shouldBe given the length of its edge as size" should {
       val smallfield = FieldImpl(8)
       "have a total field size of 8" in {
-        smallfield.getFieldSize shouldBe 8
+        smallfield.fieldSize shouldBe 8
       }
     }
     "filled" in {
       val field = FieldImpl(10)
-      field.matrix.cell(0, 1).get.getValue shouldBe 1
-      field.matrix.cell(0, 0) shouldBe None
-      field.matrix.cell(1, 0).get.getValue shouldBe 1
-      field.matrix.cell(1, 1) shouldBe None
+      
+      field.fieldMatrix.cell(0, 1).get.value shouldBe 1
+      field.fieldMatrix.cell(0, 0) shouldBe None
+      field.fieldMatrix.cell(1, 0).get.value shouldBe 1
+      field.fieldMatrix.cell(1, 1) shouldBe None
     }
   }
   "made a string" in {
@@ -28,22 +29,16 @@ class FieldImplSpec extends AnyWordSpec with Matchers {
     "created" should {
       val matrix = new FieldMatrixImpl[Option[Cell]](1, None)
       "have a size of 1" in {
-        matrix.getSize shouldBe 1
+        matrix.size shouldBe 1
       }
     }
   }
   "A field" when {
-    "have a total field size" should {
-      val field = FieldImpl(8)
-      "return" in {
-        field.getTotalFieldSize shouldBe 64
-      }
-    }
     "set fieldStatistics" should {
       val field = FieldImpl(8)
       "set field statistics" in {
-        field.setFieldStatistics(1, 1)
-        field.getFieldStatistics(1) shouldBe 1
+        field.increaseFieldStatistics(1)
+        field.fieldStatistics(1) shouldBe 1
       }
     }
   }

@@ -1,20 +1,16 @@
 package model
 
-trait Field {
+import scala.collection.mutable
 
-  def getTotalFieldSize: Int
+trait Field(val fieldSize: 8 | 10 | 12, val fieldStatistics: mutable.HashMap[Int, Int], val fieldMatrix: FieldMatrix[Option[Cell]]) {
 
-  def getFieldSize: 8 | 10 | 12
+  def recreate(fieldSize: 8 | 10 | 12 = fieldSize, fieldStatistics: mutable.HashMap[Int, Int] = fieldStatistics, fieldMatrix: FieldMatrix[Option[Cell]] = fieldMatrix): Field
 
-  def getFieldStatistics(stone: Int): Int
+  def createNewField(size: 8 | 10 | 12): Field
 
-  def setFieldStatistics(stone: Int, amount: Int): Unit
+  def decreaseFieldStatistics(cellValue: Int): Unit
 
-  def getFieldMatrix: FieldMatrix[Option[Cell]]
-
-  def setFieldMatrix(newMatrix: FieldMatrix[Option[Cell]]): Unit
-
-  def getNewField(size: 8 | 10 | 12): Field
+  def increaseFieldStatistics(cellValue: Int): Unit
 
   def copyField: Field
 }
