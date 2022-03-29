@@ -105,3 +105,4 @@ fabric.properties
 build.sbt
 project/
 null/
+.DS_Store
