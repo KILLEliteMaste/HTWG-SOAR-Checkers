@@ -45,11 +45,7 @@ case class UndoManager(controller: Controller) {
   def setControllerToOldState(oldController: OldController): Unit = {
     controller.setGame(controller.game.recreate(field = oldController.field, playerState = oldController.playerState, gameState = oldController.gameState, statusMessage = oldController.statusMessage))
 
-    controller.game.field.fieldStatistics.put(1, oldController.s1)
-    controller.game.field.fieldStatistics.put(2, oldController.s2)
-    controller.game.field.fieldStatistics.put(3, oldController.s3)
-    controller.game.field.fieldStatistics.put(4, oldController.s4)
-    controller.setGame(controller.game.recreate(field = controller.game.field.recreate(fieldMatrix = oldController.fieldMatrix)))
+    controller.setGame(controller.game.recreate(field = controller.game.field.recreate(fieldMatrix = oldController.fieldMatrix, fieldStatistics = controller.game.field.fieldStatistics  + (1-> oldController.s1, 2-> oldController.s2, 3-> oldController.s3, 4-> oldController.s4))))
   }
 
   case class OldController(field: Field, s1: Int, s2: Int, s3: Int, s4: Int, fieldMatrix: FieldMatrix[Option[Cell]], playerState: PlayerState, gameState: GameState, statusMessage: String)

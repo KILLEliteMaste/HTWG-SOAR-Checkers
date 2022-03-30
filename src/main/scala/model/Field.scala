@@ -1,16 +1,16 @@
 package model
 
-import scala.collection.mutable
+import scala.collection.immutable
 
-trait Field(val fieldSize: 8 | 10 | 12, val fieldStatistics: mutable.HashMap[Int, Int], val fieldMatrix: FieldMatrix[Option[Cell]]) {
+trait Field(val fieldSize: 8 | 10 | 12, val fieldStatistics: immutable.HashMap[Int, Int], val fieldMatrix: FieldMatrix[Option[Cell]]) {
 
-  def recreate(fieldSize: 8 | 10 | 12 = fieldSize, fieldStatistics: mutable.HashMap[Int, Int] = fieldStatistics, fieldMatrix: FieldMatrix[Option[Cell]] = fieldMatrix): Field
+  def recreate(fieldSize: 8 | 10 | 12 = fieldSize, fieldStatistics: immutable.HashMap[Int, Int] = fieldStatistics, fieldMatrix: FieldMatrix[Option[Cell]] = fieldMatrix): Field
 
   def createNewField(size: 8 | 10 | 12): Field
 
-  def decreaseFieldStatistics(cellValue: Int): Unit
+  def decreaseFieldStatistics(cellValue: Int): Field
 
-  def increaseFieldStatistics(cellValue: Int): Unit
+  def increaseFieldStatistics(cellValue: Int): Field
 
   def copyField: Field
 }

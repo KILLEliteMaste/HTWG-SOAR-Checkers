@@ -24,16 +24,16 @@ case class FileIOImpl() extends FileIO {
     val playerState = if ((gameJson \ "playerState").toString.contains("1")) new PlayerState1 else new PlayerState2
     game = game.recreate(playerState = playerState, gameState = GameState.valueOf((gameJson \ "gameState").get.as[String]))
 
-    game.field.fieldStatistics.put(1, (fieldJson \ "fieldStatistic1").get.as[Int])
-    game.field.fieldStatistics.put(2, (fieldJson \ "fieldStatistic2").get.as[Int])
-    game.field.fieldStatistics.put(3, (fieldJson \ "fieldStatistic3").get.as[Int])
-    game.field.fieldStatistics.put(4, (fieldJson \ "fieldStatistic4").get.as[Int])
+    val s1 = (fieldJson \ "fieldStatistic1").get.as[Int]
+    val s2 = (fieldJson \ "fieldStatistic2").get.as[Int]
+    val s3 = (fieldJson \ "fieldStatistic3").get.as[Int]
+    val s4 = (fieldJson \ "fieldStatistic4").get.as[Int]
     //Rows
     val f = injector.getInstance(classOf[FieldMatrix[Option[Cell]]])
     val c = injector.getInstance(classOf[Cell])
     val vectorInts = (fieldJson \ "rows").get.as[Vector[Vector[Int]]]
     val vectorCell = vectorInts.map(_.map(x => if (x != 0) Some(c.createNewCell(x)) else None))
-    game.recreate(field = game.field.recreate(fieldMatrix = f.createNewFieldMatrix(vectorCell)))
+    game.recreate(field = game.field.recreate(fieldMatrix = f.createNewFieldMatrix(vectorCell), fieldStatistics = game.field.fieldStatistics  + (1-> s1, 2-> s2, 3-> s3, 4-> s4)))
   }
 
   override def save(game: Game): Unit = {

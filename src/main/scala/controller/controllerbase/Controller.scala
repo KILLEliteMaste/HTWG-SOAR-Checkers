@@ -4,24 +4,36 @@ import com.google.inject.{Guice, Inject, Injector}
 import controller.ControllerInterface
 import net.codingwell.scalaguice.InjectorExtensions.ScalaInjector
 import util.{Position, UndoManager}
-import model.{Game, CheckersModule, PlayerState1,Field,FieldMatrix,GameState,Cell}
+import model.{Cell, CheckersModule, Field, FieldMatrix, Game, GameState, PlayerState1}
 import model.fileiocomponent.FileIO
 
-import scala.collection.mutable
+import scala.collection.{immutable, mutable}
 
 case class Controller @Inject()(var game: Game) extends ControllerInterface {
 
   private val undoManager = UndoManager(this)
   val injector: Injector = Guice.createInjector(CheckersModule())
   val fileIo: FileIO = injector.getInstance(classOf[FileIO])
-  
-  override def createNewField(): Unit = {
+
+  game = game.recreate(field = createNewField())//game.recreate(field = game.field.recreate(fieldStatistics = game.field.fieldStatistics + (1-> countStones(1), 3-> countStones(3))))
+
+  override def createNewField(): Field = {
     createNewField(game.field.fieldSize)
   }
 
-  override def createNewField(size: 8 | 10 | 12): Unit = {
+  override def createNewField(size: 8 | 10 | 12): Field = {
     game = game.recreate(size, new PlayerState1, game.statusMessage, game.field.createNewField(size), GameState.RUNNING)
     notifyObservers()
+    game = game.recreate(field = game.field.recreate(fieldStatistics = game.field.fieldStatistics + (1-> countStones(1), 3-> countStones(3))))
+    game.field
+  }
+
+  def countStones(searchValue: Int): Int = {
+    var counter = 0
+    game.field.fieldMatrix.rows.foreach(vector => {
+      counter = counter + vector.filter(_.isDefined).map(_.get).count(_.value == searchValue)
+    })
+    counter
   }
 
   override def changePlayerTurn(): Unit = {
@@ -42,7 +54,7 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
       case Some(cell) =>
         if (isStoneOpponentsColor(cell.value, stoneToMove)) {
           game = game.recreate(field = game.field.recreate(fieldMatrix = moveToNewPosition(positionFrom, positionTo, game.field).replaceCell(positionFrom.x + x, positionFrom.y + y, None)))
-          game.field.decreaseFieldStatistics(cell.value)
+          game = game.recreate(field = game.field.decreaseFieldStatistics(cell.value))
         }
       case None =>
     }
@@ -67,13 +79,13 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
     for (i <- 0 until game.field.fieldSize) {
       if (game.field.fieldMatrix.rows(game.field.fieldSize - 1)(i).exists(cell => cell.value == 1)) {
         game = game.recreate(field = game.field.recreate(fieldMatrix = moveToNewPosition(positionTo, positionTo, game.field).replaceCell(game.field.fieldSize - 1, i, Some(game.field.fieldMatrix.rows(game.field.fieldSize - 1)(i).get.createNewKing))))
-        game.field.decreaseFieldStatistics( 1)
-        game.field.increaseFieldStatistics( 2)
+        game =game.recreate(field = game.field.decreaseFieldStatistics(1))
+        game =game.recreate(field = game.field.increaseFieldStatistics(2))
       }
       if (game.field.fieldMatrix.rows(0)(i).exists(cell => cell.value == 3)) {
         game = game.recreate(field = game.field.recreate(fieldMatrix = moveToNewPosition(positionTo, positionTo, game.field).replaceCell(0, i, Some(game.field.fieldMatrix.rows(0)(i).get.createNewKing))))
-        game.field.decreaseFieldStatistics(3)
-        game.field.increaseFieldStatistics(4)
+        game =game.recreate(field = game.field.decreaseFieldStatistics(3))
+        game =game.recreate(field = game.field.increaseFieldStatistics(4))
       }
     }
     if ((stoneToMove == 2 || stoneToMove == 4) && !alreadyMoved) {
@@ -89,7 +101,7 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
               if (positionFrom.x + posX + posX != positionTo.x) {
                 val cell: Cell = game.field.fieldMatrix.cell(positionTo.x - directionX, positionTo.y - directionY).get
                 //game.field.fieldStatistics(cell.getValue, game.field.getFieldStatistics(cell.getValue) - 1)
-                game.field.decreaseFieldStatistics(cell.value)
+                game = game.recreate(field = game.field.decreaseFieldStatistics(cell.value))
                 game = game.recreate(field = game.field.recreate(fieldMatrix = moveToNewPosition(positionFrom, positionTo, game.field).replaceCell(positionTo.x - directionX, positionTo.y - directionY, None)))
               }
             } else {

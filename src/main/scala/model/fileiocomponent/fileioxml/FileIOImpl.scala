@@ -18,10 +18,10 @@ case class FileIOImpl() extends FileIO {
 
     var  game: Game = injector.getInstance(classOf[Game])
     game = game.recreate(gameState = GameState.valueOf((file \\ "game" \ "gameState").text.trim), playerState = if ((file \\ "game" \ "playerState").text.trim.contains("1")) new PlayerState1 else new PlayerState2, statusMessage = (file \\ "game" \ "statusMessage").text.trim)
-    game.field.fieldStatistics.put(1, (file \\ "game" \ "fieldStatistic1").text.trim.toInt)
-    game.field.fieldStatistics.put(2, (file \\ "game" \ "fieldStatistic2").text.trim.toInt)
-    game.field.fieldStatistics.put(3, (file \\ "game" \ "fieldStatistic3").text.trim.toInt)
-    game.field.fieldStatistics.put(4, (file \\ "game" \ "fieldStatistic4").text.trim.toInt)
+    val s1 = (file \\ "game" \ "fieldStatistic1").text.trim.toInt
+    val s2 = (file \\ "game" \ "fieldStatistic2").text.trim.toInt
+    val s3 = (file \\ "game" \ "fieldStatistic3").text.trim.toInt
+    val s4 = (file \\ "game" \ "fieldStatistic4").text.trim.toInt
 
     val fieldMatrix = file \\ "game" \ "fieldMatrix"
     val vectorBuilder = Vector.newBuilder[Vector[Option[Cell]]]
@@ -35,7 +35,7 @@ case class FileIOImpl() extends FileIO {
       vectorBuilder.+=(rowBuilder.result)
     }
     val f = injector.getInstance(classOf[FieldMatrix[Option[Cell]]])
-    game = game.recreate(field = game.field.recreate(fieldMatrix = f.createNewFieldMatrix(vectorBuilder.result)))
+    game = game.recreate(field = game.field.recreate(fieldMatrix = f.createNewFieldMatrix(vectorBuilder.result), fieldStatistics = game.field.fieldStatistics  + (1-> s1, 2-> s2, 3-> s3, 4-> s4)))
     game
   }
 

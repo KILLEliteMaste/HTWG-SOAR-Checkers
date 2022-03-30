@@ -6,9 +6,9 @@ import util.{Observable, Position, UndoManager}
 
 trait ControllerInterface extends Observable :
 
-  def createNewField(): Unit
+  def createNewField(): Field
 
-  def createNewField(size: 8 | 10 | 12): Unit
+  def createNewField(size: 8 | 10 | 12): Field
 
   def changePlayerTurn(): Unit
 

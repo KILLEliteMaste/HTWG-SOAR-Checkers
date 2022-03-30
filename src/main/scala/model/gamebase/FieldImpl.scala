@@ -4,38 +4,25 @@ import com.google.inject.name.Named
 import model.{Cell, Field, FieldMatrix}
 
 import javax.inject.Inject
-import scala.collection.mutable
+import scala.collection.{immutable}
 
-case class FieldImpl @Inject()(@Named("DefaultSize") override val fieldSize: 8 | 10 | 12, override val fieldStatistics: mutable.HashMap[Int, Int] = new mutable.HashMap[Int, Int](), override val fieldMatrix: FieldMatrix[Option[Cell]] = new FieldMatrixImpl[Option[Cell]](FieldImplHelper.generateFieldMatrix(8))) extends Field(fieldSize, fieldStatistics, fieldMatrix) {
+case class FieldImpl @Inject()(@Named("DefaultSize") override val fieldSize: 8 | 10 | 12, override val fieldStatistics: immutable.HashMap[Int, Int] = immutable.HashMap[Int, Int](1 -> 0, 2 -> 0, 3 -> 0, 4 -> 0), override val fieldMatrix: FieldMatrix[Option[Cell]] = new FieldMatrixImpl[Option[Cell]](FieldImplHelper.generateFieldMatrix(8))) extends Field(fieldSize, fieldStatistics, fieldMatrix) {
 
-  fieldStatistics.put(1, 0)
-  fieldStatistics.put(2, 0)
-  fieldStatistics.put(3, 0)
-  fieldStatistics.put(4, 0)
+  override def recreate(fieldSize: 8 | 10 | 12 = fieldSize, fieldStatistics: immutable.HashMap[Int, Int] = fieldStatistics, fieldMatrix: FieldMatrix[Option[Cell]] = fieldMatrix): Field = copy(fieldSize, fieldStatistics, fieldMatrix)
 
-  fieldStatistics.put(3, countStones(3))
-  fieldStatistics.put(1, countStones(1))
+  def updateFieldStatistics(value: Int)(cellValue: Int): Field = copy(fieldStatistics = fieldStatistics + (cellValue -> (fieldStatistics.getOrElse(cellValue, 0) + value)))
 
-  def countStones(searchValue: Int): Int = {
-    var counter = 0
-    fieldMatrix.rows.foreach(vector => {
-      counter = counter + vector.filter(_.isDefined).map(_.get).count(_.value == searchValue)
-    })
-    counter
-  }
 
-  override def recreate(fieldSize: 8 | 10 | 12 = fieldSize, fieldStatistics: mutable.HashMap[Int, Int] = fieldStatistics, fieldMatrix: FieldMatrix[Option[Cell]] = fieldMatrix): Field = copy(fieldSize, fieldStatistics, fieldMatrix)
+  override def decreaseFieldStatistics(cellValue: Int): Field = updateFieldStatistics(-1)(cellValue)
 
-  def updateFieldStatistics(value: Int)(cellValue: Int): Unit = fieldStatistics.updateWith(cellValue)({
-    case Some(count) => Some(count + value)
-    case None => Some(1)
-  })
+  override def increaseFieldStatistics(cellValue: Int): Field = updateFieldStatistics(+1)(cellValue)
 
-  override def decreaseFieldStatistics(cellValue: Int): Unit = updateFieldStatistics(-1)(cellValue)
-
-  override def increaseFieldStatistics(cellValue: Int): Unit = updateFieldStatistics(+1)(cellValue)
+  def numberToRow(index: Int): String = fieldMatrix.rows(index).map(_.getOrElse(" ")).mkString(index.toString + "  ▐ ", " ▐ ", " ▐\n")
 
   override def toString: String = {
+    (("    " + (0 until fieldSize).map(" " + _ + "  ").mkString("") + "\n") +: (0 until fieldSize).map(numberToRow(_))).mkString("")
+
+/*
     var str = "  "
     for (i <- 0 until fieldSize) {
       str += "   " + i
@@ -51,12 +38,12 @@ case class FieldImpl @Inject()(@Named("DefaultSize") override val fieldSize: 8 |
       output += "\n"
     }
     output = output.replace("▐▐", "▐")
-    output
+    output*/
   }
 
   override def copyField: Field = copy()
 
-  override def createNewField(size: 8 | 10 | 12): Field = FieldImpl(size, new mutable.HashMap[Int, Int](), new FieldMatrixImpl[Option[Cell]](FieldImplHelper.generateFieldMatrix(size)))
+  override def createNewField(size: 8 | 10 | 12): Field = FieldImpl(size, immutable.HashMap[Int, Int](1 -> 0, 2 -> 0, 3 -> 0, 4 -> 0), new FieldMatrixImpl[Option[Cell]](FieldImplHelper.generateFieldMatrix(size)))
 
 }
 

@@ -75,7 +75,7 @@ case class Buttons(gui: Gui) {
     moveButton.onAction = _ => {
       val str:StringBuilder = StringBuilder()
       
-      gui.moveList foreach (f(str,_))
+      gui.moveList foreach (buildPositionString(str,_))
 
       gui.moveList.clear()
       val retVal = gui.processInputLine("move " + str, gui.controller)
@@ -84,7 +84,7 @@ case class Buttons(gui: Gui) {
     moveButton
   }
 
-  def f(sb:StringBuilder, pos:Position): Unit = sb.append(pos.x + " " + pos.y + " ")
+  def buildPositionString(sb:StringBuilder, pos:Position): Unit = sb.append(pos.x + " " + pos.y + " ")
 
   def getNewGameButton: Button = {
     val newGameButton = new Button("Restart Game") {

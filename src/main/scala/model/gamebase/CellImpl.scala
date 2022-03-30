@@ -22,7 +22,8 @@ case class CellImpl(override val value: Int) extends Cell(value) {
   }
 
   override def toString: String = {
-    "▐ " + value.toString + " ▐"
+    //"▐ " + value.toString + " ▐"
+    value.toString
   }
 
   override def createNewKing: Cell = CellImpl(value + 1)
