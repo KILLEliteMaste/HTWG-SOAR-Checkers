@@ -1,12 +1,12 @@
 {
   "field" : {
     "size" : 8,
-    "fieldStatistic1" : 2,
+    "fieldStatistic1" : 12,
     "fieldStatistic2" : 0,
-    "fieldStatistic3" : 8,
-    "fieldStatistic4" : 2,
-    "rows" : [ [ 0, 4, 0, 0, 0, 4, 0, 0 ], [ 0, 0, 0, 0, 0, 0, 0, 0 ], [ 0, 1, 0, 0, 0, 0, 0, 3 ], [ 0, 0, 0, 0, 3, 0, 0, 0 ], [ 0, 0, 0, 1, 0, 0, 0, 0 ], [ 0, 0, 3, 0, 0, 0, 0, 0 ], [ 0, 3, 0, 0, 0, 0, 0, 0 ], [ 3, 0, 3, 0, 3, 0, 3, 0 ] ]
+    "fieldStatistic3" : 12,
+    "fieldStatistic4" : 0,
+    "rows" : [ [ 0, 1, 0, 1, 0, 1, 0, 1 ], [ 1, 0, 1, 0, 1, 0, 1, 0 ], [ 0, 1, 0, 1, 0, 1, 0, 1 ], [ 0, 0, 0, 0, 0, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 0, 0, 0 ], [ 3, 0, 3, 0, 3, 0, 3, 0 ], [ 0, 3, 0, 3, 0, 3, 0, 3 ], [ 3, 0, 3, 0, 3, 0, 3, 0 ] ]
   },
-  "playerState" : "It's Player 2 turn",
+  "playerState" : "It's Player 1 turn",
   "gameState" : "SAVED"
 }

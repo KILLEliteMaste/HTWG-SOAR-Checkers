@@ -33,7 +33,8 @@ case class FileIOImpl() extends FileIO {
     val c = injector.getInstance(classOf[Cell])
     val vectorInts = (fieldJson \ "rows").get.as[Vector[Vector[Int]]]
     val vectorCell = vectorInts.map(_.map(x => if (x != 0) Some(c.createNewCell(x)) else None))
-    game.recreate(field = game.field.recreate(fieldMatrix = f.createNewFieldMatrix(vectorCell), fieldStatistics = game.field.fieldStatistics  + (1-> s1, 2-> s2, 3-> s3, 4-> s4)))
+    val fieldstats = collection.immutable.HashMap(1-> s1, 2-> s2, 3-> s3, 4-> s4)
+    game.recreate(field = game.field.recreate(fieldMatrix = f.createNewFieldMatrix(vectorCell), fieldStatistics = fieldstats))
   }
 
   override def save(game: Game): Unit = {

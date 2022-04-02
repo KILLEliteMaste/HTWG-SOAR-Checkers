@@ -3,11 +3,11 @@ package model.fileiocomponent.fileioxml
 import com.google.inject.Guice
 import com.google.inject.name.Names
 import model.fileiocomponent.FileIO
-import model.{GameState, PlayerState1, PlayerState2, _}
+import model.*
 import net.codingwell.scalaguice.InjectorExtensions.ScalaInjector
 
-import java.io._
-import scala.xml._
+import java.io.*
+import scala.xml.*
 
 case class FileIOImpl() extends FileIO {
   override def load: Game = {
@@ -16,7 +16,7 @@ case class FileIOImpl() extends FileIO {
 
     val injector = Guice.createInjector(new CheckersModule)
 
-    var  game: Game = injector.getInstance(classOf[Game])
+    var game: Game = injector.getInstance(classOf[Game])
     game = game.recreate(gameState = GameState.valueOf((file \\ "game" \ "gameState").text.trim), playerState = if ((file \\ "game" \ "playerState").text.trim.contains("1")) new PlayerState1 else new PlayerState2, statusMessage = (file \\ "game" \ "statusMessage").text.trim)
     val s1 = (file \\ "game" \ "fieldStatistic1").text.trim.toInt
     val s2 = (file \\ "game" \ "fieldStatistic2").text.trim.toInt
@@ -35,7 +35,7 @@ case class FileIOImpl() extends FileIO {
       vectorBuilder.+=(rowBuilder.result)
     }
     val f = injector.getInstance(classOf[FieldMatrix[Option[Cell]]])
-    game = game.recreate(field = game.field.recreate(fieldMatrix = f.createNewFieldMatrix(vectorBuilder.result), fieldStatistics = game.field.fieldStatistics  + (1-> s1, 2-> s2, 3-> s3, 4-> s4)))
+    game = game.recreate(field = game.field.recreate(fieldMatrix = f.createNewFieldMatrix(vectorBuilder.result), fieldStatistics = collection.immutable.HashMap(1 -> s1, 2 -> s2, 3 -> s3, 4 -> s4)))
     game
   }
 

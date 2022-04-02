@@ -15,10 +15,15 @@ class NewSpec extends AnyWordSpec with Matchers {
         new0.handleCommand(List(), controller)
         controller.game.field.fieldSize shouldBe 8
       }
-      "with different size" in {
+      "with different size 10" in {
         controller.createNewField(10)
         new0.handleCommand(List("10"), controller)
         controller.game.field.fieldSize shouldBe 10
+      }
+      "with different size 12" in {
+        controller.createNewField(12)
+        new0.handleCommand(List("12"), controller)
+        controller.game.field.fieldSize shouldBe 12
       }
     }
   }

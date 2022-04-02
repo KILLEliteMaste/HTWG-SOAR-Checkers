@@ -2,10 +2,10 @@ package controller.controllerbase
 
 import com.google.inject.{Guice, Inject, Injector}
 import controller.ControllerInterface
+import model.fileiocomponent.FileIO
+import model.*
 import net.codingwell.scalaguice.InjectorExtensions.ScalaInjector
 import util.{Position, UndoManager}
-import model.{Cell, CheckersModule, Field, FieldMatrix, Game, GameState, PlayerState1}
-import model.fileiocomponent.FileIO
 
 import scala.collection.{immutable, mutable}
 
@@ -15,7 +15,7 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
   val injector: Injector = Guice.createInjector(CheckersModule())
   val fileIo: FileIO = injector.getInstance(classOf[FileIO])
 
-  game = game.recreate(field = createNewField())//game.recreate(field = game.field.recreate(fieldStatistics = game.field.fieldStatistics + (1-> countStones(1), 3-> countStones(3))))
+  game = game.recreate(field = createNewField()) //game.recreate(field = game.field.recreate(fieldStatistics = game.field.fieldStatistics + (1-> countStones(1), 3-> countStones(3))))
 
   override def createNewField(): Field = {
     createNewField(game.field.fieldSize)
@@ -24,7 +24,7 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
   override def createNewField(size: 8 | 10 | 12): Field = {
     game = game.recreate(size, new PlayerState1, game.statusMessage, game.field.createNewField(size), GameState.RUNNING)
     notifyObservers()
-    game = game.recreate(field = game.field.recreate(fieldStatistics = game.field.fieldStatistics + (1-> countStones(1), 3-> countStones(3))))
+    game = game.recreate(field = game.field.recreate(fieldStatistics = game.field.fieldStatistics + (1 -> countStones(1), 3 -> countStones(3))))
     game.field
   }
 
@@ -70,7 +70,7 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
       case 1 :: 1 :: Nil => if (stoneToMove == 1 && game.field.fieldMatrix.cell(positionTo.x, positionTo.y).isEmpty && !alreadyMoved) game = game.recreate(field = game.field.recreate(fieldMatrix = moveToNewPosition(positionFrom, positionTo, game.field)))
       //BLACK
       case -1 :: -1 :: Nil => if (stoneToMove == 3 && game.field.fieldMatrix.cell(positionTo.x, positionTo.y).isEmpty && !alreadyMoved) game = game.recreate(field = game.field.recreate(fieldMatrix = moveToNewPosition(positionFrom, positionTo, game.field)))
-      case -1 :: 1 :: Nil => if (stoneToMove == 3 && game.field.fieldMatrix.cell(positionTo.x, positionTo.y).isEmpty && !alreadyMoved) game = game.recreate(field = game.field.recreate(fieldMatrix= moveToNewPosition(positionFrom, positionTo, game.field)))
+      case -1 :: 1 :: Nil => if (stoneToMove == 3 && game.field.fieldMatrix.cell(positionTo.x, positionTo.y).isEmpty && !alreadyMoved) game = game.recreate(field = game.field.recreate(fieldMatrix = moveToNewPosition(positionFrom, positionTo, game.field)))
       //JUMP OVER STONE
       case _ :: _ :: Nil =>
         if (Math.abs(differenceX) == 2 && Math.abs(differenceY) == 2)
@@ -79,13 +79,13 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
     for (i <- 0 until game.field.fieldSize) {
       if (game.field.fieldMatrix.rows(game.field.fieldSize - 1)(i).exists(cell => cell.value == 1)) {
         game = game.recreate(field = game.field.recreate(fieldMatrix = moveToNewPosition(positionTo, positionTo, game.field).replaceCell(game.field.fieldSize - 1, i, Some(game.field.fieldMatrix.rows(game.field.fieldSize - 1)(i).get.createNewKing))))
-        game =game.recreate(field = game.field.decreaseFieldStatistics(1))
-        game =game.recreate(field = game.field.increaseFieldStatistics(2))
+        game = game.recreate(field = game.field.decreaseFieldStatistics(1))
+        game = game.recreate(field = game.field.increaseFieldStatistics(2))
       }
       if (game.field.fieldMatrix.rows(0)(i).exists(cell => cell.value == 3)) {
         game = game.recreate(field = game.field.recreate(fieldMatrix = moveToNewPosition(positionTo, positionTo, game.field).replaceCell(0, i, Some(game.field.fieldMatrix.rows(0)(i).get.createNewKing))))
-        game =game.recreate(field = game.field.decreaseFieldStatistics(3))
-        game =game.recreate(field = game.field.increaseFieldStatistics(4))
+        game = game.recreate(field = game.field.decreaseFieldStatistics(3))
+        game = game.recreate(field = game.field.increaseFieldStatistics(4))
       }
     }
     if ((stoneToMove == 2 || stoneToMove == 4) && !alreadyMoved) {
@@ -113,7 +113,7 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
           posY = posY + directionY
           i = i + 1
         }
-        moveToNewPosition(positionFrom, positionTo, game.field)
+        game = game.recreate(field = game.field.recreate(fieldMatrix = moveToNewPosition(positionFrom, positionTo, game.field)))
       }
     }
     checkGameState()
@@ -196,7 +196,7 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
 
   override def matrixToString: String = game.field.toString
 
-  override def setGame(newGame :Game): Unit = game = newGame
+  override def setGame(newGame: Game): Unit = game = newGame
 
   def save(): Unit = {
     game = game.recreate(gameState = GameState.SAVED)

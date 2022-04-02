@@ -4,9 +4,11 @@ import com.google.inject.name.Named
 import model.{Cell, Field, FieldMatrix}
 
 import javax.inject.Inject
-import scala.collection.{immutable}
+import scala.collection.immutable
 
 case class FieldImpl @Inject()(@Named("DefaultSize") override val fieldSize: 8 | 10 | 12, override val fieldStatistics: immutable.HashMap[Int, Int] = immutable.HashMap[Int, Int](1 -> 0, 2 -> 0, 3 -> 0, 4 -> 0), override val fieldMatrix: FieldMatrix[Option[Cell]] = new FieldMatrixImpl[Option[Cell]](FieldImplHelper.generateFieldMatrix(8))) extends Field(fieldSize, fieldStatistics, fieldMatrix) {
+
+  def this(fieldSizeSecondary: 8 | 10 | 12) = this(fieldSize = fieldSizeSecondary, fieldMatrix = new FieldMatrixImpl[Option[Cell]](FieldImplHelper.generateFieldMatrix(fieldSizeSecondary)))
 
   override def recreate(fieldSize: 8 | 10 | 12 = fieldSize, fieldStatistics: immutable.HashMap[Int, Int] = fieldStatistics, fieldMatrix: FieldMatrix[Option[Cell]] = fieldMatrix): Field = copy(fieldSize, fieldStatistics, fieldMatrix)
 
@@ -20,7 +22,7 @@ case class FieldImpl @Inject()(@Named("DefaultSize") override val fieldSize: 8 |
   def numberToRow(index: Int): String = fieldMatrix.rows(index).map(_.getOrElse(" ")).mkString(index.toString + "  ▐ ", " ▐ ", " ▐\n")
 
   override def toString: String = {
-    (("    " + (0 until fieldSize).map(" " + _ + "  ").mkString("") + "\n") +: (0 until fieldSize).map(numberToRow(_))).mkString("")
+    (("    " + (0 until fieldSize).map(" " + _ + "  ").mkString("") + "\n") +: (0 until fieldSize).map(numberToRow)).mkString("")
 
 /*
     var str = "  "
