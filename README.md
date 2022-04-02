@@ -1,9 +1,6 @@
 ##### Master branch
 [![Build Status](https://travis-ci.com/KILLEliteMaste/Checkers.svg?branch=master)](https://travis-ci.com/KILLEliteMaste/Checkers)
-[![Coverage Status](https://coveralls.io/repos/github/KILLEliteMaste/Checkers/badge.svg?branch=master)](https://coveralls.io/github/KILLEliteMaste/Checkers?branch=master)
-##### Development branch
-[![Build Status](https://travis-ci.com/KILLEliteMaste/Checkers.svg?branch=development)](https://travis-ci.com/KILLEliteMaste/Checkers)
-[![Coverage Status](https://coveralls.io/repos/github/KILLEliteMaste/Checkers/badge.svg?branch=development)](https://coveralls.io/github/KILLEliteMaste/Checkers?branch=development)
+[![Coverage Status](https://coveralls.io/repos/github/KILLEliteMaste/HTWG-SOAR-Checkers/badge.svg?branch=master)](https://coveralls.io/github/KILLEliteMaste/HTWG-SOAR-Checkers?branch=master)
 
 
 # Checkers
