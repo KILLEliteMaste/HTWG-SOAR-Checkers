@@ -8,6 +8,7 @@ import net.codingwell.scalaguice.InjectorExtensions.ScalaInjector
 import util.{Position, UndoManager}
 
 import scala.collection.{immutable, mutable}
+import scala.util.{Failure, Success}
 
 case class Controller @Inject()(var game: Game) extends ControllerInterface {
 
@@ -15,7 +16,7 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
   val injector: Injector = Guice.createInjector(CheckersModule())
   val fileIo: FileIO = injector.getInstance(classOf[FileIO])
 
-  game = game.recreate(field = createNewField()) //game.recreate(field = game.field.recreate(fieldStatistics = game.field.fieldStatistics + (1-> countStones(1), 3-> countStones(3))))
+  game = game.recreate(field = createNewField())
 
   override def createNewField(): Field = createNewField(game.field.fieldSize)
 
@@ -26,7 +27,7 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
     game.field
   }
 
-  def countStones(searchValue: Int): Int = game.field.fieldMatrix.rows.flatten.map(_.map(_.value).getOrElse(0)).count(_==searchValue)
+  def countStones(searchValue: Int): Int = game.field.fieldMatrix.rows.flatten.map(_.map(_.value).getOrElse(0)).count(_ == searchValue)
 
   override def changePlayerTurn(): Unit = {
     game.playerState.handle(this)
@@ -92,7 +93,6 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
             if (isStoneOpponentsColor(game.field.fieldMatrix.rows(positionFrom.x + posX)(positionFrom.y + posY).get.value, stoneToMove)) {
               if (positionFrom.x + posX + posX != positionTo.x) {
                 val cell: Cell = game.field.fieldMatrix.cell(positionTo.x - directionX, positionTo.y - directionY).get
-                //game.field.fieldStatistics(cell.getValue, game.field.getFieldStatistics(cell.getValue) - 1)
                 game = game.recreate(field = game.field.decreaseFieldStatistics(cell.value))
                 game = game.recreate(field = game.field.recreate(fieldMatrix = moveToNewPosition(positionFrom, positionTo, game.field).replaceCell(positionTo.x - directionX, positionTo.y - directionY, None)))
               }
@@ -151,6 +151,10 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
     true
   }
 
+  override def getGame: Game = game
+
+  override def setGame(newGame: Game): Unit = game = newGame
+
   override def checkIfAllCellsBelongToPlayer(field: Field, positions: Vector[Position]): Boolean = {
     if (game.playerState.isInstanceOf[PlayerState1]) {
       for (elem <- positions) {
@@ -170,9 +174,7 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
     true
   }
 
-  override def doStep(): Unit = {
-    undoManager.doStep()
-  }
+  override def doStep(): Unit = undoManager.doStep()
 
   override def undo(): String = {
     val ret = undoManager.undoStep()
@@ -188,21 +190,20 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
 
   override def matrixToString: String = game.field.toString
 
-  override def setGame(newGame: Game): Unit = game = newGame
-
   def save(): Unit = {
     game = game.recreate(gameState = GameState.SAVED)
     fileIo.save(game)
     notifyObservers()
   }
 
-  def load(): Unit = {
-    game = fileIo.load
-    game = game.recreate(gameState = GameState.LOADED)
-    notifyObservers()
-  }
-
-  override def getGame: Game = {
-    game
+  def load(): String = fileIo.load match {
+    case Success(gameSuccess) =>
+      game = gameSuccess.recreate(gameState = GameState.LOADED)
+      notifyObservers()
+      "LOADED"
+    case Failure(e) =>
+      game = game.recreate(gameState = GameState.FILE_COULD_NOT_BE_LOADED)
+      notifyObservers()
+      "ERROR: COULD NOT LOAD SAVE FILE"
   }
 }

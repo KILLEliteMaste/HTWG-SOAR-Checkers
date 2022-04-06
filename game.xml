@@ -1,11 +1,11 @@
 <game>
-    <fieldSize> 8 </fieldSize>
-    <playerState> It's Player 1 turn </playerState>
+    <fieldSize> 10 </fieldSize>
+    <playerState> It's Player 2 turn </playerState>
     <statusMessage> </statusMessage>
-    <gameState> IDLE </gameState>
-    <fieldStatistic1> 12 </fieldStatistic1>
+    <gameState> SAVED </gameState>
+    <fieldStatistic1> 15 </fieldStatistic1>
     <fieldStatistic2> 0 </fieldStatistic2>
-    <fieldStatistic3> 12 </fieldStatistic3>
+    <fieldStatistic3> 15 </fieldStatistic3>
     <fieldStatistic4> 0 </fieldStatistic4>
     <fieldMatrix>
         <cell>
@@ -33,7 +33,40 @@
             <value> 1 </value>
         </cell>
         <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
             <value> 1 </value>
+        </cell>
+        <cell>
+            <value> 1 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 1 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 1 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 1 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 1 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
         </cell>
         <cell>
             <value> 0 </value>
@@ -60,7 +93,25 @@
             <value> 0 </value>
         </cell>
         <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
             <value> 1 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
         </cell>
         <cell>
             <value> 0 </value>
@@ -72,13 +123,52 @@
             <value> 0 </value>
         </cell>
         <cell>
-            <value> 1 </value>
+            <value> 0 </value>
         </cell>
         <cell>
             <value> 0 </value>
         </cell>
         <cell>
-            <value> 1 </value>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
         </cell>
         <cell>
             <value> 0 </value>
@@ -153,6 +243,12 @@
             <value> 0 </value>
         </cell>
         <cell>
+            <value> 3 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
             <value> 0 </value>
         </cell>
         <cell>
@@ -175,6 +271,18 @@
         </cell>
         <cell>
             <value> 3 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
+        </cell>
+        <cell>
+            <value> 3 </value>
+        </cell>
+        <cell>
+            <value> 3 </value>
+        </cell>
+        <cell>
+            <value> 0 </value>
         </cell>
         <cell>
             <value> 3 </value>

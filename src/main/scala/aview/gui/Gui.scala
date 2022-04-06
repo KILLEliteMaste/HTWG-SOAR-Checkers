@@ -159,6 +159,7 @@ case class Gui(controller: ControllerInterface) extends UI with Observer with JF
       stone.setMaxSize(Double.MaxValue, Double.MaxValue)
       gameGrid.add(stone, y, x)
     }
+    resizeGameGrid()
   }
 
   def getTileCss(x: Int, y: Int): String = {

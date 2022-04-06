@@ -7,17 +7,27 @@ import model.*
 import net.codingwell.scalaguice.InjectorExtensions.ScalaInjector
 
 import java.io.*
+import scala.util.Try
 import scala.xml.*
 
 case class FileIOImpl() extends FileIO {
-  override def load: Game = {
+  override def load: Try[Game] = Try {
     val file = scala.xml.XML.loadFile("game.xml")
-    val size = (file \\ "game" \ "fieldSize").text.trim.toInt
+
+    val fieldSize: 8 | 10 | 12 = (file \\ "game" \ "fieldSize").text.trim.toInt match {
+      case 8 => 8
+      case 10 => 10
+      case 12 => 12
+    }
 
     val injector = Guice.createInjector(new CheckersModule)
 
-    var game: Game = injector.getInstance(classOf[Game]).recreate(gameState = GameState.valueOf((file \\ "game" \ "gameState").text.trim), playerState = if ((file \\ "game" \ "playerState").text.trim.contains("1")) new PlayerState1 else new PlayerState2, statusMessage = (file \\ "game" \ "statusMessage").text.trim)
-    
+    val game: Game = injector.getInstance(classOf[Game]).recreate(
+      gameState = GameState.valueOf((file \\ "game" \ "gameState").text.trim),
+      playerState = if ((file \\ "game" \ "playerState").text.trim.contains("1")) new PlayerState1 else new PlayerState2,
+      statusMessage = (file \\ "game" \ "statusMessage").text.trim,
+      size = fieldSize)
+
     val s1 = (file \\ "game" \ "fieldStatistic1").text.trim.toInt
     val s2 = (file \\ "game" \ "fieldStatistic2").text.trim.toInt
     val s3 = (file \\ "game" \ "fieldStatistic3").text.trim.toInt
@@ -25,7 +35,7 @@ case class FileIOImpl() extends FileIO {
 
     val fieldMatrix = file \\ "game" \ "fieldMatrix"
     val vectorBuilder = Vector.newBuilder[Vector[Option[Cell]]]
-    for (row <- (fieldMatrix \ "cell").sliding(size, size)) {
+    for (row <- (fieldMatrix \ "cell").sliding(fieldSize, fieldSize)) {
       val rowBuilder = Vector.newBuilder[Option[Cell]]
       for (cell <- row) {
         val c = injector.getInstance(classOf[Cell])
@@ -35,8 +45,7 @@ case class FileIOImpl() extends FileIO {
       vectorBuilder.+=(rowBuilder.result)
     }
     val f = injector.getInstance(classOf[FieldMatrix[Option[Cell]]])
-    game = game.recreate(field = game.field.recreate(fieldMatrix = f.createNewFieldMatrix(vectorBuilder.result), fieldStatistics = collection.immutable.HashMap(1 -> s1, 2 -> s2, 3 -> s3, 4 -> s4)))
-    game
+    game.recreate(field = game.field.recreate(fieldSize = fieldSize, fieldMatrix = f.createNewFieldMatrix(vectorBuilder.result), fieldStatistics = collection.immutable.HashMap(1 -> s1, 2 -> s2, 3 -> s3, 4 -> s4)))
   }
 
   override def save(game: Game): Unit = saveString(game)
