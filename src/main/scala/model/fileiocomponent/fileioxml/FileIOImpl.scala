@@ -16,8 +16,8 @@ case class FileIOImpl() extends FileIO {
 
     val injector = Guice.createInjector(new CheckersModule)
 
-    var game: Game = injector.getInstance(classOf[Game])
-    game = game.recreate(gameState = GameState.valueOf((file \\ "game" \ "gameState").text.trim), playerState = if ((file \\ "game" \ "playerState").text.trim.contains("1")) new PlayerState1 else new PlayerState2, statusMessage = (file \\ "game" \ "statusMessage").text.trim)
+    var game: Game = injector.getInstance(classOf[Game]).recreate(gameState = GameState.valueOf((file \\ "game" \ "gameState").text.trim), playerState = if ((file \\ "game" \ "playerState").text.trim.contains("1")) new PlayerState1 else new PlayerState2, statusMessage = (file \\ "game" \ "statusMessage").text.trim)
+    
     val s1 = (file \\ "game" \ "fieldStatistic1").text.trim.toInt
     val s2 = (file \\ "game" \ "fieldStatistic2").text.trim.toInt
     val s3 = (file \\ "game" \ "fieldStatistic3").text.trim.toInt

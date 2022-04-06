@@ -17,9 +17,7 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
 
   game = game.recreate(field = createNewField()) //game.recreate(field = game.field.recreate(fieldStatistics = game.field.fieldStatistics + (1-> countStones(1), 3-> countStones(3))))
 
-  override def createNewField(): Field = {
-    createNewField(game.field.fieldSize)
-  }
+  override def createNewField(): Field = createNewField(game.field.fieldSize)
 
   override def createNewField(size: 8 | 10 | 12): Field = {
     game = game.recreate(size, new PlayerState1, game.statusMessage, game.field.createNewField(size), GameState.RUNNING)
@@ -28,13 +26,7 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
     game.field
   }
 
-  def countStones(searchValue: Int): Int = {
-    var counter = 0
-    game.field.fieldMatrix.rows.foreach(vector => {
-      counter = counter + vector.filter(_.isDefined).map(_.get).count(_.value == searchValue)
-    })
-    counter
-  }
+  def countStones(searchValue: Int): Int = game.field.fieldMatrix.rows.flatten.map(_.map(_.value).getOrElse(0)).count(_==searchValue)
 
   override def changePlayerTurn(): Unit = {
     game.playerState.handle(this)

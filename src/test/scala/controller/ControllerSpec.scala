@@ -18,6 +18,8 @@ class ControllerSpec extends AnyWordSpec with Matchers {
         controller.createNewField(8)
         controller.createNewField()
         controller.game.field.fieldSize shouldBe 8
+        controller.countStones(1) shouldBe 12
+        controller.countStones(3) shouldBe 12
       }
       "with int" in {
         controller.createNewField(12)
