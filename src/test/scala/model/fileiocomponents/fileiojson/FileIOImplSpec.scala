@@ -7,18 +7,17 @@ import model.gamebase.GameImpl
 import model.fileiocomponent.fileiojson.FileIOImpl
 
 import scala.util.{Failure, Success}
-
+import org.scalatest.TryValues._
 
 class FileIOImplSpec extends AnyWordSpec with Matchers {
   "A FileIO system" should {
     val fileIO = FileIOImpl()
     "be able to save and load a game" in {
-      fileIO.save(new GameImpl(10))
-      
-      fileIO.load match {
-        case Success(value) => value.field.fieldSize shouldBe 10
-        case Failure(exception) =>
-      }
+      val game = new GameImpl(10)
+      fileIO.save(game)
+      val loaded = fileIO.load
+
+      loaded.success.value.field.fieldSize shouldBe 10
     }
   }
 }
