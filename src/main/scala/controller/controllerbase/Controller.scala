@@ -2,13 +2,29 @@ package controller.controllerbase
 
 import com.google.inject.{Guice, Inject, Injector}
 import controller.ControllerInterface
-import model.fileiocomponent.FileIO
+import model.FileIO
+import de.htwg.se.fileio.model.FileIO
 import model.*
 import net.codingwell.scalaguice.InjectorExtensions.ScalaInjector
 import util.{Position, UndoManager}
 
 import scala.collection.{immutable, mutable}
 import scala.util.{Failure, Success}
+
+ /*
+ Controller - load (try monade)
+
+ FileImpls - load (try monade)
+
+ FileIoXml - for comprehension
+
+ UI - Option - kein null input mehr
+
+
+  fileioimpl- tests
+
+ neuer gamestate für error
+ */
 
 case class Controller @Inject()(var game: Game) extends ControllerInterface {
 

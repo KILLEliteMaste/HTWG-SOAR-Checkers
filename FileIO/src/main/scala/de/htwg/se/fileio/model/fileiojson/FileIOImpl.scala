@@ -1,7 +1,8 @@
-package model.fileiocomponent.fileiojson
+package de.htwg.se.fileio.model.fileiojson
 
 import com.google.inject.Guice
 import com.google.inject.name.Names
+import de.htwg.se.fileio.model.FileIO
 import model.fileiocomponent.FileIO
 import model.*
 import net.codingwell.scalaguice.InjectorExtensions.*

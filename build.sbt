@@ -1,3 +1,6 @@
+lazy val root = (project in file(".")).aggregate(fileio).dependsOn(fileio)
+lazy val fileio = (project in file("FileIO")).dependsOn(root)
+
 name := "Checkers"
 organization := "de.htwg.se"
 version := "0.1"

@@ -6,8 +6,8 @@ import com.google.inject.AbstractModule
 import com.google.inject.name.Names
 import controller.ControllerInterface
 import model.gamebase.{CellImpl, FieldImpl, FieldMatrixImpl, GameImpl}
-import model.fileiocomponent.FileIO
-import model.fileiocomponent.fileiojson.FileIOImpl
+import de.htwg.se.fileio.model.FileIO
+import de.htwg.se.fileio.model.fileiojson.FileIOImpl
 import net.codingwell.scalaguice.ScalaModule
 
 class CheckersModule extends AbstractModule {
