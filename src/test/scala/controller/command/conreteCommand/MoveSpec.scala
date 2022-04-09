@@ -1,10 +1,12 @@
 package controller.command.conreteCommand
 
-import controller.controllerbase.Controller
-import model.gamebase.{FieldImpl, GameImpl}
+import de.htwg.se.board.gamebase.GameImpl
+import de.htwg.se.checkers.controller.command.conreteCommand.Move
+import de.htwg.se.checkers.controller.controllerbase.Controller
+import de.htwg.se.checkers.util.Position
+import de.htwg.se.board.gamebase.FieldImpl
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import util.Position
 
 class MoveSpec extends AnyWordSpec with Matchers {
 

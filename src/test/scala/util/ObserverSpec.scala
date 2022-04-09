@@ -1,7 +1,8 @@
 package util
 
-import controller.controllerbase.Controller
-import model.gamebase.GameImpl
+import de.htwg.se.board.gamebase.GameImpl
+import de.htwg.se.checkers.controller.controllerbase.Controller
+import de.htwg.se.checkers.util.Observer
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 

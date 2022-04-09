@@ -1,12 +1,13 @@
 package controller
 
 import com.google.inject.Guice
-import controller.controllerbase.Controller
-import model.GameState
-import model.gamebase.{FieldImpl, GameImpl}
+import de.htwg.se.board.GameState
+import de.htwg.se.board.gamebase.GameImpl
+import de.htwg.se.checkers.controller.controllerbase.Controller
+import de.htwg.se.checkers.util.Position
+import de.htwg.se.board.gamebase.GameImpl
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import util.Position
 
 
 class ControllerSpec extends AnyWordSpec with Matchers {

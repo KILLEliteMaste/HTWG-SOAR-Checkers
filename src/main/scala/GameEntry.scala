@@ -1,7 +1,8 @@
-import aview.UserInterface
 import com.google.inject.Guice
-import controller.ControllerInterface
-import model.CheckersModule
+import de.htwg.se.checkers.aview
+import de.htwg.se.checkers.aview.UserInterface
+import de.htwg.se.checkers.controller.ControllerInterface
+import de.htwg.se.checkers.CheckersModule
 
 import scala.util.{Failure, Success, Try}
 
@@ -11,6 +12,6 @@ import scala.util.{Failure, Success, Try}
 
   val uiTypeGui = if System.getenv("CHECKERS_UI_TYPE") == null then "both" else System.getenv("CHECKERS_UI_TYPE")
 
-  Try(UserInterface(uiTypeGui, controller)) match
+  Try(aview.UserInterface(uiTypeGui, controller)) match
     case Failure(v) => println("Could not start UI because: " + v.getMessage + v.printStackTrace())
     case Success(v) => println("GOOD BYE")

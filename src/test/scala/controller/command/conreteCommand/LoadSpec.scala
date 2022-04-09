@@ -1,7 +1,8 @@
 package controller.command.conreteCommand
 
-import controller.controllerbase.Controller
-import model.gamebase.GameImpl
+import de.htwg.se.board.gamebase.GameImpl
+import de.htwg.se.checkers.controller.command.conreteCommand.Load
+import de.htwg.se.checkers.controller.controllerbase.Controller
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 

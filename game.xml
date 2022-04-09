@@ -1,11 +1,11 @@
 <game>
     <fieldSize> 10 </fieldSize>
-    <playerState> It's Player 2 turn </playerState>
+    <playerState> It's Player 1 turn </playerState>
     <statusMessage> </statusMessage>
-    <gameState> SAVED </gameState>
-    <fieldStatistic1> 15 </fieldStatistic1>
+    <gameState> IDLE </gameState>
+    <fieldStatistic1> 0 </fieldStatistic1>
     <fieldStatistic2> 0 </fieldStatistic2>
-    <fieldStatistic3> 15 </fieldStatistic3>
+    <fieldStatistic3> 0 </fieldStatistic3>
     <fieldStatistic4> 0 </fieldStatistic4>
     <fieldMatrix>
         <cell>
@@ -90,7 +90,7 @@
             <value> 0 </value>
         </cell>
         <cell>
-            <value> 0 </value>
+            <value> 1 </value>
         </cell>
         <cell>
             <value> 0 </value>
@@ -117,7 +117,7 @@
             <value> 0 </value>
         </cell>
         <cell>
-            <value> 1 </value>
+            <value> 0 </value>
         </cell>
         <cell>
             <value> 0 </value>
