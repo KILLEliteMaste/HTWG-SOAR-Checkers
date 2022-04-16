@@ -20,6 +20,8 @@ lazy val osName = System.getProperty("os.name") match {
 
 lazy val dependencies =
   new {
+    val akkaVersion = "2.6.19"
+    val akkaHttpVersion = "10.2.9"
     val scalacticVersion = "3.2.11"
     val scalatestVersion = "3.2.11"
     val scalaxmlVersion = "2.0.1"
@@ -29,6 +31,9 @@ lazy val dependencies =
     val scalafxVersion = "17.0.1-R26"
     val javaFxVersion = "17.0.1"
 
+    val akka = ("com.typesafe.akka" %% "akka-http" % akkaHttpVersion).cross(CrossVersion.for3Use2_13)
+    val akkaactor = ("com.typesafe.akka" %% "akka-actor-typed" % akkaVersion).cross(CrossVersion.for3Use2_13)
+    val akkastream = ("com.typesafe.akka" %% "akka-stream" % akkaVersion).cross(CrossVersion.for3Use2_13)
     val scalactic = "org.scalactic" %% "scalactic" % scalacticVersion
     val scalatest = "org.scalatest" %% "scalatest" % scalatestVersion % "test"
     val scalaXML = "org.scala-lang.modules" %% "scala-xml" % scalaxmlVersion
@@ -46,6 +51,9 @@ lazy val dependencies =
   }
 
 val commonDependencies = Seq(
+  dependencies.akka,
+  dependencies.akkaactor,
+  dependencies.akkastream,
   dependencies.scalactic,
   dependencies.scalatest,
   dependencies.scalaXML,
@@ -63,6 +71,9 @@ val commonDependencies = Seq(
 )
 
 val fileioDependencies = Seq(
+  dependencies.akka,
+  dependencies.akkastream,
+  dependencies.akkaactor,
   dependencies.scalactic,
   dependencies.scalatest,
   dependencies.scalaXML,

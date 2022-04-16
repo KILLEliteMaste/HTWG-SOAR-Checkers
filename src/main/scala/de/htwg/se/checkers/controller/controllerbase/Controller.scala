@@ -9,31 +9,27 @@ import de.htwg.se.checkers.util.{Position, UndoManager}
 import de.htwg.se.checkers.CheckersModule
 import de.htwg.se.fileio.FileIO
 import net.codingwell.scalaguice.InjectorExtensions.ScalaInjector
+import akka.actor.typed.ActorSystem
+import akka.actor.typed.scaladsl.Behaviors
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpMethods, HttpRequest, HttpResponse}
+import akka.http.scaladsl.unmarshalling.Unmarshal
 
+import scala.concurrent.Future
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
 import scala.collection.{immutable, mutable}
 import scala.util.{Failure, Success}
-
- /*
- Controller - load (try monade)
-
- FileImpls - load (try monade)
-
- FileIoXml - for comprehension
-
- UI - Option - kein null input mehr
-
-
-  fileioimpl- tests
-
- neuer gamestate für error
- */
 
 case class Controller @Inject()(var game: Game) extends ControllerInterface {
 
   private val undoManager = UndoManager(this)
   val injector: Injector = Guice.createInjector(CheckersModule())
   val fileIo: FileIO = injector.getInstance(classOf[FileIO])
-
+  
+  val fileIoPort: Int = sys.env.getOrElse("FILE_IO_PORT", 8081).toString.toInt
+  val fileIoHost: String = sys.env.getOrElse("FILE_IO_HOST", "localhost")
+  
   game = game.recreate(field = createNewField())
 
   override def createNewField(): Field = createNewField(game.field.fieldSize)
@@ -209,20 +205,52 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
 
   override def matrixToString: String = game.field.toString
 
-  def save(): Unit = {
+  override def save(): Unit = {
+    implicit val system = ActorSystem(Behaviors.empty, "SingleRequest")
+    // needed for the future flatMap/onComplete in the end
+    implicit val executionContext = system.executionContext
+
+    val responseFuture: Future[HttpResponse] = Http().singleRequest(
+      HttpRequest(
+        method= HttpMethods.POST,
+        uri= s"http://$fileIoHost:$fileIoPort/json",
+        entity = HttpEntity(ContentTypes.`application/json`, fileIo.serialize(game))
+      )
+    )
     game = game.recreate(gameState = GameState.SAVED)
-    fileIo.save(game)
     notifyObservers()
   }
 
-  def load(): String = fileIo.load match {
-    case Success(gameSuccess) =>
-      game = gameSuccess.recreate(gameState = GameState.LOADED)
-      notifyObservers()
-      "LOADED"
-    case Failure(e) =>
-      game = game.recreate(gameState = GameState.FILE_COULD_NOT_BE_LOADED)
-      notifyObservers()
-      "ERROR: COULD NOT LOAD SAVE FILE"
+  override def load(): String = {
+    implicit val system = ActorSystem(Behaviors.empty, "SingleRequest")
+    // needed for the future flatMap/onComplete in the end
+    implicit val executionContext = system.executionContext
+
+    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(uri = s"http://$fileIoHost:$fileIoPort/json"))
+
+    var returnMessage = ""
+    val waitFuture = responseFuture andThen  {
+      case Failure(exception) =>
+        game = game.recreate(gameState = GameState.FILE_COULD_NOT_BE_LOADED)
+        notifyObservers()
+        returnMessage = "ERROR: COULD NOT LOAD SAVE FILE"
+      case Success(value) =>
+        Unmarshal(value.entity).to[String] andThen  {
+          case Failure(_) => sys.error("Something went wrong trying to unmarshal the FileIO response")
+          case Success(result) =>
+            returnMessage = fileIo.loadByString(result) match {
+              case Success(gameSuccess) =>
+                game = gameSuccess.recreate(gameState = GameState.LOADED)
+                notifyObservers()
+                "LOADED"
+              case Failure(e) =>
+                game = game.recreate(gameState = GameState.FILE_COULD_NOT_BE_LOADED)
+                notifyObservers()
+                "ERROR: COULD NOT LOAD SAVE FILE"
+            }
+        }
+    }
+    Await.ready(waitFuture, Duration.Inf)
+    returnMessage
   }
 }

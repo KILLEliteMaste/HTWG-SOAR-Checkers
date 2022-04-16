@@ -13,9 +13,16 @@ import scala.util.{Failure, Try}
 case class FileIOImpl() extends FileIO {
 
   override def load: Try[Game] = Try {
-    val injector = Guice.createInjector(new FileIOModule())
     val source: String = Source.fromFile("game.json").getLines.mkString
-    val gameJson: JsValue = Json.parse(source)
+    load(Json.parse(source))
+  }
+
+  override def loadByString(gameString: String): Try[Game] = Try {
+    val gameJson: JsValue = Json.parse(gameString)
+    load(gameJson)
+  }
+
+  def load(gameJson: JsValue) = {
     val fieldJson = gameJson \ "field"
 
     val fieldSize: 8 | 10 | 12 = (fieldJson \ "size").get.as[Int] match {
@@ -25,7 +32,7 @@ case class FileIOImpl() extends FileIO {
     }
 
     val playerState = if ((gameJson \ "playerState").toString.contains("1")) new PlayerState1 else new PlayerState2
-
+    val injector = Guice.createInjector(new FileIOModule())
     val game: Game = injector.getInstance(classOf[Game]).recreate(
       playerState = playerState,
       gameState = GameState.valueOf((gameJson \ "gameState").get.as[String]),
@@ -51,6 +58,15 @@ case class FileIOImpl() extends FileIO {
     pw.close()
   }
 
+  def save(gameString: String): Unit = {
+    import java.io._
+    val pw = new PrintWriter(new File("game.json"))
+    pw.write(gameString)
+    pw.close()
+  }
+
+  override def serialize(game: Game): String = gameToJson(game).toString
+    
   def gameToJson(game: Game): JsObject = {
     val rowsBuilder = Vector.newBuilder[Vector[Int]]
 
@@ -73,6 +89,5 @@ case class FileIOImpl() extends FileIO {
       "playerState" -> JsString(game.playerState.toString),
       "gameState" -> JsString(game.gameState.toString)
     )
-
   }
 }

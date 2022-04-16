@@ -12,8 +12,16 @@ import scala.xml.*
 
 case class FileIOImpl() extends FileIO {
   override def load: Try[Game] = Try {
-    val file = scala.xml.XML.loadFile("game.xml")
+    val file = scala.xml.XML.load("game.xml")
+    load(file)
+  }
 
+  override def loadByString(gameString: String): Try[Game] = Try {
+    val file = scala.xml.XML.loadString(gameString)
+    load(file)
+  }
+
+  def load(file : Elem) = {
     val fieldSize: 8 | 10 | 12 = (file \\ "game" \ "fieldSize").text.trim.toInt match {
       case 8 => 8
       case 10 => 10
@@ -48,6 +56,7 @@ case class FileIOImpl() extends FileIO {
     game.recreate(field = game.field.recreate(fieldSize = fieldSize, fieldMatrix = f.createNewFieldMatrix(vectorBuilder.result), fieldStatistics = collection.immutable.HashMap(1 -> s1, 2 -> s2, 3 -> s3, 4 -> s4)))
   }
 
+
   override def save(game: Game): Unit = saveString(game)
 
   def saveString(game: Game): Unit = {
@@ -57,6 +66,15 @@ case class FileIOImpl() extends FileIO {
     pw.write(xml)
     pw.close()
   }
+
+  override def save(gameString: String): Unit = {
+    val pw = new PrintWriter(new File("game.xml"))
+    val prettyPrinter = new PrettyPrinter(120, 4)
+    pw.write(gameString)
+    pw.close()
+  }
+
+  override def serialize(game: Game): String = gameToXml(game).toString()
 
   def gameToXml(game: Game): Elem = {
     <game>

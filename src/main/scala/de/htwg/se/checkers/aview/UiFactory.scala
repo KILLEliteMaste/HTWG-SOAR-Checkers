@@ -20,6 +20,7 @@ object UserInterface {
       Gui(controller).run()
     }
     case "tui" | "TUI" => Tui(controller).run()
+    case "resttui" | "RESTTUI" => RestTui(controller).run()
     case "both" | "BOTH" =>
       ExecutionContext.global.execute(() => {
         Try(UserInterface("tui", controller)) match {
@@ -27,6 +28,10 @@ object UserInterface {
           case Failure(v) => println("Could not start UI because: " + v.getMessage + v.printStackTrace())
         }
       })
+      ExecutionContext.global.execute(() => {
+        UserInterface("resttui", controller)
+      })
+
       Try(UserInterface("gui", controller)) match {
         case Failure(v) => println("Could not start UI because: " + v.getMessage + v.printStackTrace())
         case Success(v) => println("GOOD BYE")
