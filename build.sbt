@@ -1,15 +1,52 @@
 lazy val global = project.in(file("."))
   .settings(libraryDependencies ++= commonDependencies)
-  .settings(mainClass in Compile := Some("GameEntry"))
   .aggregate(fileio, board)
   .dependsOn(fileio, board)
+  //.settings(mainClass in Compile := Some("de.htwg.se.checkers.GameEntry"))
+  //.enablePlugins(sbtdocker.DockerPlugin, JavaAppPackaging)
+  /*
+  .settings(dockerCommands ++= Seq(
+    Cmd("FROM", "hseeberger/scala-sbt:17.0.2_1.6.2_3.1.1"),
+    Cmd("ENV", "DISPLAY host.docker.internal:0.0"),
+    Cmd("RUN", "apt-get update && apt-get install -y --no-install-recommends"),
+    Cmd("RUN", "apt-get install -y libxrender1"),
+    Cmd("RUN", "apt-get install -y libxtst6"),
+    Cmd("RUN", "apt-get install -y libxi6"),
+    Cmd("RUN", "apt-get install -y openjfx"),
+    Cmd("ADD", ". /sources"),
+    Cmd("WORKDIR", "/sources"),
+    Cmd("ENV", "CHECKERS_UI_TYPE \"tui gui rui\""),
+    Cmd("RUN", "sbt compile"),
+    Cmd("CMD", "sbt", "run")
+  ))
+  .settings(dockerExposedPorts := Seq(8080))
+  */
+
 
 lazy val fileio = project.in(file("FileIO"))
   .settings(libraryDependencies ++= fileioDependencies)
   .dependsOn(board)
+  .settings(mainClass in Compile := Some("de.htwg.se.fileio.FileIOService"))
+  //.enablePlugins(sbtdocker.DockerPlugin, JavaAppPackaging)
+  /*
+  .settings(dockerCommands ++= Seq(
+    Cmd("FROM", "hseeberger/scala-sbt:17.0.2_1.6.2_3.1.1"),
+    Cmd("RUN", "apt-get update && apt-get install -y --no-install-recommends"),
+    Cmd("RUN", "apt-get install -y libxrender1"),
+    Cmd("RUN", "apt-get install -y libxtst6"),
+    Cmd("RUN", "apt-get install -y libxi6"),
+    Cmd("ADD", "./sources"),
+    Cmd("WORKDIR", "/sources"),
+    Cmd("RUN", "sbt compile"),
+    Cmd("RUN", "sbt", "\"runMain de.htwg.se.fileio.FileIOService\"")
+  ))
+  .settings(dockerExposedPorts := Seq(8081))
+  */
+
 
 lazy val board = project.in(file("Board"))
   .settings(libraryDependencies ++= boardDependencies)
+  //.enablePlugins(JavaAppPackaging)
 
 lazy val osName = System.getProperty("os.name") match {
   case n if n.startsWith("Linux") => "linux"

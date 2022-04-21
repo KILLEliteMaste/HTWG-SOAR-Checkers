@@ -3,10 +3,11 @@ package de.htwg.se.fileio
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model._
-import akka.http.scaladsl.server.Directives._
-import scala.io.StdIn
+import akka.http.scaladsl.model.*
+import akka.http.scaladsl.server.Directives.*
 
+import scala.concurrent.{ExecutionContextExecutor, Future}
+import scala.io.StdIn
 
 case object FileIOService {
 
@@ -71,5 +72,11 @@ case object FileIOService {
     val bindingFuture = Http().newServerAt(connectionInterface, connectionPort).bind(route)
 
     println(s"Server online at http://$connectionInterface:$connectionPort/\nPress RETURN to stop...")
+
+    StdIn.readLine() // let it run until user presses return
+    bindingFuture
+      .flatMap(_.unbind()) // trigger unbinding from the port
+      .onComplete(_ => system.terminate()) // and shutdown when done
+
   }
 }

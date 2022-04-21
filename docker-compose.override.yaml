@@ -1,0 +1,7 @@
+services:
+  checkers:
+    ports:
+      - "8080:8080"
+  fileio:
+    ports:
+      - "8081:8081"

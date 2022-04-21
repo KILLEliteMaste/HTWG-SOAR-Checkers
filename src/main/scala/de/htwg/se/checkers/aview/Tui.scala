@@ -24,7 +24,7 @@ case class Tui(controller: ControllerInterface) extends UI with Observer {
     update()
 
     controller.setGame(controller.getGame.recreate(gameState = GameState.RUNNING))
-    while (!input.toLowerCase().equals("quit")) {
+    while (input != null && !input.toLowerCase().equals("quit")) {
       input = readLine()
       processInputLine(input, controller)
     }

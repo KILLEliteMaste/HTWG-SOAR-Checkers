@@ -5,6 +5,7 @@ import de.htwg.se.checkers.controller.ControllerInterface
 import de.htwg.se.checkers.controller.controllerbase.Controller
 import javafx.embed.swing.JFXPanel
 
+import java.util.concurrent.ExecutorService
 import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success, Try}
 
@@ -13,29 +14,31 @@ trait UserInterface {
 }
 
 object UserInterface {
-  def apply(kind: String, controller: ControllerInterface): Unit = kind match {
-    case "gui" | "GUI" => {
+  def apply(kind: String, controller: ControllerInterface): Unit = {
+    if (kind.contains("tui")) {
+      if (kind.contains("rui") || kind.contains("gui")) {
+        ExecutionContext.global.execute(() => {
+          Tui(controller).run()
+        })
+      } else {
+        Tui(controller).run()
+      }
+    }
+
+    if (kind.contains("rui")) {
+      if (kind.contains("gui")) {
+        ExecutionContext.global.execute(() => {
+          Tui(controller).run()
+        })
+      } else {
+        RestTui(controller).run()
+      }
+    }
+
+    if (kind.contains("gui")) {
       //Workaround for ScalaFX toolkit initialization. This fix is broadly used among other users.
       new JFXPanel()
       Gui(controller).run()
     }
-    case "tui" | "TUI" => Tui(controller).run()
-    case "resttui" | "RESTTUI" => RestTui(controller).run()
-    case "both" | "BOTH" =>
-      ExecutionContext.global.execute(() => {
-        Try(UserInterface("tui", controller)) match {
-          case Success(v) => println("UI successfully started")
-          case Failure(v) => println("Could not start UI because: " + v.getMessage + v.printStackTrace())
-        }
-      })
-      ExecutionContext.global.execute(() => {
-        UserInterface("resttui", controller)
-      })
-
-      Try(UserInterface("gui", controller)) match {
-        case Failure(v) => println("Could not start UI because: " + v.getMessage + v.printStackTrace())
-        case Success(v) => println("GOOD BYE")
-      }
-    case _ => throw new Exception("No valid user interface")
   }
 }
