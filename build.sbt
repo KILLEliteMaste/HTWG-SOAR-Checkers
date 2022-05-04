@@ -1,4 +1,5 @@
 lazy val global = project.in(file("."))
+  .settings(resolvers += "jitpack" at "https://jitpack.io")
   .settings(libraryDependencies ++= commonDependencies)
   .aggregate(fileio, board)
   .dependsOn(fileio, board)
@@ -45,6 +46,7 @@ lazy val fileio = project.in(file("FileIO"))
 
 
 lazy val board = project.in(file("Board"))
+  .settings(resolvers += "jitpack" at "https://jitpack.io")
   .settings(libraryDependencies ++= boardDependencies)
   //.enablePlugins(JavaAppPackaging)
 
@@ -67,6 +69,20 @@ lazy val dependencies =
     val scalaguiceVersion = "5.0.2"
     val scalafxVersion = "17.0.1-R26"
     val javaFxVersion = "17.0.1"
+    val slickVersion = "3.3.3"
+    val slickHCPVersion = "3.3.3"
+    val mariadbVersion = "3.0.4"
+    val slf4jVersion = "1.7.36"
+
+
+    //("com.typesafe.slick" %% "slick" % slickVersion).cross(CrossVersion.for3Use2_13)
+
+
+    val slick = "com.github.slick.slick" % "slick_3" % "nafg~dottyquery-SNAPSHOT"
+
+    val slf4j = "org.slf4j" % "slf4j-nop" % slf4jVersion
+    val slickHCP = ("com.typesafe.slick" %% "slick-hikaricp" % slickHCPVersion).cross(CrossVersion.for3Use2_13)
+    val mariadb = "org.mariadb.jdbc" % "mariadb-java-client" % mariadbVersion
 
     val akka = ("com.typesafe.akka" %% "akka-http" % akkaHttpVersion).cross(CrossVersion.for3Use2_13)
     val akkaactor = ("com.typesafe.akka" %% "akka-actor-typed" % akkaVersion).cross(CrossVersion.for3Use2_13)
@@ -120,6 +136,10 @@ val fileioDependencies = Seq(
 )
 
 val boardDependencies = Seq(
+  dependencies.slick,
+  dependencies.slickHCP,
+  dependencies.slf4j,
+  dependencies.mariadb,
   dependencies.scalactic,
   dependencies.scalatest,
   dependencies.guice,

@@ -43,7 +43,7 @@ case class Buttons(gui: Gui) {
   }
 
   def getLoadButton: Button = {
-    val loadButton = new Button("Load Game") {
+    val loadButton = new Button("Load") {
       styleClass = List("controlGridButton")
     }
     loadButton.setMaxSize(Double.MaxValue, Double.MaxValue)
@@ -56,12 +56,37 @@ case class Buttons(gui: Gui) {
   }
 
   def getSaveButton: Button = {
-    val saveButton = new Button("Save Game") {
+    val saveButton = new Button("Save") {
       styleClass = List("controlGridButton")
     }
     saveButton.setMaxSize(Double.MaxValue, Double.MaxValue)
     saveButton.onAction = _ => {
       gui.processInputLine("save", gui.controller)
+      gui.update()
+    }
+    saveButton
+  }
+
+  def getLoadDbButton: Button = {
+    val loadButton = new Button("Load DB") {
+      styleClass = List("controlGridButton")
+    }
+    loadButton.setMaxSize(Double.MaxValue, Double.MaxValue)
+    loadButton.onAction = _ => {
+
+      gui.processInputLine("loaddb", gui.controller)
+      gui.update()
+    }
+    loadButton
+  }
+
+  def getSaveDbButton: Button = {
+    val saveButton = new Button("Save DB") {
+      styleClass = List("controlGridButton")
+    }
+    saveButton.setMaxSize(Double.MaxValue, Double.MaxValue)
+    saveButton.onAction = _ => {
+      gui.processInputLine("savedb", gui.controller)
       gui.update()
     }
     saveButton

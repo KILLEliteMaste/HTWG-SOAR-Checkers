@@ -77,6 +77,7 @@ case class FileIOImpl() extends FileIO {
       })
       rowsBuilder.+=(builder.result)
     }
+    
     Json.obj(
       "field" -> Json.obj(
         "size" -> JsNumber(game.field.fieldSize),

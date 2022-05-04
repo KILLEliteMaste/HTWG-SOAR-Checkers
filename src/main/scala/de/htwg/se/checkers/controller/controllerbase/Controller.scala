@@ -14,6 +14,7 @@ import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpMethods, HttpRequest, HttpResponse}
 import akka.http.scaladsl.unmarshalling.Unmarshal
+import de.htwg.se.board.dbComponent.DaoInterface
 
 import scala.concurrent.Future
 import scala.concurrent.duration.Duration
@@ -26,6 +27,7 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
   private val undoManager = UndoManager(this)
   val injector: Injector = Guice.createInjector(CheckersModule())
   val fileIo: FileIO = injector.getInstance(classOf[FileIO])
+  val database: DaoInterface = injector.getInstance(classOf[DaoInterface])
   
   val fileIoPort: Int = sys.env.getOrElse("FILE_IO_PORT", 8081).toString.toInt
   val fileIoHost: String = sys.env.getOrElse("FILE_IO_HOST", "localhost")
@@ -252,5 +254,22 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
     }
     Await.ready(waitFuture, Duration.Inf)
     returnMessage
+  }
+
+  override def loadFromDB(): String = {
+    database.load() match {
+      case Success(result) =>
+        game = result
+        notifyObservers()
+        "LOADED FROM DATABASE"
+      case Failure(_) => {
+        notifyObservers()
+        "COULD NOT LOAD FROM DATABASE"
+      }
+    }
+  }
+
+  override def saveToDB(): Unit = {
+    database.save(game = game)
   }
 }

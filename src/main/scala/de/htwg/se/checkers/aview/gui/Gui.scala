@@ -87,7 +87,7 @@ case class Gui(controller: ControllerInterface) extends UI with Observer with JF
     }
     rowConstraints.add(row)
 
-    for (_ <- 0 until 6) {
+    for (_ <- 0 until 8) {
       val colC = new ColumnConstraints() {
         percentWidth = 100
       }
@@ -99,6 +99,8 @@ case class Gui(controller: ControllerInterface) extends UI with Observer with JF
     add(buttons.getMoveButton, 3, 0)
     add(buttons.getLoadButton, 4, 0)
     add(buttons.getSaveButton, 5, 0)
+    add(buttons.getLoadDbButton, 6, 0)
+    add(buttons.getSaveDbButton, 7, 0)
   }
 
   def run(): Unit = {
@@ -110,6 +112,8 @@ case class Gui(controller: ControllerInterface) extends UI with Observer with JF
       title.value = "Checkers"
       minWidth = 650
       minHeight = 800
+      maxWidth = 650
+      maxHeight = 800
       scene = new Scene {
         stylesheets = List(getClass.getResource("/stylesheet.css").toExternalForm)
         root = new BorderPane {

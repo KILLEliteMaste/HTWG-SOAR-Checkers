@@ -1,9 +1,8 @@
 package de.htwg.se.checkers.aview
 
-import de.htwg.se.checkers.controller.command.conreteCommand.Move
+import de.htwg.se.checkers.controller.command.conreteCommand.{Load, Move, New, Redo, Save, SaveDB, Undo, LoadDB}
 import de.htwg.se.checkers.controller.ControllerInterface
 import de.htwg.se.checkers.controller.command.Command
-import de.htwg.se.checkers.controller.command.conreteCommand.{Load, Move, New, Redo, Save, Undo}
 import scalafx.beans.property.StringProperty
 
 abstract class UI extends UserInterface {
@@ -13,7 +12,9 @@ abstract class UI extends UserInterface {
     "undo" -> Undo(),
     "redo" -> Redo(),
     "load" -> Load(),
-    "save" -> Save()
+    "save" -> Save(),
+    "loaddb" -> LoadDB(),
+    "savedb" -> SaveDB()
   )
   
   var returnMessage: StringProperty = new StringProperty() {
