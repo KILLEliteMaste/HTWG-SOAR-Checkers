@@ -1,9 +1,9 @@
-package de.htwg.se.board.dbComponent.slickImpls
+package de.htwg.se.fileio.dbComponent.slickImpls
 
 import scala.util.{Failure, Random, Success, Try}
 import de.htwg.se.board.{Cell, Game, GameState, PlayerState1, PlayerState2}
-import de.htwg.se.board.dbComponent.DaoInterface
 import de.htwg.se.board.gamebase.{CellImpl, FieldImpl, FieldMatrixImpl, GameImpl}
+import de.htwg.se.fileio.dbComponent.DaoInterface
 import slick.jdbc.GetResult
 import slick.jdbc.JdbcBackend.Database
 import slick.jdbc.MySQLProfile.api.*
@@ -74,7 +74,7 @@ class DaoSlickImpl extends DaoInterface {
     new FieldMatrixImpl[Option[Cell]](internalRows = vectorBuilder.result())
   }
 
-  def save(gameParam: Game): Unit = {
+  override def save(gameParam: Game): Unit = {
     val stones = gameParam.field.fieldMatrix.rows.flatten.map((maybeCell: Option[Cell]) => maybeCell.getOrElse(0)).mkString(" ")
     val setup = DBIO.seq(
       (gameTableQuery.schema ++ fieldTableQuery.schema).createIfNotExists,

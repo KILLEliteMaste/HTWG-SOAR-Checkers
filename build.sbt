@@ -3,47 +3,11 @@ lazy val global = project.in(file("."))
   .settings(libraryDependencies ++= commonDependencies)
   .aggregate(fileio, board)
   .dependsOn(fileio, board)
-  //.settings(mainClass in Compile := Some("de.htwg.se.checkers.GameEntry"))
-  //.enablePlugins(sbtdocker.DockerPlugin, JavaAppPackaging)
-  /*
-  .settings(dockerCommands ++= Seq(
-    Cmd("FROM", "hseeberger/scala-sbt:17.0.2_1.6.2_3.1.1"),
-    Cmd("ENV", "DISPLAY host.docker.internal:0.0"),
-    Cmd("RUN", "apt-get update && apt-get install -y --no-install-recommends"),
-    Cmd("RUN", "apt-get install -y libxrender1"),
-    Cmd("RUN", "apt-get install -y libxtst6"),
-    Cmd("RUN", "apt-get install -y libxi6"),
-    Cmd("RUN", "apt-get install -y openjfx"),
-    Cmd("ADD", ". /sources"),
-    Cmd("WORKDIR", "/sources"),
-    Cmd("ENV", "CHECKERS_UI_TYPE \"tui gui rui\""),
-    Cmd("RUN", "sbt compile"),
-    Cmd("CMD", "sbt", "run")
-  ))
-  .settings(dockerExposedPorts := Seq(8080))
-  */
-
 
 lazy val fileio = project.in(file("FileIO"))
   .settings(libraryDependencies ++= fileioDependencies)
   .dependsOn(board)
   .settings(mainClass in Compile := Some("de.htwg.se.fileio.FileIOService"))
-  //.enablePlugins(sbtdocker.DockerPlugin, JavaAppPackaging)
-  /*
-  .settings(dockerCommands ++= Seq(
-    Cmd("FROM", "hseeberger/scala-sbt:17.0.2_1.6.2_3.1.1"),
-    Cmd("RUN", "apt-get update && apt-get install -y --no-install-recommends"),
-    Cmd("RUN", "apt-get install -y libxrender1"),
-    Cmd("RUN", "apt-get install -y libxtst6"),
-    Cmd("RUN", "apt-get install -y libxi6"),
-    Cmd("ADD", "./sources"),
-    Cmd("WORKDIR", "/sources"),
-    Cmd("RUN", "sbt compile"),
-    Cmd("RUN", "sbt", "\"runMain de.htwg.se.fileio.FileIOService\"")
-  ))
-  .settings(dockerExposedPorts := Seq(8081))
-  */
-
 
 lazy val board = project.in(file("Board"))
   .settings(resolvers += "jitpack" at "https://jitpack.io")
@@ -69,21 +33,16 @@ lazy val dependencies =
     val scalaguiceVersion = "5.0.2"
     val scalafxVersion = "17.0.1-R26"
     val javaFxVersion = "17.0.1"
-    val slickVersion = "3.3.3"
     val slickHCPVersion = "3.3.3"
     val mariadbVersion = "3.0.4"
     val slf4jVersion = "1.7.36"
+    val mongoDbVersion = "4.6.0"
 
-
-    //("com.typesafe.slick" %% "slick" % slickVersion).cross(CrossVersion.for3Use2_13)
-
-
+    val mongoDb = ("org.mongodb.scala" %% "mongo-scala-driver" % mongoDbVersion).cross(CrossVersion.for3Use2_13)
     val slick = "com.github.slick.slick" % "slick_3" % "nafg~dottyquery-SNAPSHOT"
-
     val slf4j = "org.slf4j" % "slf4j-nop" % slf4jVersion
     val slickHCP = ("com.typesafe.slick" %% "slick-hikaricp" % slickHCPVersion).cross(CrossVersion.for3Use2_13)
     val mariadb = "org.mariadb.jdbc" % "mariadb-java-client" % mariadbVersion
-
     val akka = ("com.typesafe.akka" %% "akka-http" % akkaHttpVersion).cross(CrossVersion.for3Use2_13)
     val akkaactor = ("com.typesafe.akka" %% "akka-actor-typed" % akkaVersion).cross(CrossVersion.for3Use2_13)
     val akkastream = ("com.typesafe.akka" %% "akka-stream" % akkaVersion).cross(CrossVersion.for3Use2_13)
@@ -136,6 +95,7 @@ val fileioDependencies = Seq(
 )
 
 val boardDependencies = Seq(
+  dependencies.mongoDb,
   dependencies.slick,
   dependencies.slickHCP,
   dependencies.slf4j,

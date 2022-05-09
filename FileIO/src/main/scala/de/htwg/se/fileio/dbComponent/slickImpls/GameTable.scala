@@ -1,4 +1,4 @@
-package de.htwg.se.board.dbComponent.slickImpls
+package de.htwg.se.fileio.dbComponent.slickImpls
 
 import slick.jdbc.MySQLProfile.api.*
 

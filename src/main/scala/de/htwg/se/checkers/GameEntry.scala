@@ -1,11 +1,11 @@
 package de.htwg.se.checkers
 
 import com.google.inject.Guice
-import de.htwg.se.board.dbComponent.slickImpls.DaoSlickImpl
 import de.htwg.se.checkers.aview
 import de.htwg.se.checkers.aview.UserInterface
 import de.htwg.se.checkers.controller.ControllerInterface
 import de.htwg.se.checkers.CheckersModule
+import de.htwg.se.fileio.dbComponent.mongoImpl.DaoMongoImpl
 
 import scala.util.{Failure, Success, Try}
 

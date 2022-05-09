@@ -10,9 +10,10 @@ import de.htwg.se.board.gamebase.{CellImpl, FieldMatrixImpl, GameImpl}
 import de.htwg.se.checkers.controller.ControllerInterface
 import net.codingwell.scalaguice.ScalaModule
 import de.htwg.se.board.FieldMatrix
-import de.htwg.se.board.dbComponent.DaoInterface
-import de.htwg.se.board.dbComponent.slickImpls.DaoSlickImpl
 import de.htwg.se.fileio.FileIO
+import de.htwg.se.fileio.dbComponent.DaoInterface
+import de.htwg.se.fileio.dbComponent.mongoImpl.DaoMongoImpl
+import de.htwg.se.fileio.dbComponent.slickImpls.DaoSlickImpl
 import de.htwg.se.fileio.fileiojson.FileIOImpl
 
 
@@ -29,7 +30,8 @@ class CheckersModule extends AbstractModule {
     bind(classOf[FieldMatrix[Option[Cell]]]).toInstance(new FieldMatrixImpl[Option[Cell]](8, None))
     bind(classOf[ControllerInterface]).to(classOf[controller.controllerbase.Controller])
 
-    bind(classOf[DaoInterface]).to(classOf[DaoSlickImpl])
+    //bind(classOf[DaoInterface]).to(classOf[DaoSlickImpl])
+    bind(classOf[DaoInterface]).to(classOf[DaoMongoImpl])
     
     bind(classOf[FileIO]).to(classOf[FileIOImpl])
   }

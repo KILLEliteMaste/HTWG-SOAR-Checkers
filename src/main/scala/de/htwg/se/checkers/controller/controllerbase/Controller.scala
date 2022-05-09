@@ -14,7 +14,7 @@ import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpMethods, HttpRequest, HttpResponse}
 import akka.http.scaladsl.unmarshalling.Unmarshal
-import de.htwg.se.board.dbComponent.DaoInterface
+import de.htwg.se.fileio.dbComponent.DaoInterface
 
 import scala.concurrent.Future
 import scala.concurrent.duration.Duration
