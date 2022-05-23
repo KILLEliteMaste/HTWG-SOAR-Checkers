@@ -6,7 +6,7 @@ import scala.concurrent.Future
 
 trait DaoInterface {
 
-  def load(): Try[Game]
+  def load(): Future[Try[Game]]
   def save(game: Game): Unit
 
 }

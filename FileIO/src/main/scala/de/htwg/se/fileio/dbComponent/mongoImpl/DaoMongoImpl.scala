@@ -15,15 +15,16 @@ import org.mongodb.scala.model.Filters.*
 import org.mongodb.scala.model.Updates.*
 import org.mongodb.scala.model.UpdateOptions
 import org.mongodb.scala.result.InsertOneResult
-import play.api.libs.json.{JsNumber}
-
-import scala.concurrent.Await
+import play.api.libs.json.JsNumber
+import java.util.concurrent.{ExecutorService, Executors}
+import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
 import org.mongodb.scala.model.Filters.*
 import org.mongodb.scala.model.Projections.*
-import scala.io.Source
 
+import scala.io.Source
 import scala.util.Try
+import concurrent.ExecutionContext.Implicits.global
 
 class DaoMongoImpl extends DaoInterface {
 
@@ -33,11 +34,14 @@ class DaoMongoImpl extends DaoInterface {
   val db: MongoDatabase = client.getDatabase("trading_bot")
   val collection: MongoCollection[Document] = db.getCollection("checkers")
 
-  val jsonFileIo = FileIOImpl()
+  val jsonFileIo: FileIOImpl = FileIOImpl()
 
-  val gameId = sys.env.getOrElse("GAME_ID", "1").toInt
+  val gameId: Int = sys.env.getOrElse("GAME_ID", "1").toInt
+  var gameCache = Option.empty
 
-  override def load(): Try[Game] = {
+  override def load(): Future[Try[Game]] = Future(loading())
+
+  def loading(): Try[Game] = {
     val collection = db.getCollection("checkers")
     val result = Await.result(collection.find(equal("id", gameId)).first().head(), Duration.Inf)
     jsonFileIo.loadByString(result.toJson())
@@ -52,7 +56,10 @@ class DaoMongoImpl extends DaoInterface {
 
       override def onNext(result: Long): Unit = if (result == 0) documentNotFound(doc) else documentFound(doc)
 
-      override def onError(e: Throwable): Unit = println("Failed")
+      override def onError(e: Throwable): Unit = {
+        e.printStackTrace()
+        println("Failed count")
+      }
 
       override def onComplete(): Unit = println("Completed")
     })
@@ -80,7 +87,7 @@ class DaoMongoImpl extends DaoInterface {
 
         override def onNext(result: Any): Unit = println(s"onNext $result")
 
-        override def onError(e: Throwable): Unit = println("Failed")
+        override def onError(e: Throwable): Unit = println("Failed find and replace")
 
         override def onComplete(): Unit = println("Completed")
       })

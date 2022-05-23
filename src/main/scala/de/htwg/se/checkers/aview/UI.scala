@@ -23,7 +23,7 @@ abstract class UI extends UserInterface {
 
   def processInputLine(input: String, controller: ControllerInterface): String = Option(input).map(processInput(_, controller)).getOrElse("Could not process Command")
 
-  def processInput(input: String, controller: ControllerInterface): String = {
+  def processInput(input: String, controller: ControllerInterface): String = synchronized {
     val inputSplit = input.toLowerCase().split("\\s+").toList
     returnMessage.value = commands.get(inputSplit.head).map(command => command.handleCommand(inputSplit.drop(1), controller))
       .getOrElse("No matching command found")

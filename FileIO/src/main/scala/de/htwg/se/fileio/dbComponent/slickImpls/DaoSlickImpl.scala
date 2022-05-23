@@ -9,6 +9,8 @@ import slick.jdbc.JdbcBackend.Database
 import slick.jdbc.MySQLProfile.api.*
 
 import java.lang.StackWalker
+import java.util.concurrent.{ExecutorService, Executors}
+import java.util.concurrent.locks.ReentrantLock
 import concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.{Duration, DurationInt}
 import scala.concurrent.{Await, Future}
@@ -21,9 +23,9 @@ class DaoSlickImpl extends DaoInterface {
   val gameId = sys.env.getOrElse("GAME_ID", "1").toInt
   val fieldId = gameId
 
-  override def load(): Try[Game] = Try {
+  override def load(): Future[Try[Game]] = Future(Try {
     loadGame()
-  }
+  })
 
   def loadGame(): Game = {
     val gameQuery = sql"""select * from GAME where GAME_ID = $gameId""".as[(Int, String, String)]
@@ -45,8 +47,6 @@ class DaoSlickImpl extends DaoInterface {
 
     val fieldMatrix = createFieldMatrix(fieldResult(7), fieldSize)
 
-    fieldMatrix.internalRows.foreach(x=> println(x))
-
     val gameState = GameState.valueOf(gameResult(2))
 
     val playerState = if (new PlayerState1().toString.equals(gameResult(1))) new PlayerState1() else new PlayerState2()
@@ -58,7 +58,7 @@ class DaoSlickImpl extends DaoInterface {
     loadedGame
   }
 
-  def createFieldMatrix(stones: String, fieldSize : Int) = {
+  def createFieldMatrix(stones: String, fieldSize: Int) = {
     val stonesArray = stones.split(" ")
     val vectorBuilder = Vector.newBuilder[Vector[Option[Cell]]]
 
@@ -74,6 +74,8 @@ class DaoSlickImpl extends DaoInterface {
     new FieldMatrixImpl[Option[Cell]](internalRows = vectorBuilder.result())
   }
 
+  private val lock = new ReentrantLock()
+
   override def save(gameParam: Game): Unit = {
     val stones = gameParam.field.fieldMatrix.rows.flatten.map((maybeCell: Option[Cell]) => maybeCell.getOrElse(0)).mkString(" ")
     val setup = DBIO.seq(
@@ -86,9 +88,12 @@ class DaoSlickImpl extends DaoInterface {
       fieldTableQuery += (fieldId, gameId, gameParam.field.fieldSize, gameParam.field.fieldStatistics.getOrElse(0, 0),
         gameParam.field.fieldStatistics.getOrElse(1, 0), gameParam.field.fieldStatistics.getOrElse(2, 0), gameParam.field.fieldStatistics.getOrElse(3, 0), stones),
     )
+    lock.lock()
     val setupFuture = database.run(setup).andThen {
       case Success(_) => println("Daten erfolgreich gespeichert")
       case Failure(e) => println(s"Fehler beim Speichern in die Datenbank: ${e.getMessage}")
     }
+    Await.result(setupFuture, Duration.Inf)
+    lock.unlock()
   }
 }

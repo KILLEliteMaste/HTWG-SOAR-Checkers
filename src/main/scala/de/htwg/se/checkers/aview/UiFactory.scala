@@ -28,7 +28,7 @@ object UserInterface {
     if (kind.contains("rui")) {
       if (kind.contains("gui")) {
         ExecutionContext.global.execute(() => {
-          Tui(controller).run()
+          RestTui(controller).run()
         })
       } else {
         RestTui(controller).run()

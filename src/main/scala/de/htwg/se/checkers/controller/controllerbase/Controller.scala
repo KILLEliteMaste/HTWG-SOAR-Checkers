@@ -21,7 +21,7 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 import scala.collection.{immutable, mutable}
 import scala.util.{Failure, Success}
-
+import concurrent.ExecutionContext.Implicits.global
 case class Controller @Inject()(var game: Game) extends ControllerInterface {
 
   private val undoManager = UndoManager(this)
@@ -128,7 +128,6 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
   }
 
   override def checkGameState(): Unit = {
-    println(game.field.fieldStatistics.toString())
     Tuple4(game.field.fieldStatistics.get(1).get, game.field.fieldStatistics.get(2).get,
       game.field.fieldStatistics.get(3).get, game.field.fieldStatistics.get(4).get) match {
       //Only 1 black / white king on each side left
@@ -257,16 +256,22 @@ case class Controller @Inject()(var game: Game) extends ControllerInterface {
   }
 
   override def loadFromDB(): String = {
-    database.load() match {
-      case Success(result) =>
-        game = result
-        notifyObservers()
-        "LOADED FROM DATABASE"
-      case Failure(_) => {
-        notifyObservers()
-        "COULD NOT LOAD FROM DATABASE"
+    database.load().onComplete {
+      case Success(tryGame) => {
+        tryGame match {
+          case Success(result) =>
+            game = result
+            notifyObservers()
+            "LOADED FROM DATABASE"
+          case Failure(_) => {
+            notifyObservers()
+            "COULD NOT LOAD FROM DATABASE"
+          }
+        }
       }
+      case Failure(t) => println("An error has occurred: " + t.getMessage)
     }
+    "LOADED FROM DB"
   }
 
   override def saveToDB(): Unit = {
