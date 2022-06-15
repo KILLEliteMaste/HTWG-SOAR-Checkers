@@ -1,9 +1,9 @@
 ##### Master branch
-[![Build Status](https://travis-ci.com/KILLEliteMaste/Checkers.svg?branch=master)](https://travis-ci.com/KILLEliteMaste/Checkers)
-[![Coverage Status](https://coveralls.io/repos/github/KILLEliteMaste/HTWG-SOAR-Checkers/badge.svg?branch=master)](https://coveralls.io/github/KILLEliteMaste/HTWG-SOAR-Checkers?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/KILLEliteMaste/Checkers/badge.svg?branch=master)](https://coveralls.io/github/KILLEliteMaste/Checkers?branch=master)
 
 
-# Checkers
+
+# Checkers Softwarearchitecture
 The classic board game programmed in scala
 ## Game Rules
 Draughts is played by two opponents, on opposite sides of the gameboard. One player has the dark pieces; the other has the light pieces. Players alternate turns. A player may not move an opponent's piece. A move consists of moving a piece diagonally to an adjacent unoccupied square. If the adjacent square contains an opponent's piece, and the square immediately beyond it is vacant, the piece may be captured (and removed from the game) by jumping over it.
